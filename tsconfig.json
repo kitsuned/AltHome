@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"lib": [
+			"ES2020",
+			"DOM"
+		],
+		"module": "ES2020",
+		"moduleResolution": "Node",
+		"jsx": "react-jsx",
+		"baseUrl": "./src",
+		"allowSyntheticDefaultImports": true,
+		"allowUmdGlobalAccess": true,
+		"declaration": false,
+		"esModuleInterop": false,
+		"isolatedModules": true,
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"useDefineForClassFields": true
+	}
+}

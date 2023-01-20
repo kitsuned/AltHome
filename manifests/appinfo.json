@@ -1,0 +1,13 @@
+{
+	id: "@APP_ID@",
+	version: "@APP_VERSION@",
+	type: "web",
+	main: "index.html",
+	title: "AltHome",
+	icon: "icon80.png",
+	largeIcon: "icon130.png",
+	iconColor: "#2f3e46",
+	noSplashOnLaunch: true,
+	disableBackHistoryAPI: true,
+	defaultWindowType: "popup"
+}

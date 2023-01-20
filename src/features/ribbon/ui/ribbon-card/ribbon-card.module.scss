@@ -1,0 +1,36 @@
+$card-width: 142px;
+$card-height: 230px;
+
+.card {
+	--card-color: #ffffff;
+
+	position: relative;
+
+	flex-shrink: 0;
+
+	appearance: none;
+	background: none;
+	outline: none;
+
+	width: $card-width;
+	height: $card-height;
+
+	padding: 0;
+	border: 0;
+
+	&::after {
+		content: '';
+		z-index: -1;
+		position: absolute;
+		inset: 0;
+
+		transform: skewX(-9.5deg);
+
+		background-color: var(--card-color);
+	}
+}
+
+.icon {
+	width: 115px;
+	height: 115px;
+}

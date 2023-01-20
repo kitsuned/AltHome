@@ -1,0 +1,17 @@
+.container {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	display: flex;
+	align-items: flex-end;
+
+	height: 270px;
+
+	overflow-x: scroll;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}

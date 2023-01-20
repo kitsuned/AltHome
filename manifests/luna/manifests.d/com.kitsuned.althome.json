@@ -1,0 +1,11 @@
+{
+	id: "@APP_ID@",
+	version: "@APP_VERSION@",
+	roleFiles: [
+		"/var/luna-service2-dev/roles.d/@APP_ID@.app.json"
+	],
+	clientPermissionFiles: [
+		"/var/luna-service2-dev/client-permissions.d/@APP_ID@.app.json",
+		"/var/luna-service2-dev/client-permissions.d/@APP_ID@.app.all.json"
+	]
+}

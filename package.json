@@ -1,0 +1,48 @@
+{
+	"name": "com.kitsuned.althome",
+	"version": "1.0.0",
+	"packageManager": "yarn@3.3.1",
+	"scripts": {
+		"build": "webpack --mode production",
+		"dev": "webpack serve --mode development"
+	},
+	"dependencies": {
+		"@please/lrud": "0.0.23",
+		"framer-motion": "8.4.6",
+		"react": "18.2.0",
+		"react-dom": "18.2.0"
+	},
+	"devDependencies": {
+		"@types/node": "18.11.18",
+		"@types/react": "18.0.26",
+		"@types/react-dom": "18.0.10",
+		"@webosbrew/pub-utils": "1.0.3",
+		"@webosose/ares-cli": "2.3.1",
+		"copy-webpack-plugin": "11.0.0",
+		"css-loader": "6.7.3",
+		"esbuild": "0.16.16",
+		"esbuild-loader": "2.20.0",
+		"esbuild-register": "3.4.2",
+		"html-webpack-plugin": "5.5.0",
+		"json5": "2.2.3",
+		"sass": "1.57.1",
+		"sass-loader": "13.2.0",
+		"style-loader": "3.3.1",
+		"tsconfig-paths-webpack-plugin": "4.0.0",
+		"typescript": "4.9.4",
+		"webpack": "5.75.0",
+		"webpack-cli": "5.0.1",
+		"webpack-dev-server": "4.11.1"
+	},
+	"resolutions": {
+		"esbuild": "0.16.16"
+	},
+	"engines": {
+		"node": ">=16",
+		"yarn": ">=1.19.2",
+		"npm": "please-use-yarn"
+	},
+	"os": [
+		"!win32"
+	]
+}
