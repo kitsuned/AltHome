@@ -8,10 +8,11 @@ import {
 	JsonTransformer,
 	AresPackagerPlugin,
 	PermissionPlugin,
+	WebOSBrewManifestPlugin,
 	WebpackMultipleConfigurations,
 } from 'chore/webpack-utils';
 
-import { name, version } from './package.json';
+import { name, version, description } from './package.json';
 
 const transformer = new JsonTransformer({
 	APP_ID: name,
@@ -19,7 +20,7 @@ const transformer = new JsonTransformer({
 });
 
 export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
-	(_, argv) => ({
+	(env, argv) => ({
 		name: 'app',
 		target: 'web',
 		mode: argv.mode ?? 'development',
@@ -63,6 +64,9 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 				},
 			],
 		},
+		performance: {
+			hints: false,
+		},
 		plugins: [
 			new ProvidePlugin({
 				React: 'react',
@@ -89,20 +93,16 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 					},
 				],
 			}),
-			new PermissionPlugin(),
+			...!env?.WEBPACK_SERVE ? [
+				new PermissionPlugin(),
+				new AresPackagerPlugin(),
+				new WebOSBrewManifestPlugin({
+					appDescription: description,
+					sourceUrl: 'https://github.com/kitsuned/AltHome',
+					iconUri: './manifests/icon320.png',
+					rootRequired: true,
+				}),
+			] : [],
 		],
 	}),
-	env => !env?.WEBPACK_SERVE ? {
-		name: 'ares',
-		dependencies: [
-			'app',
-		],
-		mode: 'none',
-		entry: {},
-		plugins: [
-			new AresPackagerPlugin(),
-		],
-	} : {
-		entry: {},
-	},
 ];

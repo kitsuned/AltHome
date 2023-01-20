@@ -1,6 +1,4 @@
-export { AresPackagerPlugin } from './plugins/ares-packager';
-
-export { PermissionPlugin } from './plugins/permission';
+export * from './plugins';
 
 export { JsonTransformer } from './json-transformer';
 
