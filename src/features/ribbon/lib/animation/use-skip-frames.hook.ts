@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 export const useSkipFrames = (frames: number, callback: () => void) => {
 	const counter = useRef(frames);
@@ -13,5 +13,7 @@ export const useSkipFrames = (frames: number, callback: () => void) => {
 		}
 	};
 
-	window.requestAnimationFrame(handler);
+	useLayoutEffect(() => {
+		window.requestAnimationFrame(handler);
+	}, []);
 };
