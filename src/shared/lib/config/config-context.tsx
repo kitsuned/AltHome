@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-import { LaunchPoint, LunaAPI } from 'lib/luna';
+import { LaunchPoint, LunaAPI } from 'shared/lib/luna';
 
 type ConfigContext = {
 	config: {

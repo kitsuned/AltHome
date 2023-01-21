@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useConfig } from 'lib/config';
-import { useBackKeyHandler } from 'lib/hid';
+import { useConfig } from 'shared/lib/config';
+import { useBackKeyHandler } from 'shared/lib/hid';
 
 import { Ribbon, RibbonHandle } from 'features/ribbon';
 
@@ -35,15 +35,11 @@ export const App = () => {
 		return () => document.removeEventListener('webOSRelaunch', handler);
 	}, []);
 
-	return (
-		<main>
-			{config && (
-				<Ribbon
-					ref={ribbonRef}
-					onHide={handleHide}
-					launchPoints={config.launchPoints}
-				/>
-			)}
-		</main>
+	return config && (
+		<Ribbon
+			ref={ribbonRef}
+			onHide={handleHide}
+			launchPoints={config.launchPoints}
+		/>
 	);
 };

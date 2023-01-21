@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import type { MotionProps, TargetAndTransition } from 'framer-motion';
 
-import { LunaAPI } from 'lib/luna';
+import { LunaAPI } from 'shared/lib/luna';
 
 import type { RibbonCardProps } from './ribbon-card.interface';
 

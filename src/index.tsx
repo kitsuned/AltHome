@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 
 import { FocusRoot } from '@please/lrud';
 
-import { ConfigProvider } from './lib/config';
+import { ConfigProvider } from 'shared/lib/config';
 
 import { App } from './app';
 
