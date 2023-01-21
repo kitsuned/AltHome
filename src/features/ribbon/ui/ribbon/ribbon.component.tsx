@@ -1,35 +1,44 @@
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 
 import { FocusNode } from '@please/lrud';
 
 import { motion } from 'framer-motion';
 
 import { RibbonCard } from '../ribbon-card';
+import { RibbonScrollTrigger } from '../ribbon-scroll-trigger';
 
-import { useRibbon } from './ribbon.lib';
+import { useRibbon, useRibbonScroll } from './ribbon.lib';
 
 import type { RibbonHandle, RibbonProps } from './ribbon.interface';
 
 import s from './ribbon.module.scss';
 
 export const Ribbon = forwardRef<RibbonHandle, RibbonProps>((props, ref): JSX.Element => {
+	const domRef = useRef<HTMLElement>(null);
+
 	const { motionMixin, handleRootNodeClick, handleApplicationOpen } = useRibbon(ref, props);
+	const { handleTrigger } = useRibbonScroll(domRef);
 
 	return (
-		<FocusNode
-			elementType={motion.div}
-			className={s.container}
-			onClick={handleRootNodeClick}
-			{...motionMixin}
-		>
-			{props.launchPoints.map(point => (
-				<RibbonCard
-					key={point.id}
-					metadata={point}
-					onOpen={handleApplicationOpen}
-				/>
-			))}
-		</FocusNode>
+		<>
+			<FocusNode
+				ref={domRef}
+				elementType={motion.div}
+				className={s.container}
+				onClick={handleRootNodeClick}
+				{...motionMixin}
+			>
+				{props.launchPoints.map(point => (
+					<RibbonCard
+						key={point.id}
+						metadata={point}
+						onOpen={handleApplicationOpen}
+					/>
+				))}
+			</FocusNode>
+
+			<RibbonScrollTrigger onTrigger={handleTrigger} />
+		</>
 	);
 });
 
