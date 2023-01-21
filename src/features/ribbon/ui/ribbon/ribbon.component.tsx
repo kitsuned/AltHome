@@ -13,12 +13,13 @@ import type { RibbonHandle, RibbonProps } from './ribbon.interface';
 import s from './ribbon.module.scss';
 
 export const Ribbon = forwardRef<RibbonHandle, RibbonProps>((props, ref): JSX.Element => {
-	const { motionMixin, handleApplicationOpen } = useRibbon(ref, props);
+	const { motionMixin, handleRootNodeClick, handleApplicationOpen } = useRibbon(ref, props);
 
 	return (
 		<FocusNode
 			elementType={motion.div}
 			className={s.container}
+			onClick={handleRootNodeClick}
 			{...motionMixin}
 		>
 			{props.launchPoints.map(point => (

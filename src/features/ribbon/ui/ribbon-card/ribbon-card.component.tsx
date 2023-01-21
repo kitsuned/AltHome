@@ -11,14 +11,14 @@ import type { RibbonCardProps } from './ribbon-card.interface';
 import s from './ribbon-card.module.scss';
 
 export const RibbonCard = memo((props: RibbonCardProps): JSX.Element => {
-	const { icon, handleClick, motionMixin } = useRibbonCard(props);
+	const { icon, handleSelection, handleClick, motionMixin } = useRibbonCard(props);
 
 	return (
 		<FocusNode
 			elementType={motion.button}
 			className={s.card}
+			onSelected={handleSelection}
 			onClick={handleClick}
-			onSelected={handleClick}
 			{...motionMixin}
 		>
 			<img src={icon} className={s.icon} />

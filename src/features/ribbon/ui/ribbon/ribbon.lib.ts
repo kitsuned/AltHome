@@ -13,8 +13,8 @@ const motionProps: MotionProps = {
 		hidden: {
 			y: '105%',
 			transition: {
-				duration: .3
-			}
+				duration: .5,
+			},
 		},
 		show: {
 			y: 1,
@@ -31,25 +31,15 @@ export const useRibbon = (ref: React.ForwardedRef<RibbonHandle>, { onHide }: Pic
 	const focusedNode = useLeafFocusedNode();
 
 	useImperativeHandle(ref, () => ({
-		show() {
-			controls.start('show');
-		},
-		hide() {
-			controls.start('hidden');
-		},
+		show: () => void controls.start('show'),
+		hide: () => void controls.start('hidden'),
 	}));
 
-	useEffect(() => {
-		focusedNode?.elRef.current?.focus();
-	}, [focusedNode]);
+	useEffect(() => void focusedNode?.elRef.current?.focus(), [focusedNode]);
 
-	useSkipFrames(10, () => {
-		controls.start('show');
-	});
+	useSkipFrames(10, () => void controls.start('show'));
 
-	const handleApplicationOpen = useCallback((id: string) => {
-		controls.start('hidden');
-	}, []);
+	const handleRibbonHide = useCallback(() => void controls.start('hidden'), [controls]);
 
 	const handleAnimationComplete = useCallback<NonNullable<MotionProps['onAnimationComplete']>>(definition => {
 		if (definition !== 'hidden') {
@@ -67,6 +57,7 @@ export const useRibbon = (ref: React.ForwardedRef<RibbonHandle>, { onHide }: Pic
 
 	return {
 		motionMixin,
-		handleApplicationOpen,
+		handleRootNodeClick: handleRibbonHide,
+		handleApplicationOpen: handleRibbonHide,
 	};
 };
