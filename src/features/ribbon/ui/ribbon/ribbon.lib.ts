@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 
 import { useAnimationControls, type MotionProps } from 'framer-motion';
 
@@ -6,7 +6,7 @@ import { useLeafFocusedNode } from '@please/lrud';
 
 import { useContainerScroll, useSkipFrames } from '../../lib/animation';
 
-import type { RibbonScrollTriggeredZone } from '../ribbon-scroll-trigger';
+import type { TriggerZone } from '../../lib/zone';
 
 import type { RibbonHandle, RibbonProps } from './ribbon.interface';
 
@@ -66,12 +66,16 @@ export const useRibbon = (ref: React.ForwardedRef<RibbonHandle>, { onHide }: Pic
 	};
 };
 
-export const useRibbonScroll = (ref: React.MutableRefObject<HTMLElement | null>) => {
-	const [zone, dispatchZone] = useState<RibbonScrollTriggeredZone>(null);
+export const useRibbonScroll = () => {
+	const domRef = useRef<HTMLElement>(null);
 
-	useContainerScroll(ref, zone ? zone === 'left' ? -shiftVelocity : shiftVelocity : 0);
+	const [zone, dispatchZone] = useState<TriggerZone>(null);
+
+	const edge = useContainerScroll(domRef, zone ? zone === 'left' ? -shiftVelocity : shiftVelocity : 0);
 
 	return {
+		domRef,
+		edge,
 		handleTrigger: dispatchZone,
 	};
 };

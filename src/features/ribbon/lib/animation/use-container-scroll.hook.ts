@@ -1,6 +1,18 @@
-import { useLayoutEffect, useRef, type MutableRefObject } from 'react';
+import { useLayoutEffect, useRef, useState, type MutableRefObject } from 'react';
 
-export const useContainerScroll = (ref: MutableRefObject<HTMLElement | null>, shift: number) => {
+import type { TriggerZone } from '../zone';
+
+const getReachedEdge = ({ scrollLeft, scrollWidth, clientWidth }: HTMLElement): TriggerZone => {
+	if (scrollLeft < 1) {
+		return 'left';
+	}
+
+	return scrollLeft > scrollWidth - clientWidth ? 'right' : null;
+};
+
+export const useContainerScroll = (ref: MutableRefObject<HTMLElement | null>, shift: number): TriggerZone => {
+	const [edge, setEdge] = useState<TriggerZone>(null);
+
 	const mountedRef = useRef(true);
 
 	useLayoutEffect(() => {
@@ -10,6 +22,8 @@ export const useContainerScroll = (ref: MutableRefObject<HTMLElement | null>, sh
 
 		const handler = () => {
 			ref.current?.scrollBy(shift, 0);
+
+			setEdge(ref.current ? getReachedEdge(ref.current) : null);
 
 			if (mountedRef.current) {
 				window.requestAnimationFrame(handler);
@@ -24,4 +38,6 @@ export const useContainerScroll = (ref: MutableRefObject<HTMLElement | null>, sh
 			mountedRef.current = false;
 		};
 	}, [shift]);
+
+	return edge;
 };

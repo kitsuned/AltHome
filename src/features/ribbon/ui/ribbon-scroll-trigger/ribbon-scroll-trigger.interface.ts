@@ -1,5 +1,6 @@
-export type RibbonScrollTriggeredZone = 'left' | 'right' | null;
+import type { TriggerZone } from '../../lib/zone';
 
 export type RibbonScrollTriggerProps = {
-	onTrigger(zone: RibbonScrollTriggeredZone): void;
+	hiddenEdge: TriggerZone;
+	onTrigger(zone: TriggerZone): void;
 };
