@@ -751,17 +751,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webosbrew/pub-utils@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@webosbrew/pub-utils@npm:1.0.3"
-  dependencies:
-    argparse: ^2.0.1
-  bin:
-    webosbrew-gen-manifest: src/gen_manifest.js
-  checksum: 88f38070b343e707aa2ca0200dd7142720e2a9158d356a36896f464834441cbb0d1e90bef7f29e7cfcbf9b88e60f441c3b81a3cc5f25b73c9f99f21ba9931071
-  languageName: node
-  linkType: hard
-
 "@webosose/ares-cli@npm:2.3.1":
   version: 2.3.1
   resolution: "@webosose/ares-cli@npm:2.3.1"
@@ -1111,13 +1100,6 @@ __metadata:
     delegates: ^1.0.0
     readable-stream: ^2.0.6
   checksum: 70d251719c969b2745bfe5ddf3ebaefa846a636e90a6d5212573676af5d6670e15457761d4725731e19cbebdce42c4ab0cbedf23ab047f2a08274985aa10a3c7
-  languageName: node
-  linkType: hard
-
-"argparse@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "argparse@npm:2.0.1"
-  checksum: 83644b56493e89a254bae05702abf3a1101b4fa4d0ca31df1c9985275a5a5bd47b3c27b7fa0b71098d41114d8ca000e6ed90cad764b306f8a503665e4d517ced
   languageName: node
   linkType: hard
 
@@ -1689,7 +1671,6 @@ __metadata:
     "@types/node": 18.11.18
     "@types/react": 18.0.26
     "@types/react-dom": 18.0.10
-    "@webosbrew/pub-utils": 1.0.3
     "@webosose/ares-cli": 2.3.1
     copy-webpack-plugin: 11.0.0
     css-loader: 6.7.3

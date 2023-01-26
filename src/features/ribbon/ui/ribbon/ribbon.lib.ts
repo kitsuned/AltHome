@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 
 import { useAnimationControls, type MotionProps } from 'framer-motion';
 
 import { useLeafFocusedNode } from '@please/lrud';
 
-import { useContainerScroll, useSkipFrames } from '../../lib/animation';
+import { useContainerScroll, useKeepElementInView, useSkipFrames } from '../../lib/animation';
 
 import type { TriggerZone } from '../../lib/zone';
 
@@ -30,7 +30,11 @@ const motionProps: MotionProps = {
 
 const shiftVelocity = 14;
 
-export const useRibbon = (ref: React.ForwardedRef<RibbonHandle>, { onHide }: Pick<RibbonProps, 'onHide'>) => {
+export const useRibbon = (
+	ref: React.ForwardedRef<RibbonHandle>,
+	domRef: React.MutableRefObject<HTMLElement | null>,
+	{ onHide }: Pick<RibbonProps, 'onHide'>,
+) => {
 	const controls = useAnimationControls();
 	const focusedNode = useLeafFocusedNode();
 
@@ -39,7 +43,12 @@ export const useRibbon = (ref: React.ForwardedRef<RibbonHandle>, { onHide }: Pic
 		hide: () => void controls.start('hidden'),
 	}));
 
-	useEffect(() => void focusedNode?.elRef.current?.focus(), [focusedNode]);
+	useEffect(() => void focusedNode?.elRef.current?.focus({ preventScroll: true }), [focusedNode]);
+
+	useKeepElementInView({
+		target: focusedNode?.elRef.current,
+		container: domRef.current,
+	});
 
 	useSkipFrames(10, () => void controls.start('show'));
 
@@ -66,15 +75,12 @@ export const useRibbon = (ref: React.ForwardedRef<RibbonHandle>, { onHide }: Pic
 	};
 };
 
-export const useRibbonScroll = () => {
-	const domRef = useRef<HTMLElement>(null);
-
+export const useRibbonScroll = (ref: React.MutableRefObject<HTMLElement | null>) => {
 	const [zone, dispatchZone] = useState<TriggerZone>(null);
 
-	const edge = useContainerScroll(domRef, zone ? zone === 'left' ? -shiftVelocity : shiftVelocity : 0);
+	const edge = useContainerScroll(ref, zone ? zone === 'left' ? -shiftVelocity : shiftVelocity : 0);
 
 	return {
-		domRef,
 		edge,
 		handleTrigger: dispatchZone,
 	};

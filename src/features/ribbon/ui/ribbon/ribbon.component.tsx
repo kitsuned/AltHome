@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 
 import { FocusNode } from '@please/lrud';
 
@@ -14,8 +14,10 @@ import type { RibbonHandle, RibbonProps } from './ribbon.interface';
 import s from './ribbon.module.scss';
 
 export const Ribbon = forwardRef<RibbonHandle, RibbonProps>((props, ref): JSX.Element => {
-	const { motionMixin, handleRootNodeClick, handleApplicationOpen } = useRibbon(ref, props);
-	const { domRef, edge, handleTrigger } = useRibbonScroll();
+	const domRef = useRef<HTMLElement>(null);
+
+	const { motionMixin, handleRootNodeClick, handleApplicationOpen } = useRibbon(ref, domRef, props);
+	const { edge, handleTrigger } = useRibbonScroll(domRef);
 
 	return (
 		<>
