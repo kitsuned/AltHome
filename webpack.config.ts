@@ -1,4 +1,4 @@
-import { ProvidePlugin, DefinePlugin } from 'webpack';
+import { BannerPlugin, ProvidePlugin, DefinePlugin } from 'webpack';
 
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -20,7 +20,45 @@ const transformer = new JsonTransformer({
 });
 
 export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
-	(env, argv) => ({
+	{
+		name: 'installer',
+		target: 'node12',
+		mode: 'production',
+		entry: './src/installer/index.ts',
+		output: {
+			filename: 'install',
+			clean: true,
+		},
+		resolve: {
+			extensions: [
+				'.ts',
+				'.js',
+			],
+		},
+		module: {
+			rules: [
+				{
+					test: /.ts$/,
+					loader: 'esbuild-loader',
+					options: {
+						loader: 'ts',
+						target: 'node12',
+					},
+				},
+			],
+		},
+		plugins: [
+			new DefinePlugin({
+				'process.env.APP_ID': JSON.stringify(name),
+			}),
+			new BannerPlugin({
+				banner: '#!/usr/bin/env node',
+				raw: true,
+			}),
+			new PermissionPlugin(),
+		],
+	},
+	(_, argv) => ({
 		name: 'app',
 		target: 'web',
 		mode: argv.mode ?? 'development',
@@ -31,7 +69,6 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 		},
 		output: {
 			filename: 'app.js',
-			clean: true,
 		},
 		resolve: {
 			extensions: [
@@ -93,16 +130,23 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 					},
 				],
 			}),
-			...!env?.WEBPACK_SERVE ? [
-				new PermissionPlugin(),
-				new AresPackagerPlugin(),
-				new WebOSBrewManifestPlugin({
-					appDescription: description,
-					sourceUrl: 'https://github.com/kitsuned/AltHome',
-					iconUri: './manifests/icon320.png',
-					rootRequired: true,
-				}),
-			] : [],
 		],
+	}),
+	env => ({
+		name: 'ares',
+		entry: {},
+		dependencies: [
+			'app',
+			'installer',
+		],
+		plugins: !env?.WEBPACK_SERVE ? [
+			new AresPackagerPlugin(),
+			new WebOSBrewManifestPlugin({
+				appDescription: description,
+				sourceUrl: 'https://github.com/kitsuned/AltHome',
+				iconUri: './manifests/icon320.png',
+				rootRequired: true,
+			}),
+		] : [],
 	}),
 ];
