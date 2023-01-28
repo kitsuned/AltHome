@@ -88,7 +88,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 					loader: 'esbuild-loader',
 					options: {
 						loader: 'tsx',
-						target: 'ES2015',
+						target: 'chrome79',
 					},
 				},
 				{
