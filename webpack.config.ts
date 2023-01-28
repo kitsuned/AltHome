@@ -22,7 +22,7 @@ const transformer = new JsonTransformer({
 export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 	{
 		name: 'installer',
-		target: 'node12',
+		target: 'node8',
 		mode: 'production',
 		entry: './src/installer/index.ts',
 		output: {
@@ -42,7 +42,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 					loader: 'esbuild-loader',
 					options: {
 						loader: 'ts',
-						target: 'node12',
+						target: 'node8',
 					},
 				},
 			],

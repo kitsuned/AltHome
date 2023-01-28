@@ -8,6 +8,7 @@ $card-height: 230px;
 
 	flex-shrink: 0;
 
+	-webkit-appearance: none;
 	appearance: none;
 	background: none;
 	outline: none;
@@ -23,7 +24,11 @@ $card-height: 230px;
 		content: '';
 		z-index: -1;
 		position: absolute;
-		inset: 0;
+
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
 
 		transform: skewX(-9.5deg);
 
