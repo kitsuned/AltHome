@@ -1,5 +1,3 @@
-import { parse } from 'json5';
-
 export class JsonTransformer {
 	private readonly definitions: Record<string, string>;
 
@@ -15,7 +13,7 @@ export class JsonTransformer {
 	public transform(buffer: Buffer): Buffer {
 		const transformerScope = this;
 
-		const transformed = parse(
+		const transformed = JSON.parse(
 			buffer.toString('utf8'),
 			function (...args) {
 				return transformerScope.reviver.call(transformerScope, this, ...args);
