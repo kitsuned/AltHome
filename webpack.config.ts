@@ -3,6 +3,7 @@ import { BannerPlugin, ProvidePlugin, DefinePlugin } from 'webpack';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 import {
 	JsonTransformer,
@@ -94,9 +95,20 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 				{
 					test: /.scss$/,
 					use: [
-						'style-loader',
+						MiniCssExtractPlugin.loader,
 						'css-loader',
 						'sass-loader',
+						{
+							loader: 'postcss-loader',
+							options: {
+								postcssOptions: {
+									plugins: [
+										'autoprefixer',
+										'postcss-preset-env',
+									],
+								},
+							},
+						},
 					],
 				},
 			],
@@ -112,6 +124,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 				__DEV__: JSON.stringify(!process.env.PRODUCTION),
 				'process.env.APP_ID': JSON.stringify(name),
 			}),
+			new MiniCssExtractPlugin(),
 			new HtmlWebpackPlugin({
 				template: './src/app/index.html',
 			}),

@@ -16,6 +16,7 @@
 		"@types/react": "18.0.26",
 		"@types/react-dom": "18.0.10",
 		"@webosose/ares-cli": "2.3.1",
+		"autoprefixer": "10.4.13",
 		"copy-webpack-plugin": "11.0.0",
 		"css-loader": "6.7.3",
 		"esbuild": "0.16.16",
@@ -23,6 +24,10 @@
 		"esbuild-register": "3.4.2",
 		"framer-motion": "8.4.6",
 		"html-webpack-plugin": "5.5.0",
+		"mini-css-extract-plugin": "2.7.2",
+		"postcss": "8.4.21",
+		"postcss-loader": "7.0.2",
+		"postcss-preset-env": "8.0.1",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"sass": "1.57.1",
@@ -44,5 +49,8 @@
 	},
 	"os": [
 		"!win32"
+	],
+	"browserslist": [
+		"Chrome >= 79"
 	]
 }
