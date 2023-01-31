@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useConfig } from 'shared/lib/config';
+import { observer } from 'mobx-react-lite';
+
 import { useBackKeyHandler } from 'shared/lib/hid';
+
+import { LauncherStore } from 'shared/features/launcher';
 
 import { Ribbon, RibbonHandle } from 'features/ribbon';
 
-export const App = () => {
+const launcherStore = new LauncherStore();
+
+export const App = observer(() => {
 	const ribbonRef = useRef<RibbonHandle>(null);
-	const config = useConfig();
 
 	const hideEventTimestamp = useRef<number>(0);
 
@@ -35,11 +39,11 @@ export const App = () => {
 		return () => document.removeEventListener('webOSRelaunch', handler);
 	}, []);
 
-	return config && (
+	return launcherStore.launchPoints && (
 		<Ribbon
 			ref={ribbonRef}
 			onHide={handleHide}
-			launchPoints={config.launchPoints}
+			launchPoints={launcherStore.launchPoints}
 		/>
 	);
-};
+});

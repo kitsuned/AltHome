@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom/client';
 
 import { FocusRoot } from '@please/lrud';
 
-import { ConfigProvider } from 'shared/lib/config';
-
 import { App } from './app';
 
 import './app/styles/global.scss';
@@ -14,9 +12,7 @@ ReactDOM
 	.render(
 		<React.StrictMode>
 			<FocusRoot pointerEvents>
-				<ConfigProvider>
-					<App />
-				</ConfigProvider>
+				<App />
 			</FocusRoot>
 		</React.StrictMode>,
 	);

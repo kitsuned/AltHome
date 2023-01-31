@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react';
 
 import type { MotionProps, TargetAndTransition } from 'framer-motion';
 
-import { LunaAPI } from 'shared/lib/luna';
 import { suppressPropagation } from 'shared/lib/event';
 
 import type { RibbonCardProps } from './ribbon-card.interface';
@@ -16,8 +15,6 @@ export const useRibbonCard = ({ metadata, onOpen }: RibbonCardProps) => {
 	const icon = `./root${metadata.mediumLargeIcon || metadata.largeIcon || metadata.icon}`;
 
 	const handleSelection = useCallback(() => {
-		void LunaAPI.launch(metadata.id);
-
 		onOpen(metadata.id);
 	}, [metadata.id]);
 
