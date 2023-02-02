@@ -8,9 +8,7 @@ import type { Serializable } from 'shared/api/serializable';
 
 type Settings = {
 	reducedMotion: boolean;
-	deep: {
-		counter: number;
-	};
+	wheelVelocityFactor: number;
 };
 
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';
@@ -18,9 +16,7 @@ const KEY = process.env.APP_ID as 'com.kitsuned.althome';
 class SettingsStore implements Serializable<Settings>, Settings {
 	public hydrated: boolean = false;
 	public reducedMotion: boolean = false;
-	public deep = {
-		counter: 0,
-	};
+	public wheelVelocityFactor: number = 1.5;
 
 	private topic = new LunaTopic<{ configs: { [KEY]: Settings } }>('luna://com.webos.service.config/getConfigs', {
 		configNames: [KEY],

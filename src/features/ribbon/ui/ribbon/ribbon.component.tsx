@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 
 import { Reorder, type MotionProps } from 'framer-motion';
 
-import { ribbonService } from 'features/ribbon';
+import { ribbonService, scrollService } from 'features/ribbon';
 
 import { RibbonCard } from '../ribbon-card';
 
@@ -40,6 +40,7 @@ export const Ribbon = observer(() => {
 
 	return (
 		<Reorder.Group
+			ref={scrollService.scrollContainerRef}
 			as='div'
 			axis='x'
 			className={s.group}
