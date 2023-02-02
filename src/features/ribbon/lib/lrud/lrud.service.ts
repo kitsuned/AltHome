@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx';
 import { launcherStore, type LaunchPoint } from 'shared/services/launcher';
 
 import { ribbonService } from '../ribbon';
+import { scrollService } from '../scroll';
 
 const enum SystemKey {
 	Home = 0x3f5,
@@ -35,6 +36,15 @@ class LrudService {
 
 	public focusToNode(launchPointId: string) {
 		this.currentIndex = ribbonService.launchPoints.findIndex(x => x.launchPointId === launchPointId);
+	}
+
+	private focusToFirstVisibleNode() {
+		for (const [index, child] of Array.from(scrollService.container!.children).entries()) {
+			if (child.getBoundingClientRect().left >= 0) {
+				this.currentIndex = index;
+				return;
+			}
+		}
 	}
 
 	private handleKeyDown(event: KeyboardEvent) {
@@ -78,6 +88,8 @@ class LrudService {
 
 	private handleArrow(key: string) {
 		if (this.currentIndex === null) {
+			this.focusToFirstVisibleNode();
+
 			return;
 		}
 
