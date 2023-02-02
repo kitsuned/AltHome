@@ -2,7 +2,7 @@ import { makeAutoObservable, reaction } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
 
-import { LaunchPoint } from '../api/launch-point';
+import type { LaunchPoint } from '../api/launch-point';
 
 type ListLaunchPointsMessage = {
 	launchPoints?: LaunchPoint[];

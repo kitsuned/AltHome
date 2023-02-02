@@ -15,7 +15,6 @@ export class AresPackagerPlugin implements WebpackPluginInstance {
 
 			process.stdout.on('data', data => {
 				logger.info(data.toString().trim());
-
 			});
 
 			process.stderr.on('data', data => {

@@ -1,1 +1,1 @@
-export { LunaTopic, luna } from './luna.service';
+export { luna, LunaTopic } from './model/luna.service';

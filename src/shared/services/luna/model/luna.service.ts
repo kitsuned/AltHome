@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
-import type { LunaMessage, LunaRequestParams, LunaSubscriptionStatus } from './luna.api';
+import type { LunaMessage, LunaRequestParams, LunaSubscriptionStatus } from '../api/luna.api';
 
 export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParams = {}> {
 	public status: LunaSubscriptionStatus = 'pending';
