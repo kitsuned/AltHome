@@ -26,6 +26,10 @@ class LrudService {
 		return this.currentIndex !== null ? ribbonService.launchPoints[this.currentIndex] : null;
 	}
 
+	public get selectedLaunchPointIndex() {
+		return this.currentIndex;
+	}
+
 	public isSelected(launchPoint: LaunchPoint) {
 		return this.selectedLaunchPoint === launchPoint;
 	}

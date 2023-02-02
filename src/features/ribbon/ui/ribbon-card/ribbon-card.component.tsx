@@ -7,7 +7,7 @@ import { MotionProps, Reorder } from 'framer-motion';
 
 import { launcherStore } from 'shared/services/launcher';
 
-import { lrudService, ribbonService } from 'features/ribbon';
+import { lrudService, ribbonService, scrollService } from 'features/ribbon';
 
 import type { RibbonCardProps } from './ribbon-card.interface';
 
@@ -27,7 +27,11 @@ export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 
 	const isSelected = computed(() => lrudService.isSelected(launchPoint)).get();
 
-	const handleMouseOver = useCallback(() => lrudService.focusToNode(launchPoint.launchPointId), [launchPoint]);
+	const handleMouseOver = useCallback(() => {
+		if (!scrollService.isAnimating) {
+			lrudService.focusToNode(launchPoint.launchPointId);
+		}
+	}, [scrollService, launchPoint]);
 
 	const handleClick = useCallback(() => {
 		runInAction(() => {

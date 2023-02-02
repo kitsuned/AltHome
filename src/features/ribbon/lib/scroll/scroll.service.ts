@@ -23,29 +23,61 @@ class ScrollService {
 			{ autoBind: true },
 		);
 
-		this.scrollPosition.on('change', v => {
-			this.container!.scrollLeft = v;
-		});
-
 		when(
 			() => this.container !== null,
 			() => {
 				reaction(
-					() => this.wheelShift,
+					() => lrudService.selectedLaunchPointIndex,
 					() => {
-						animate(this.scrollPosition, this.wheelShift);
-
-						lrudService.blur();
+						this.wheelShift = this.focusedElementPosition;
 					},
+				);
+
+				reaction(
+					() => this.wheelShift,
+					() => animate(this.scrollPosition, this.wheelShift),
 				);
 			},
 		);
+
+		this.scrollPosition.on('change', v => {
+			this.container!.scrollLeft = v;
+		});
 
 		document.addEventListener('wheel', this.handleScroll);
 	}
 
 	public scrollContainerRef(ref: HTMLElement) {
 		this.container = ref;
+	}
+
+	public get isAnimating() {
+		return this.scrollPosition.isAnimating();
+	}
+
+	private get focusedElementPosition() {
+		if (!this.container || lrudService.selectedLaunchPointIndex === null) {
+			return this.container?.scrollLeft ?? 0;
+		}
+
+		const element = this.container.children[lrudService.selectedLaunchPointIndex];
+		const box = element.getBoundingClientRect();
+
+		const { width: viewportWidth } = document.body.getBoundingClientRect();
+
+		if (box.left >= 0 && box.right <= viewportWidth) {
+			return this.container.scrollLeft;
+		}
+
+		if (box.left < 0) {
+			return this.container.scrollLeft + box.left;
+		}
+
+		if (box.right > viewportWidth) {
+			return this.container.scrollLeft + box.right - viewportWidth;
+		}
+
+		return 0;
 	}
 
 	private get shiftThreshold() {
@@ -58,6 +90,8 @@ class ScrollService {
 		this.wheelShift += deltaY * settingsStore.wheelVelocityFactor;
 
 		this.wheelShift = Math.max(0, Math.min(this.shiftThreshold, this.wheelShift));
+
+		lrudService.blur();
 	}
 }
 
