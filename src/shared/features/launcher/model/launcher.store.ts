@@ -5,15 +5,8 @@ import { luna, LunaTopic } from 'shared/services/luna';
 import { LaunchPoint } from '../api/launch-point';
 
 type ListLaunchPointsMessage = {
-	launchPoints: LaunchPoint[];
-} | (LaunchPoint & ({
-	change: 'removed';
-	changeReason: 'appUninstalled';
-} | {
-	change: 'updated';
-	changeReason: 'movedByUser' | string;
-	position: number;
-}));
+	launchPoints?: LaunchPoint[];
+};
 
 class LauncherStore {
 	public launchPoints: LaunchPoint[] = [];
@@ -42,43 +35,31 @@ class LauncherStore {
 		});
 	}
 
-	public async move({ launchPointId }: LaunchPoint, position: number) {
+	public async move(launchPoint: LaunchPoint, position: number) {
+		const from = this.launchPoints.indexOf(launchPoint);
+
+		this.launchPoints.splice(from, 1);
+		this.launchPoints.splice(position, 0, launchPoint);
+
 		return luna('luna://com.webos.service.applicationmanager/moveLaunchPoint', {
-			launchPointId,
+			launchPointId: launchPoint.launchPointId,
 			position,
 		});
 	}
 
 	public async uninstall({ id }: LaunchPoint) {
+		this.launchPoints = this.launchPoints.filter(x => x.id !== id);
+
 		return luna('luna://com.webos.appInstallService/remove', {
 			id,
-		})
+		});
 	}
 
 	private handleMessage() {
-		const message = this.launchPointsMessage.message;
+		const { message } = this.launchPointsMessage;
 
-		if (!message) {
-			return;
-		}
-
-		if ('launchPoints' in message) {
+		if (message?.launchPoints) {
 			this.launchPoints = message.launchPoints.filter(x => x.id !== process.env.APP_ID);
-		}
-
-		if (!('change' in message)) {
-			return;
-		}
-
-		if (message.change === 'removed') {
-			this.launchPoints = this.launchPoints.filter(x => x.launchPointId !== message.launchPointId);
-		}
-
-		if (message.change === 'updated' && message.changeReason === 'movedByUser') {
-			const from = this.launchPoints.findIndex(x => x.launchPointId === message.launchPointId);
-
-			this.launchPoints.splice(from, 1);
-			this.launchPoints.splice(message.position, 0, message);
 		}
 	}
 }
