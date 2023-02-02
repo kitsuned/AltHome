@@ -29,6 +29,8 @@ const motionProps: MotionProps = {
 	initial: 'hide',
 };
 
+const noop = () => {};
+
 export const Ribbon = observer(() => {
 	useEffect(() => {
 		runInAction(() => {
@@ -43,7 +45,7 @@ export const Ribbon = observer(() => {
 			className={s.group}
 			values={ribbonService.launchPoints}
 			animate={ribbonService.controls}
-			onReorder={() => {}}
+			onReorder={noop}
 			{...motionProps}
 		>
 			{ribbonService.launchPoints.map(point => (
