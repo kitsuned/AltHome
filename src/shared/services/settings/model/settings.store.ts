@@ -18,25 +18,17 @@ class SettingsStore implements Serializable<Settings>, Settings {
 	public reducedMotion: boolean = false;
 	public wheelVelocityFactor: number = 1.5;
 
-	private topic = new LunaTopic<{ configs: { [KEY]: Settings } }>('luna://com.webos.service.config/getConfigs', {
+	private topic = new LunaTopic<{ configs?: { [KEY]: Settings } }>('luna://com.webos.service.config/getConfigs', {
 		configNames: [KEY],
 		subscribe: true,
 	});
 
 	public constructor() {
-		makeAutoObservable<SettingsStore, 'topic'>(this, { topic: false }, { autoBind: true });
+		makeAutoObservable(this, {}, { autoBind: true });
 
 		reaction(
 			() => this.topic.message,
-			(message, _, reaction) => {
-				if (!message) {
-					return;
-				}
-
-				this.hydrate(message.configs[KEY]);
-
-				reaction.dispose();
-			},
+			message => this.hydrate(message?.configs?.[KEY] ?? {}),
 		);
 
 		autorun(
@@ -58,7 +50,7 @@ class SettingsStore implements Serializable<Settings>, Settings {
 		return omit(['hydrated', 'topic'], toJS(this));
 	}
 
-	public hydrate(json: Settings) {
+	public hydrate(json: Partial<Settings>) {
 		this.hydrated = true;
 
 		Object.assign(this, json);
