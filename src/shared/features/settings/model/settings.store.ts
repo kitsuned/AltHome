@@ -15,7 +15,7 @@ type Settings = {
 
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';
 
-export class SettingsStore implements Serializable<Settings>, Settings {
+class SettingsStore implements Serializable<Settings>, Settings {
 	public hydrated: boolean = false;
 	public reducedMotion: boolean = false;
 	public deep = {
@@ -68,3 +68,5 @@ export class SettingsStore implements Serializable<Settings>, Settings {
 		Object.assign(this, json);
 	}
 }
+
+export const settingsStore = new SettingsStore();

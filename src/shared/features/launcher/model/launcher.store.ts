@@ -15,7 +15,7 @@ type ListLaunchPointsMessage = {
 	position: number;
 }));
 
-export class LauncherStore {
+class LauncherStore {
 	public launchPoints: LaunchPoint[] = [];
 
 	private launchPointsMessage = new LunaTopic<ListLaunchPointsMessage>('luna://com.webos.service.applicationmanager/listLaunchPoints', {
@@ -35,7 +35,6 @@ export class LauncherStore {
 
 		reaction(() => this.launchPointsMessage.message, this.handleMessage);
 	}
-
 
 	public async launch({ id }: LaunchPoint) {
 		return luna('luna://com.webos.service.applicationmanager/launch', {
@@ -83,3 +82,5 @@ export class LauncherStore {
 		}
 	}
 }
+
+export const launcherStore = new LauncherStore();

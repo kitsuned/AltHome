@@ -1,29 +1,41 @@
-import { memo } from 'react';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react-lite';
 
-import { FocusNode } from '@please/lrud';
+import { MotionProps, Reorder } from 'framer-motion';
 
-import { motion, Reorder } from 'framer-motion';
-
-import { useRibbonCard } from './ribbon-card.lib';
+import { lrudService } from 'features/ribbon';
 
 import type { RibbonCardProps } from './ribbon-card.interface';
 
 import s from './ribbon-card.module.scss';
 
-export const RibbonCard = memo((props: RibbonCardProps): JSX.Element => {
-	const { icon, handleSelection, handleClick, motionMixin } = useRibbonCard(props);
+const motionProps: MotionProps = {
+	variants: {
+		selected: {
+			x: 3.4,
+			height: 270,
+		},
+	},
+};
+
+export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
+	const icon = `./root${launchPoint.mediumLargeIcon || launchPoint.largeIcon || launchPoint.icon}`;
+
+	const isSelected = computed(() => lrudService.isSelected(launchPoint.launchPointId)).get();
 
 	return (
-		<Reorder.Item as='div' value={props.metadata}>
-			<FocusNode
-				elementType={motion.button}
-				className={s.card}
-				onSelected={handleSelection}
-				onClick={handleClick}
-				{...motionMixin}
-			>
-				<img src={icon} className={s.icon} />
-			</FocusNode>
+		<Reorder.Item
+			as='button'
+			value={launchPoint}
+			className={s.card}
+			animate={isSelected ? 'selected' : undefined}
+			style={{
+				// @ts-ignore
+				'--card-color': launchPoint.iconColor,
+			}}
+			{...motionProps}
+		>
+			<img src={icon} className={s.icon} />
 		</Reorder.Item>
 	);
 });

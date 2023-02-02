@@ -15,16 +15,14 @@ declare namespace webOSSystem {
 	function hide(): void;
 }
 
-// declare interface webOSSystem {
+declare global {
+	interface ActivateType {
+		activateType?: 'home' | string;
+	}
 
-// declare global {
-// 	interface ActivateType {
-// 		activateType?: 'home' | string;
-// 	}
-//
-// 	interface Document {
-// 		addEventListener(type: 'webOSRelaunch', listener: (this: Document, event: CustomEvent<ActivateType>) => void): void;
-//
-// 		removeEventListener(type: 'webOSRelaunch', listener: (this: Document, event: CustomEvent<ActivateType>) => void): void;
-// 	}
-// }
+	interface Document {
+		addEventListener(type: 'webOSRelaunch', listener: (this: Document, event: CustomEvent<ActivateType>) => void): void;
+
+		removeEventListener(type: 'webOSRelaunch', listener: (this: Document, event: CustomEvent<ActivateType>) => void): void;
+	}
+}

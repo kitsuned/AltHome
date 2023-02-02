@@ -683,15 +683,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@please/lrud@npm:0.0.23":
-  version: 0.0.23
-  resolution: "@please/lrud@npm:0.0.23"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0
-  checksum: 9b500e24d1f0f3fb4a60bec60d1c464149396b9027992310cea6f3d907ced13a0b64d37c0e9b21ce8b5dd33e3ed9abc5d0b0f72a32c384bf05ebe2553cb20874
-  languageName: node
-  linkType: hard
-
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -2063,7 +2054,6 @@ __metadata:
   dependencies:
     "@babel/generator": 7.20.7
     "@babel/parser": 7.20.13
-    "@please/lrud": 0.0.23
     "@types/babel__generator": 7.6.4
     "@types/node": 18.11.18
     "@types/ramda": 0.28.22
@@ -2076,7 +2066,7 @@ __metadata:
     esbuild: 0.16.16
     esbuild-loader: 2.20.0
     esbuild-register: 3.4.2
-    framer-motion: 8.4.6
+    framer-motion: 9.0.0
     html-webpack-plugin: 5.5.0
     mini-css-extract-plugin: 2.7.2
     mobx: 6.7.0
@@ -3291,9 +3281,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:8.4.6":
-  version: 8.4.6
-  resolution: "framer-motion@npm:8.4.6"
+"framer-motion@npm:9.0.0":
+  version: 9.0.0
+  resolution: "framer-motion@npm:9.0.0"
   dependencies:
     "@emotion/is-prop-valid": ^0.8.2
     "@motionone/dom": ^10.15.3
@@ -3305,7 +3295,7 @@ __metadata:
   dependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  checksum: 243bdca426736ab1804c38a20b9a371dd6f0cc264d5f6a60fa76fd95195a94d3646a7a42e85163fcca057e512371048cdebba44c0b4ee4142bc7fee8fe7faad9
+  checksum: eaafa53fc5e48dc6ea241c6259fa192bd467fb46bda416bf0d0855a81ed48761f66905bb9f39185746c3a39e7bc6c2474a407153bbed553a25e9f3578c624c80
   languageName: node
   linkType: hard
 

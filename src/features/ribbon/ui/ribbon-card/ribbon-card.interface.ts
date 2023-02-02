@@ -1,5 +1,5 @@
-export type RibbonCardProps = {
-	metadata: AltHome.LaunchPoint;
+import type { LaunchPoint } from 'shared/features/launcher';
 
-	onOpen(id: string): void;
+export type RibbonCardProps = {
+	launchPoint: LaunchPoint;
 };

@@ -1,53 +1,51 @@
-import { forwardRef, useRef } from 'react';
+import { useEffect } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
-import { FocusNode } from '@please/lrud';
+import { Reorder, type MotionProps } from 'framer-motion';
 
-import { motion, Reorder } from 'framer-motion';
+import { ribbonService } from 'features/ribbon';
 
 import { RibbonCard } from '../ribbon-card';
-import { RibbonScrollTrigger } from '../ribbon-scroll-trigger';
-
-import { useRibbon, useRibbonScroll } from './ribbon.lib';
-
-import type { RibbonHandle, RibbonProps } from './ribbon.interface';
 
 import s from './ribbon.module.scss';
 
-export const Ribbon = observer(forwardRef<RibbonHandle, RibbonProps>((props, ref): JSX.Element => {
-	const domRef = useRef<HTMLElement>(null);
+const motionProps: MotionProps = {
+	variants: {
+		hide: {
+			y: '105%',
+			transition: {
+				duration: .5,
+			},
+		},
+		show: {
+			y: 1,
+			transition: {
+				ease: 'circOut',
+			},
+		},
+	},
+	initial: 'hide',
+};
 
-	const { motionMixin, handleRootNodeClick, handleApplicationOpen } = useRibbon(ref, domRef, props);
-	const { edge, handleTrigger } = useRibbonScroll(domRef);
+export const Ribbon = observer(() => {
+	useEffect(() => {
+		ribbonService.mounted = true;
+	}, []);
 
 	return (
-		<>
-			<FocusNode
-				ref={domRef}
-				elementType={motion.div}
-				className={s.container}
-				onClick={handleRootNodeClick}
-				{...motionMixin}
-			>
-				<Reorder.Group
-					as='div'
-					axis='x'
-					className={s.group}
-					values={props.launchPoints}
-					onReorder={() => {}}
-				>
-					{props.launchPoints.map(point => (
-						<RibbonCard
-							key={point.id}
-							metadata={point}
-							onOpen={handleApplicationOpen}
-						/>
-					))}
-				</Reorder.Group>
-			</FocusNode>
-
-			<RibbonScrollTrigger hiddenEdge={edge} onTrigger={handleTrigger} />
-		</>
+		<Reorder.Group
+			as='div'
+			axis='x'
+			className={s.group}
+			values={ribbonService.launchPoints}
+			animate={ribbonService.controls}
+			onReorder={() => {}}
+			{...motionProps}
+		>
+			{ribbonService.launchPoints.map(point => (
+				<RibbonCard key={point.id} launchPoint={point} />
+			))}
+		</Reorder.Group>
 	);
-}));
+});

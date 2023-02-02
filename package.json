@@ -10,7 +10,6 @@
 	"devDependencies": {
 		"@babel/generator": "7.20.7",
 		"@babel/parser": "7.20.13",
-		"@please/lrud": "0.0.23",
 		"@types/babel__generator": "7.6.4",
 		"@types/node": "18.11.18",
 		"@types/ramda": "0.28.22",
@@ -23,7 +22,7 @@
 		"esbuild": "0.16.16",
 		"esbuild-loader": "2.20.0",
 		"esbuild-register": "3.4.2",
-		"framer-motion": "8.4.6",
+		"framer-motion": "9.0.0",
 		"html-webpack-plugin": "5.5.0",
 		"mini-css-extract-plugin": "2.7.2",
 		"mobx": "6.7.0",
