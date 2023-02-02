@@ -9,5 +9,5 @@
 	"iconColor": "#2f3e46",
 	"noSplashOnLaunch": true,
 	"disableBackHistoryAPI": true,
-	"defaultWindowType": "floating"
+	"defaultWindowType": "popup"
 }
