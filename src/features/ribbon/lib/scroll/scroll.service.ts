@@ -2,7 +2,7 @@ import { makeAutoObservable, observable, reaction, when } from 'mobx';
 
 import { animate, motionValue } from 'framer-motion';
 
-import { settingsStore } from 'shared/features/settings';
+import { settingsStore } from 'shared/services/settings';
 
 class ScrollService {
 	public container: HTMLElement | null = null;

@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 
-import { launcherStore, type LaunchPoint } from 'shared/features/launcher';
+import { launcherStore, type LaunchPoint } from 'shared/services/launcher';
 
 import { ribbonService } from '../ribbon';
 

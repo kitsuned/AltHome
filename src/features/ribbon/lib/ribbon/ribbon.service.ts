@@ -2,7 +2,7 @@ import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { animationControls } from 'framer-motion';
 
-import { launcherStore } from 'shared/features/launcher';
+import { launcherStore } from 'shared/services/launcher';
 
 class RibbonService {
 	public mounted: boolean = false;

@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 
 import { MotionProps, Reorder } from 'framer-motion';
 
-import { launcherStore } from 'shared/features/launcher';
+import { launcherStore } from 'shared/services/launcher';
 
 import { lrudService, ribbonService } from 'features/ribbon';
 
