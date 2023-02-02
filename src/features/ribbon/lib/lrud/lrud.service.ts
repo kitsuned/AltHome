@@ -13,7 +13,7 @@ const enum SystemKey {
 }
 
 class LrudService {
-	private currentIndex = 0;
+	private currentIndex: number | null = 0;
 
 	public constructor() {
 		makeAutoObservable(this, {}, { autoBind: true });
@@ -22,11 +22,15 @@ class LrudService {
 	}
 
 	public get selectedLaunchPoint() {
-		return ribbonService.launchPoints[this.currentIndex];
+		return this.currentIndex !== null ? ribbonService.launchPoints[this.currentIndex] : null;
 	}
 
 	public isSelected(launchPoint: LaunchPoint) {
 		return this.selectedLaunchPoint === launchPoint;
+	}
+
+	public blur() {
+		this.currentIndex = null;
 	}
 
 	public focusToNode(launchPointId: string) {
@@ -46,19 +50,19 @@ class LrudService {
 		if (event.keyCode === SystemKey.Home || event.key === 'GoBack' || event.key === 'Enter') {
 			ribbonService.visible = false;
 
-			if (event.key === 'Enter') {
-				void launcherStore.launch(ribbonService.launchPoints[this.currentIndex]);
+			if (event.key === 'Enter' && this.selectedLaunchPoint) {
+				void launcherStore.launch(this.selectedLaunchPoint);
 			}
 		}
 
-		if (event.keyCode === SystemKey.Yellow || event.keyCode === SystemKey.Blue) {
-			let newPosition = this.currentIndex;
+		if (this.selectedLaunchPoint && (event.keyCode === SystemKey.Yellow || event.keyCode === SystemKey.Blue)) {
+			let newPosition = this.currentIndex!;
 
-			if (event.keyCode === SystemKey.Yellow && this.currentIndex > 0) {
+			if (event.keyCode === SystemKey.Yellow && this.currentIndex! > 0) {
 				newPosition--;
 			}
 
-			if (event.keyCode === SystemKey.Blue && this.currentIndex !== ribbonService.launchPoints.length - 1) {
+			if (event.keyCode === SystemKey.Blue && this.currentIndex! !== ribbonService.launchPoints.length - 1) {
 				newPosition++;
 			}
 
@@ -73,6 +77,10 @@ class LrudService {
 	}
 
 	private handleArrow(key: string) {
+		if (this.currentIndex === null) {
+			return;
+		}
+
 		if (key === 'ArrowLeft' && this.currentIndex !== 0) {
 			this.currentIndex--;
 		}

@@ -4,6 +4,8 @@ import { animate, motionValue } from 'framer-motion';
 
 import { settingsStore } from 'shared/services/settings';
 
+import { lrudService } from '../lrud';
+
 class ScrollService {
 	public container: HTMLElement | null = null;
 
@@ -30,7 +32,11 @@ class ScrollService {
 			() => {
 				reaction(
 					() => this.wheelShift,
-					() => animate(this.scrollPosition, this.wheelShift),
+					() => {
+						animate(this.scrollPosition, this.wheelShift);
+
+						lrudService.blur();
+					},
 				);
 			},
 		);
