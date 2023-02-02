@@ -16,15 +16,7 @@ class LauncherStore {
 	});
 
 	public constructor() {
-		makeAutoObservable(
-			this,
-			{
-				launch: false,
-				move: false,
-				uninstall: false,
-			},
-			{ autoBind: true },
-		);
+		makeAutoObservable(this, { launch: false }, { autoBind: true });
 
 		reaction(() => this.launchPointsMessage.message, this.handleMessage);
 	}
