@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
 import { Reorder, type MotionProps } from 'framer-motion';
@@ -30,7 +31,9 @@ const motionProps: MotionProps = {
 
 export const Ribbon = observer(() => {
 	useEffect(() => {
-		ribbonService.mounted = true;
+		runInAction(() => {
+			ribbonService.mounted = true;
+		});
 	}, []);
 
 	return (

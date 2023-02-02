@@ -1,4 +1,4 @@
-import { makeAutoObservable, reaction, when } from 'mobx';
+import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { animationControls } from 'framer-motion';
 
@@ -41,7 +41,9 @@ class RibbonService {
 
 		document.addEventListener('webOSRelaunch', () => {
 			if (!this.transition) {
-				this.visible = true;
+				runInAction(() => {
+					this.visible = true;
+				});
 			}
 		});
 	}
