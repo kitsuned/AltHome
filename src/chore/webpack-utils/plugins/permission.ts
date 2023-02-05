@@ -23,13 +23,10 @@ export class PermissionPlugin implements WebpackPluginInstance {
 				});
 				const header = buffer.readUInt16LE();
 
-				if (header !== this.shebangMagicHeader) {
-					await handle.close();
-
-					continue;
+				if (header === this.shebangMagicHeader) {
+					await handle.chmod(this.mask);
 				}
 
-				await handle.chmod(this.mask);
 				await handle.close();
 			}
 		});
