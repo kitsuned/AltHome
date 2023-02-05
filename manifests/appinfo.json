@@ -10,5 +10,5 @@
 	"noSplashOnLaunch": true,
 	"disableBackHistoryAPI": true,
 	"visible": false,
-	"defaultWindowType": "popup"
+	"defaultWindowType": "floating"
 }
