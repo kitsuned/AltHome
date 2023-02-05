@@ -19,7 +19,9 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 		this.bridge.onservicecallback = this.handleCallback;
 
-		this.bridge.call(this.uri, JSON.stringify(this.params ?? {}));
+		this.bridge.call(this.uri, JSON.stringify(this.params ?? {
+			subscribe: true,
+		}));
 	}
 
 	private handleCallback(serialized: string) {

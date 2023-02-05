@@ -11,9 +11,7 @@ type ListLaunchPointsMessage = {
 class LauncherStore {
 	public launchPoints: LaunchPoint[] = [];
 
-	private launchPointsMessage = new LunaTopic<ListLaunchPointsMessage>('luna://com.webos.service.applicationmanager/listLaunchPoints', {
-		subscribe: true,
-	});
+	private launchPointsMessage = new LunaTopic<ListLaunchPointsMessage>('luna://com.webos.service.applicationmanager/listLaunchPoints');
 
 	public constructor() {
 		makeAutoObservable(this, { launch: false }, { autoBind: true });
