@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, reaction } from 'mobx';
 
 import { launcherStore, type LaunchPoint } from 'shared/services/launcher';
 
@@ -18,6 +18,15 @@ class LrudService {
 
 	public constructor() {
 		makeAutoObservable(this, {}, { autoBind: true });
+
+		reaction(
+			() => ribbonService.launchPoints.length,
+			count => {
+				if (this.currentIndex !== null && count <= this.currentIndex) {
+					this.currentIndex = count - 1;
+				}
+			},
+		);
 
 		document.addEventListener('keydown', this.handleKeyDown);
 	}
