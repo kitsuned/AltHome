@@ -1,6 +1,4 @@
-import { autorun, makeAutoObservable, reaction, toJS } from 'mobx';
-
-import { omit } from 'ramda';
+import { makeAutoObservable, reaction, toJS } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
 
@@ -14,7 +12,6 @@ type Settings = {
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';
 
 class SettingsStore implements Serializable<Settings>, Settings {
-	public hydrated: boolean = false;
 	public reducedMotion: boolean = false;
 	public wheelVelocityFactor: number = 1.5;
 
@@ -31,28 +28,23 @@ class SettingsStore implements Serializable<Settings>, Settings {
 			message => this.hydrate(message?.configs?.[KEY] ?? {}),
 		);
 
-		autorun(
-			() => {
-				if (!this.hydrated) {
-					return;
-				}
-
-				void luna('luna://com.webos.service.config/setConfigs', {
-					configs: {
-						[KEY]: this.serialize(),
-					},
-				});
-			},
+		reaction(
+			() => this.serialize(),
+			serialized => luna('luna://com.webos.service.config/setConfigs', {
+				configs: {
+					[KEY]: serialized,
+				},
+			}),
 		);
 	}
 
 	public serialize(): Settings {
-		return omit(['hydrated', 'topic'], toJS(this));
+		const { topic: _, ...settings } = toJS(this);
+
+		return settings;
 	}
 
 	public hydrate(json: Partial<Settings>) {
-		this.hydrated = true;
-
 		Object.assign(this, json);
 	}
 }
