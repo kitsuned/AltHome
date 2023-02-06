@@ -20,7 +20,7 @@ class RibbonService {
 		when(
 			() => this.mounted && this.launchPoints.length !== 0,
 			() => {
-				this.visible = true;
+				this.visible = webOSSystem.launchReason !== 'preload';
 			},
 		);
 
