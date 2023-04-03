@@ -1,18 +1,34 @@
-use crate::routines::memory_manager;
+use serde::Deserialize;
 
-#[cfg(feature = "sandbox")]
-use crate::sandbox::chroot;
-
-#[cfg(feature = "sandbox")]
-mod sandbox;
+use crate::routines::{elevator, keyfilter, memory_manager};
 
 mod routines;
 mod rewire;
+mod luna;
+
+#[derive(Deserialize, Clone, Debug)]
+#[serde(rename_all = "camelCase")]
+struct AltHomeSettings {
+    #[serde(default = "low_memory")]
+    memory_quirks: bool,
+}
+
+fn low_memory() -> bool {
+    // TODO implement checks
+    true
+}
 
 fn main() {
-    #[cfg(feature = "sandbox")]
-    chroot().expect("Failed to chroot in sandbox.");
+    elevator::elevate("com.kitsuned.althome")
+        .expect("Failed to elevate app.");
 
-    memory_manager::rewire()
-        .expect("Failed to rewire Memory Manager configuration.");
+    keyfilter::rewire()
+        .expect("Failed to rewire KeyFilters configuration.");
+
+    let config: AltHomeSettings = luna::configd::get("com.kitsuned.althome").unwrap();
+
+    if config.memory_quirks {
+        memory_manager::rewire()
+            .expect("Failed to rewire Memory Manager configuration.");
+    }
 }

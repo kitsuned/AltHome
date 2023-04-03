@@ -1,6 +1,6 @@
 use std::{fs, io};
 use std::error::Error;
-use std::process::{Command, ExitStatus, Stdio};
+use std::process::{Command, Stdio};
 
 use serde::Serialize;
 use serde::de::DeserializeOwned;
@@ -40,7 +40,7 @@ pub fn bind(_source: &str, _target: &str) -> Result<(), Box<dyn Error>> {
     unimplemented!();
 }
 
-fn create_root_directory(file_path: &str) -> Result<(), io::Error> {
+pub fn create_root_directory(file_path: &str) -> Result<(), io::Error> {
     use std::path::PathBuf;
 
     let root = PathBuf::from(file_path)
@@ -76,22 +76,23 @@ pub fn rewire<T, F>(path: &str, f: F) -> Result<(), Box<dyn Error>>
     }
 }
 
-pub fn restart_unit(unit: &str) -> Result<ExitStatus, Box<dyn Error>> {
-    let status = Command::new("systemctl")
+pub fn restart_unit(unit: &str) -> Result<(), Box<dyn Error>> {
+    Command::new("systemctl")
         .arg("--no-block")
         .arg("restart")
         .arg(unit)
         .stderr(Stdio::null())
-        .status()?;
+        .spawn()?;
 
     println!("Unit {} restarted.", unit);
 
-    Ok(status)
+    Ok(())
 }
 
 pub fn kill_all(process_name: &str) {
     Command::new("killall")
         .arg(process_name)
-        .status()
+        .stderr(Stdio::null())
+        .spawn()
         .ok();
 }

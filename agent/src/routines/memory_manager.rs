@@ -14,7 +14,7 @@ struct Manifest {
     keep_alive_extra: Vec<String>,
 
     #[serde(flatten)]
-    extra: HashMap<String, Value>,
+    rest: HashMap<String, Value>,
 }
 
 pub fn rewire() -> Result<(), Box<dyn Error>> {
