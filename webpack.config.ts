@@ -7,12 +7,10 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 import {
 	JsonTransformer,
-	AresPackagerPlugin,
-	WebOSBrewManifestPlugin,
 	WebpackMultipleConfigurations,
 } from 'chore/webpack-utils';
 
-import { name, version, description } from './package.json';
+import { name, version } from './package.json';
 
 const transformer = new JsonTransformer({
 	APP_ID: name,
@@ -30,6 +28,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 			hot: true,
 		},
 		output: {
+			clean: true,
 			filename: 'app.js',
 		},
 		resolve: {
@@ -105,21 +104,5 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 				],
 			}),
 		],
-	}),
-	env => ({
-		name: 'ares',
-		entry: {},
-		dependencies: [
-			'app',
-		],
-		plugins: !env?.WEBPACK_SERVE ? [
-			new AresPackagerPlugin(),
-			new WebOSBrewManifestPlugin({
-				appDescription: description,
-				sourceUrl: 'https://github.com/kitsuned/AltHome',
-				iconUri: './manifests/icon320.png',
-				rootRequired: true,
-			}),
-		] : [],
 	}),
 ];

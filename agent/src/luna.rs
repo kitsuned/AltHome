@@ -1,5 +1,5 @@
 use std::error::Error;
-use std::process::Command;
+use std::process::{Command, Stdio};
 use serde::{Serialize, de::DeserializeOwned};
 
 pub fn send<T, R>(url: &str, message: T) -> Result<R, Box<dyn Error>>
@@ -31,6 +31,7 @@ pub fn control(action: LunaHubControlAction) {
             LunaHubControlAction::ScanServices => "scan-services",
             LunaHubControlAction::ScanVolatileDirs => "scan-volatile-dirs"
         })
+        .stdout(Stdio::null())
         .spawn()
         .unwrap();
 }
