@@ -1,4 +1,4 @@
-import { BannerPlugin, ProvidePlugin, DefinePlugin } from 'webpack';
+import { ProvidePlugin, DefinePlugin } from 'webpack';
 
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -8,7 +8,6 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import {
 	JsonTransformer,
 	AresPackagerPlugin,
-	PermissionPlugin,
 	WebOSBrewManifestPlugin,
 	WebpackMultipleConfigurations,
 } from 'chore/webpack-utils';
@@ -21,44 +20,6 @@ const transformer = new JsonTransformer({
 });
 
 export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
-	{
-		name: 'installer',
-		target: 'node8',
-		mode: 'production',
-		entry: './src/installer/index.ts',
-		output: {
-			filename: 'install',
-			clean: true,
-		},
-		resolve: {
-			extensions: [
-				'.ts',
-				'.js',
-			],
-		},
-		module: {
-			rules: [
-				{
-					test: /.ts$/,
-					loader: 'esbuild-loader',
-					options: {
-						loader: 'ts',
-						target: 'node8',
-					},
-				},
-			],
-		},
-		plugins: [
-			new DefinePlugin({
-				'process.env.APP_ID': JSON.stringify(name),
-			}),
-			new BannerPlugin({
-				banner: '#!/usr/bin/env node',
-				raw: true,
-			}),
-			new PermissionPlugin(),
-		],
-	},
 	(_, argv) => ({
 		name: 'app',
 		target: 'web',
@@ -150,7 +111,6 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 		entry: {},
 		dependencies: [
 			'app',
-			'installer',
 		],
 		plugins: !env?.WEBPACK_SERVE ? [
 			new AresPackagerPlugin(),
