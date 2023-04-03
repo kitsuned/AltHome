@@ -1,6 +1,8 @@
+use std::env::{current_dir, current_exe, set_current_dir};
+use std::io;
 use serde::Deserialize;
 
-use crate::routines::{elevator, keyfilter, memory_manager};
+use crate::routines::{elevator, keyfilter, memory_manager, root_syml};
 
 mod routines;
 mod rewire;
@@ -18,9 +20,18 @@ fn low_memory() -> bool {
     true
 }
 
+fn setup_env() -> Result<(), io::Error> {
+    set_current_dir(current_exe().unwrap().parent().unwrap())
+}
+
 fn main() {
+    setup_env().unwrap();
+
     elevator::elevate("com.kitsuned.althome")
         .expect("Failed to elevate app.");
+
+    root_syml::create_symlink()
+        .expect("Failed to create symbolic link.");
 
     keyfilter::rewire()
         .expect("Failed to rewire KeyFilters configuration.");
