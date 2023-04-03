@@ -6,6 +6,7 @@ import { Compiler, WebpackPluginInstance } from 'webpack';
 export class PermissionPlugin implements WebpackPluginInstance {
 	static readonly pluginName = 'permission-plugin';
 	private readonly shebangMagicHeader = 0x2123;
+	private readonly elfMagicHeader = 0x464c457f;
 	private readonly mask = 0o755;
 
 	apply(compiler: Compiler) {
@@ -19,11 +20,11 @@ export class PermissionPlugin implements WebpackPluginInstance {
 
 				const handle = await open(path);
 				const { buffer } = await handle.read({
-					length: 2,
+					length: 4,
 				});
-				const header = buffer.readUInt16LE();
+				const header = buffer.readUInt32LE();
 
-				if (header === this.shebangMagicHeader) {
+				if (header === this.elfMagicHeader || (header & 0xffff) === this.shebangMagicHeader) {
 					await handle.chmod(this.mask);
 				}
 

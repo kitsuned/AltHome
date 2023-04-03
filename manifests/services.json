@@ -1,0 +1,11 @@
+{
+	"id": "@APP_ID@.service",
+	"description": "@APP_ID@ service",
+	"engine": "native",
+	"executable": "service",
+	"services": [
+		{
+			"name": "@APP_ID@.service"
+		}
+	]
+}
