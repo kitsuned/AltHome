@@ -5,14 +5,14 @@ import { luna, LunaTopic } from 'shared/services/luna';
 import type { Serializable } from 'shared/api/serializable';
 
 type Settings = {
-	reducedMotion: boolean;
+	memoryQuirks: boolean;
 	wheelVelocityFactor: number;
 };
 
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';
 
 class SettingsStore implements Serializable<Settings>, Settings {
-	public reducedMotion: boolean = false;
+	public memoryQuirks: boolean = true;
 	public wheelVelocityFactor: number = 1.5;
 
 	private topic = new LunaTopic<{ configs?: { [KEY]: Settings } }>('luna://com.webos.service.config/getConfigs', {
