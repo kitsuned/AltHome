@@ -1,8 +1,6 @@
-import { makeAutoObservable, reaction, toJS } from 'mobx';
+import { comparer, makeAutoObservable, reaction, toJS, when } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
-
-import type { Serializable } from 'shared/api/serializable';
 
 type Settings = {
 	memoryQuirks: boolean;
@@ -11,7 +9,9 @@ type Settings = {
 
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';
 
-class SettingsStore implements Serializable<Settings>, Settings {
+class SettingsStore implements Settings {
+	public hydrated: boolean = false;
+
 	public memoryQuirks: boolean = true;
 	public wheelVelocityFactor: number = 1.5;
 
@@ -24,27 +24,34 @@ class SettingsStore implements Serializable<Settings>, Settings {
 		makeAutoObservable(this, {}, { autoBind: true });
 
 		reaction(
-			() => this.topic.message,
-			message => this.hydrate(message?.configs?.[KEY] ?? {}),
+			() => this.topic.message?.configs?.[KEY],
+			settings => this.hydrate(settings ?? {}),
 		);
 
-		reaction(
-			() => this.serialize(),
-			serialized => luna('luna://com.webos.service.config/setConfigs', {
-				configs: {
-					[KEY]: serialized,
-				},
-			}),
+		when(
+			() => this.hydrated,
+			() =>
+				reaction(
+					() => this.serialized,
+					serialized => luna('luna://com.webos.service.config/setConfigs', {
+						configs: {
+							[KEY]: serialized,
+						},
+					}),
+					{ equals: comparer.structural },
+				),
 		);
 	}
 
-	public serialize(): Settings {
-		const { topic: _, ...settings } = toJS(this);
+	public get serialized(): Settings {
+		const { topic, hydrated, ...settings } = toJS(this);
 
 		return settings;
 	}
 
 	public hydrate(json: Partial<Settings>) {
+		this.hydrated = true;
+
 		Object.assign(this, json);
 	}
 }
