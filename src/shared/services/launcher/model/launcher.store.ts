@@ -1,6 +1,7 @@
-import { makeAutoObservable, reaction } from 'mobx';
+import { makeAutoObservable, observable, reaction, when } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
+import { settingsStore } from 'shared/services/settings';
 
 import type { LaunchPoint } from '../api/launch-point';
 
@@ -16,7 +17,7 @@ type ListLaunchPointsMessage = {
 }));
 
 class LauncherStore {
-	public launchPoints: LaunchPoint[] = [];
+	public availableLaunchPoints = observable.map<string, LaunchPoint>();
 
 	private launchPointsMessage = new LunaTopic<ListLaunchPointsMessage>('luna://com.webos.service.applicationmanager/listLaunchPoints');
 
@@ -24,6 +25,26 @@ class LauncherStore {
 		makeAutoObservable(this, { launch: false }, { autoBind: true });
 
 		reaction(() => this.launchPointsMessage.message, this.handleMessage);
+
+		when(
+			() => settingsStore.hydrated && Boolean(this.launchPointsMessage.message),
+			() => {
+				if (settingsStore.order.length === 0) {
+					settingsStore.order = this.launchPoints.map(x => x.id)
+						.filter(id => !id.startsWith('com.webos'));
+				}
+
+				if (settingsStore.order.length === 0) {
+					settingsStore.order = this.launchPoints.map(x => x.id);
+				}
+			},
+		);
+	}
+
+	public get launchPoints(): LaunchPoint[] {
+		return settingsStore.order
+			.map(id => this.availableLaunchPoints.get(id))
+			.filter((lp): lp is LaunchPoint => lp !== undefined);
 	}
 
 	public async launch({ id }: LaunchPoint) {
@@ -32,30 +53,21 @@ class LauncherStore {
 		});
 	}
 
-	public async move(launchPoint: LaunchPoint, position: number) {
-		this.optimisticMove(launchPoint, position);
+	public async move({ id }: LaunchPoint, position: number) {
+		const from = settingsStore.order.indexOf(id);
 
-		return luna('luna://com.webos.service.applicationmanager/moveLaunchPoint', {
-			launchPointId: launchPoint.launchPointId,
-			position,
-		});
+		if (from !== position) {
+			settingsStore.order.splice(from, 1);
+			settingsStore.order.splice(position, 0, id);
+		}
 	}
 
 	public async uninstall({ id }: LaunchPoint) {
-		this.launchPoints = this.launchPoints.filter(x => x.id !== id);
+		this.availableLaunchPoints.delete(id);
 
 		return luna('luna://com.webos.appInstallService/remove', {
 			id,
 		});
-	}
-
-	private optimisticMove(launchPoint: LaunchPoint, position: number) {
-		const from = this.launchPoints.indexOf(launchPoint);
-
-		if (from !== position) {
-			this.launchPoints.splice(from, 1);
-			this.launchPoints.splice(position, 0, launchPoint);
-		}
 	}
 
 	private handleMessage() {
@@ -66,7 +78,7 @@ class LauncherStore {
 		}
 
 		if ('launchPoints' in message) {
-			this.launchPoints = message.launchPoints.filter(x => x.id !== process.env.APP_ID);
+			this.availableLaunchPoints.replace(message.launchPoints.map(x => [x.id, x]));
 		}
 
 		if (!('change' in message)) {
@@ -74,21 +86,19 @@ class LauncherStore {
 		}
 
 		if (message.change === 'added') {
-			this.launchPoints.push(message);
-		}
+			this.availableLaunchPoints.set(message.id, message);
 
-		if (message.change === 'removed') {
-			this.launchPoints = this.launchPoints.filter(x => x.id !== message.id);
+			if (settingsStore.addNewApps) {
+				settingsStore.order.push(message.id);
+			}
 		}
 
 		if (message.change === 'updated') {
-			const curr = this.launchPoints.find(x => x.id === message.id)!;
+			this.availableLaunchPoints.set(message.id, message);
+		}
 
-			if (message.changeReason !== 'movedByUser') {
-				Object.assign(curr, message);
-			} else {
-				this.optimisticMove(curr, message.position);
-			}
+		if (message.change === 'removed') {
+			this.availableLaunchPoints.delete(message.id);
 		}
 	}
 }
