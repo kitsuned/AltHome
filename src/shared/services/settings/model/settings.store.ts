@@ -2,18 +2,17 @@ import { comparer, makeAutoObservable, reaction, toJS, when } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
 
-type Settings = {
-	memoryQuirks: boolean;
-	wheelVelocityFactor: number;
-};
-
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';
 
-class SettingsStore implements Settings {
+type Settings = Omit<SettingsStore, 'hydrated'>;
+
+class SettingsStore {
 	public hydrated: boolean = false;
 
 	public memoryQuirks: boolean = true;
 	public wheelVelocityFactor: number = 1.5;
+	public addNewApps: boolean = true;
+	public order: string[] = [];
 
 	private topic = new LunaTopic<{ configs?: { [KEY]: Settings } }>('luna://com.webos.service.config/getConfigs', {
 		configNames: [KEY],
@@ -43,13 +42,13 @@ class SettingsStore implements Settings {
 		);
 	}
 
-	public get serialized(): Settings {
+	private get serialized(): Settings {
 		const { topic, hydrated, ...settings } = toJS(this);
 
 		return settings;
 	}
 
-	public hydrate(json: Partial<Settings>) {
+	private hydrate(json: Partial<Settings>) {
 		this.hydrated = true;
 
 		Object.assign(this, json);
