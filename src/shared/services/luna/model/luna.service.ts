@@ -1,17 +1,23 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, reaction } from 'mobx';
 
-import type { LunaMessage, LunaRequestParams, LunaSubscriptionStatus } from '../api/luna.api';
+import type { LunaMessage, LunaRequestParams } from '../api/luna.api';
 
 export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParams = {}> {
-	public status: LunaSubscriptionStatus = 'pending';
-	public message?: LunaMessage<T>;
+	public message: LunaMessage<T> | null = null;
 
 	private bridge!: PalmServiceBridge;
 
 	public constructor(private readonly uri: string, readonly params?: P) {
-		makeAutoObservable(this, {}, { autoBind: true });
+		makeAutoObservable<LunaTopic<T>, 'bridge'>(this, { bridge: false }, { autoBind: true });
 
 		this.subscribe();
+
+		reaction(
+			() => this.message,
+			message => console.log('<*-', uri, message),
+		);
+
+		console.log('<!>', uri);
 	}
 
 	private subscribe() {
@@ -26,8 +32,6 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 	private handleCallback(serialized: string) {
 		this.message = JSON.parse(serialized);
-
-		this.status = this.message?.returnValue ? 'subscribed' : 'failed';
 	}
 }
 

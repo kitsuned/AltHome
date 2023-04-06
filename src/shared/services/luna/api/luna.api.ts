@@ -1,5 +1,3 @@
-export type LunaSubscriptionStatus = 'pending' | 'subscribed' | 'failed';
-
 export type LunaMessage<T extends Record<string, any> = {}> = T & {
 	returnValue: boolean;
 };
