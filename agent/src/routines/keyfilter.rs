@@ -1,5 +1,6 @@
 use std::fs;
 use std::error::Error;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use serde::{Serialize, Deserialize};
 use crate::luna;
@@ -33,6 +34,15 @@ fn get_patched_policies() -> Result<Vec<KeyFilterPolicy>, Box<dyn Error>> {
         .find(|x| x.handler == "handleSystemKeys")
         .unwrap()
         .file = CUSTOM_KF.to_string();
+
+    sm_config.key_filters.push(KeyFilterPolicy {
+        file: CUSTOM_KF.to_string(),
+        handler: String::from("nonce") + SystemTime::now()
+            .duration_since(UNIX_EPOCH)?
+            .as_millis()
+            .to_string()
+            .as_str(),
+    });
 
     Ok(sm_config.key_filters)
 }
