@@ -1,0 +1,104 @@
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+
+import { motion } from 'framer-motion';
+
+import { arrow, FloatingArrow, offset, shift, useFloating } from '@floating-ui/react';
+
+import { useSunbeam } from 'react-sunbeam';
+
+import { lrudService } from 'features/ribbon/lib/lrud';
+
+import { MenuAction } from '../../lib/ribbon';
+
+import { RibbonContextMenuAction } from '../ribbon-context-menu-action';
+
+import { RibbonContextMenuProps } from './ribbon-context-menu.interface';
+
+import s from './ribbon-context-menu.module.scss';
+
+export const RibbonContextMenu = ({ cardRef, onSelect }: RibbonContextMenuProps): JSX.Element => {
+	const { moveFocusUp, moveFocusDown } = useSunbeam();
+
+	const [selectedAction, setAction] = useState<MenuAction>(MenuAction.Move);
+
+	const keyReleasedRef = useRef<boolean>(false);
+	const menuRef = useRef<HTMLDivElement>(null);
+	const arrowRef = useRef<SVGSVGElement>(null);
+
+	const { strategy, x, y, refs, context } = useFloating({
+		placement: 'top',
+		middleware: [
+			offset({ crossAxis: 21, mainAxis: 16 }),
+			shift(),
+			arrow({ element: arrowRef }),
+		],
+	});
+
+	const handleKeyUp = useCallback(() => {
+		keyReleasedRef.current = true;
+	}, []);
+
+	const handleKeyDown = useCallback((event: KeyboardEvent) => {
+		event.stopPropagation();
+		event.stopImmediatePropagation();
+
+		if (!keyReleasedRef.current) {
+			return;
+		}
+
+		switch (event.key) {
+			case 'ArrowRight':
+			case 'ArrowLeft':
+			case 'GoBack':
+				lrudService.closeMenu();
+				return;
+			case 'ArrowUp':
+				moveFocusUp();
+				return;
+			case 'ArrowDown':
+				moveFocusDown();
+				return;
+			case 'Enter':
+				onSelect(selectedAction);
+				return;
+		}
+	}, [selectedAction]);
+
+	useLayoutEffect(() => {
+		menuRef.current?.focus();
+		refs.setReference(cardRef.current);
+	}, [refs, cardRef]);
+
+	useEffect(() => {
+		menuRef.current?.addEventListener('keydown', handleKeyDown);
+		menuRef.current?.addEventListener('keyup', handleKeyUp);
+
+		return () => {
+			menuRef.current?.removeEventListener('keydown', handleKeyDown);
+			menuRef.current?.removeEventListener('keyup', handleKeyUp);
+		};
+	}, [handleKeyDown]);
+
+	return (
+		<motion.div
+			ref={refs.setFloating}
+			className={s.container}
+			initial={{ y: 20, opacity: 0 }}
+			animate={{ y: 0, opacity: 1 }}
+			exit={{ y: -20, opacity: 0 }}
+			style={{
+				position: strategy,
+				top: y ?? 0,
+				left: x ?? 0,
+			}}
+		>
+			<div ref={menuRef} tabIndex={0} className={s.menu}>
+				<RibbonContextMenuAction action={MenuAction.Move} onSelect={setAction} />
+				<RibbonContextMenuAction action={MenuAction.Hide} onSelect={setAction} />
+				<RibbonContextMenuAction action={MenuAction.Uninstall} onSelect={setAction} />
+			</div>
+
+			<FloatingArrow ref={arrowRef} context={context} className={s.arrow} />
+		</motion.div>
+	);
+};

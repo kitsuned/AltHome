@@ -1,4 +1,4 @@
-import { makeAutoObservable, reaction } from 'mobx';
+import { autorun, makeAutoObservable, reaction } from 'mobx';
 
 import { launcherStore, type LaunchPoint } from 'shared/services/launcher';
 
@@ -14,10 +14,18 @@ const enum SystemKey {
 }
 
 class LrudService {
-	private currentIndex: number | null = 0;
+	private currentIndex: number | null = null;
+	private selectDownFiredCounter: number = 0;
+
+	public moving: boolean = false;
+	public showContextMenu: boolean = false;
 
 	public constructor() {
-		makeAutoObservable(this, {}, { autoBind: true });
+		makeAutoObservable<LrudService, 'selectDownFiredCounter'>(
+			this,
+			{ selectDownFiredCounter: false },
+			{ autoBind: true },
+		);
 
 		reaction(
 			() => ribbonService.launchPoints.length,
@@ -29,6 +37,7 @@ class LrudService {
 		);
 
 		document.addEventListener('keydown', this.handleKeyDown);
+		document.addEventListener('keyup', this.handleKeyUp);
 	}
 
 	public get selectedLaunchPoint() {
@@ -51,6 +60,14 @@ class LrudService {
 		this.currentIndex = ribbonService.launchPoints.findIndex(x => x.launchPointId === launchPointId);
 	}
 
+	public closeMenu() {
+		this.showContextMenu = false;
+	}
+
+	public enableMoveMode() {
+		this.moving = true;
+	}
+
 	private focusToFirstVisibleNode() {
 		for (const [index, child] of Array.from(scrollService.container!.children).entries()) {
 			if (child.getBoundingClientRect().left >= 0) {
@@ -70,33 +87,43 @@ class LrudService {
 			return;
 		}
 
-		if (event.keyCode === SystemKey.Home || event.key === 'GoBack' || event.key === 'Enter') {
-			ribbonService.visible = false;
+		if (event.key === 'GoBack' && this.showContextMenu) {
+			this.showContextMenu = false;
 
-			if (event.key === 'Enter' && this.selectedLaunchPoint) {
-				void launcherStore.launch(this.selectedLaunchPoint);
-			}
+			return;
 		}
 
-		if (this.selectedLaunchPoint && (event.keyCode === SystemKey.Yellow || event.keyCode === SystemKey.Blue)) {
-			let newPosition = this.currentIndex!;
+		if (event.key === 'Enter') {
+			if (this.moving) {
+				this.moving = false;
 
-			if (event.keyCode === SystemKey.Yellow && this.currentIndex! > 0) {
-				newPosition--;
-			}
-
-			if (event.keyCode === SystemKey.Blue && this.currentIndex! !== ribbonService.launchPoints.length - 1) {
-				newPosition++;
-			}
-
-			if (newPosition === this.currentIndex) {
 				return;
 			}
 
-			void launcherStore.move(this.selectedLaunchPoint, newPosition);
+			this.selectDownFiredCounter++;
 
-			this.currentIndex = newPosition;
+			if (this.selectDownFiredCounter > 1 && !this.showContextMenu) {
+				this.showContextMenu = true;
+			}
 		}
+
+		if (event.keyCode === SystemKey.Home || event.key === 'GoBack') {
+			ribbonService.visible = false;
+		}
+	}
+
+	private handleKeyUp(event: KeyboardEvent) {
+		if (event.key !== 'Enter') {
+			return;
+		}
+
+		if (this.selectDownFiredCounter === 1 && this.selectedLaunchPoint) {
+			ribbonService.visible = false;
+
+			void launcherStore.launch(this.selectedLaunchPoint);
+		}
+
+		this.selectDownFiredCounter = 0;
 	}
 
 	private handleArrow(key: string) {
@@ -104,6 +131,22 @@ class LrudService {
 			this.focusToFirstVisibleNode();
 
 			return;
+		}
+
+		if (this.moving && this.selectedLaunchPoint) {
+			let newPosition = this.currentIndex!;
+
+			if (key === 'ArrowLeft' && this.currentIndex! > 0) {
+				newPosition--;
+			}
+
+			if (key === 'ArrowRight' && this.currentIndex! !== ribbonService.launchPoints.length - 1) {
+				newPosition++;
+			}
+
+			if (newPosition !== this.currentIndex) {
+				launcherStore.move(this.selectedLaunchPoint, newPosition);
+			}
 		}
 
 		if (key === 'ArrowLeft' && this.currentIndex !== 0) {
