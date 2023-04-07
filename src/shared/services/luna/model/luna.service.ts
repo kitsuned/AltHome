@@ -32,6 +32,10 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 	private handleCallback(serialized: string) {
 		this.message = JSON.parse(serialized);
+
+		if (this.message) {
+			verifyMessageContents(this.message);
+		}
 	}
 }
 
@@ -48,9 +52,7 @@ class LunaOneShot<T extends Record<string, any>, P extends LunaRequestParams = {
 				console.log('<--', this.uri, parsed);
 
 				if (parsed.errorCode || !parsed.returnValue) {
-					if (typeof parsed?.errorText === 'string' && parsed.errorText.startsWith('Denied method call')) {
-						this.requestElevation().catch();
-					}
+					verifyMessageContents(parsed);
 
 					reject(parsed);
 				}
@@ -63,29 +65,35 @@ class LunaOneShot<T extends Record<string, any>, P extends LunaRequestParams = {
 			this.bridge.call(this.uri, JSON.stringify(this.params ?? {}));
 		});
 	}
-
-	private async requestElevation() {
-		const x = await luna<{ root: boolean; }>('luna://org.webosbrew.hbchannel.service/getConfiguration');
-
-		if (!x.root) {
-			await luna('luna://com.webos.notification/createToast', {
-				message: '[AltHome] Check root status!',
-			});
-
-			return;
-		}
-
-		await luna('luna://com.webos.notification/createToast', {
-			message: '[AltHome] Getting things ready…',
-		});
-
-		await luna('luna://org.webosbrew.hbchannel.service/exec', {
-			command: '/media/developer/apps/usr/palm/applications/com.kitsuned.althome/service --self-elevation',
-		});
-
-		window.close();
-	}
 }
 
 export const luna = <T extends Record<string, any>, P extends LunaRequestParams = {}>(uri: string, params?: P) =>
 	new LunaOneShot<T, P>(uri, params).call();
+
+const verifyMessageContents = (message: LunaMessage) => {
+	if (!message.returnValue && message.errorText?.startsWith('Denied method call')) {
+		void requestElevation();
+	}
+};
+
+const requestElevation = async () => {
+	const { root } = await luna<{ root: boolean; }>('luna://org.webosbrew.hbchannel.service/getConfiguration');
+
+	if (!root) {
+		await luna('luna://com.webos.notification/createToast', {
+			message: '[AltHome] Check root status!',
+		});
+
+		return;
+	}
+
+	await luna('luna://com.webos.notification/createToast', {
+		message: '[AltHome] Getting things ready…',
+	});
+
+	await luna('luna://org.webosbrew.hbchannel.service/exec', {
+		command: '/media/developer/apps/usr/palm/applications/com.kitsuned.althome/service --self-elevation',
+	});
+
+	window.close();
+};
