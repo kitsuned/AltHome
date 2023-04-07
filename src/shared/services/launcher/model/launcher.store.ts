@@ -30,12 +30,12 @@ class LauncherStore {
 			() => settingsStore.hydrated && Boolean(this.launchPointsMessage.message),
 			() => {
 				if (settingsStore.order.length === 0) {
-					settingsStore.order = this.launchPoints.map(x => x.id)
+					settingsStore.order = Array.from(this.availableLaunchPoints.keys())
 						.filter(id => !id.startsWith('com.webos'));
 				}
 
 				if (settingsStore.order.length === 0) {
-					settingsStore.order = this.launchPoints.map(x => x.id);
+					settingsStore.order = Array.from(this.availableLaunchPoints.keys());
 				}
 			},
 		);
@@ -47,13 +47,13 @@ class LauncherStore {
 			.filter((lp): lp is LaunchPoint => lp !== undefined);
 	}
 
-	public async launch({ id }: LaunchPoint) {
+	public async launch({ id }: Pick<LaunchPoint, 'id'>) {
 		return luna('luna://com.webos.service.applicationmanager/launch', {
 			id,
 		});
 	}
 
-	public async move({ id }: LaunchPoint, position: number) {
+	public move({ id }: Pick<LaunchPoint, 'id'>, position: number) {
 		const from = settingsStore.order.indexOf(id);
 
 		if (from !== position) {
@@ -62,7 +62,12 @@ class LauncherStore {
 		}
 	}
 
-	public async uninstall({ id }: LaunchPoint) {
+	public hide({ id }: Pick<LaunchPoint, 'id'>) {
+		settingsStore.order = settingsStore.order.filter(x => x !== id);
+	}
+
+	public async uninstall({ id }: Pick<LaunchPoint, 'id'>) {
+		this.hide({ id });
 		this.availableLaunchPoints.delete(id);
 
 		return luna('luna://com.webos.appInstallService/remove', {
