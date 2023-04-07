@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
-import { Reorder, type MotionProps } from 'framer-motion';
+import { motion, type MotionProps } from 'framer-motion';
 
 import { ribbonService, scrollService } from 'features/ribbon';
 
@@ -29,8 +29,6 @@ const motionProps: MotionProps = {
 	initial: 'hide',
 };
 
-const noop = () => {};
-
 export const Ribbon = observer(() => {
 	useEffect(() => {
 		runInAction(() => {
@@ -39,19 +37,15 @@ export const Ribbon = observer(() => {
 	}, []);
 
 	return (
-		<Reorder.Group
+		<motion.div
 			ref={scrollService.scrollContainerRef}
-			as='div'
-			axis='x'
-			className={s.group}
-			values={ribbonService.launchPoints}
 			animate={ribbonService.controls}
-			onReorder={noop}
+			className={s.group}
 			{...motionProps}
 		>
 			{ribbonService.launchPoints.map(point => (
 				<RibbonCard key={point.id} launchPoint={point} />
 			))}
-		</Reorder.Group>
+		</motion.div>
 	);
 });

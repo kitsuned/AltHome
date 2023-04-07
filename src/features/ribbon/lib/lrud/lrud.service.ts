@@ -1,4 +1,4 @@
-import { autorun, makeAutoObservable, reaction } from 'mobx';
+import { makeAutoObservable, reaction } from 'mobx';
 
 import { launcherStore, type LaunchPoint } from 'shared/services/launcher';
 
@@ -50,6 +50,10 @@ class LrudService {
 
 	public isSelected(launchPoint: LaunchPoint) {
 		return this.selectedLaunchPoint === launchPoint;
+	}
+
+	public getIndexByLaunchPoint(launchPoint: LaunchPoint) {
+		return ribbonService.launchPoints.indexOf(launchPoint);
 	}
 
 	public blur() {
