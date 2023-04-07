@@ -47,7 +47,7 @@ class ScrollService {
 		document.addEventListener('wheel', this.handleScroll);
 	}
 
-	public scrollContainerRef(ref: HTMLElement) {
+	public scrollContainerRef(ref: HTMLElement | null) {
 		this.container = ref;
 	}
 
