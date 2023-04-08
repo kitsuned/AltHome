@@ -16,7 +16,7 @@ import { RibbonContextMenuProps } from './ribbon-context-menu.interface';
 
 import s from './ribbon-context-menu.module.scss';
 
-export const RibbonContextMenu = ({ cardRef, onSelect }: RibbonContextMenuProps): JSX.Element => {
+export const RibbonContextMenu = ({ cardRef, removable = true, onSelect }: RibbonContextMenuProps): JSX.Element => {
 	const { moveFocusUp, moveFocusDown } = useSunbeam();
 
 	const [selectedAction, setAction] = useState<MenuAction>(MenuAction.Move);
@@ -67,7 +67,7 @@ export const RibbonContextMenu = ({ cardRef, onSelect }: RibbonContextMenuProps)
 	useLayoutEffect(() => {
 		menuRef.current?.focus();
 		refs.setReference(cardRef.current);
-	}, [refs, cardRef]);
+	}, [refs]);
 
 	useEffect(() => {
 		menuRef.current?.addEventListener('keydown', handleKeyDown);
@@ -95,7 +95,7 @@ export const RibbonContextMenu = ({ cardRef, onSelect }: RibbonContextMenuProps)
 			<div ref={menuRef} tabIndex={0} className={s.menu}>
 				<RibbonContextMenuAction action={MenuAction.Move} onSelect={setAction} />
 				<RibbonContextMenuAction action={MenuAction.Hide} onSelect={setAction} />
-				<RibbonContextMenuAction action={MenuAction.Uninstall} onSelect={setAction} />
+				{removable && <RibbonContextMenuAction action={MenuAction.Uninstall} onSelect={setAction} />}
 			</div>
 
 			<FloatingArrow ref={arrowRef} context={context} className={s.arrow} />
