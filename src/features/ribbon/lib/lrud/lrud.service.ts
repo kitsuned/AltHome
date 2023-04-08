@@ -60,8 +60,8 @@ class LrudService {
 		this.currentIndex = null;
 	}
 
-	public focusToNode(launchPointId: string) {
-		this.currentIndex = ribbonService.launchPoints.findIndex(x => x.launchPointId === launchPointId);
+	public focusToNode(id: string) {
+		this.currentIndex = ribbonService.launchPoints.findIndex(x => x.id === id);
 	}
 
 	public closeMenu() {
@@ -106,7 +106,11 @@ class LrudService {
 
 			this.selectDownFiredCounter++;
 
-			if (this.selectDownFiredCounter > 1 && !this.showContextMenu) {
+			if (
+				this.selectDownFiredCounter > 1 &&
+				!this.showContextMenu &&
+				this.selectedLaunchPoint?.id !== process.env.APP_ID
+			) {
 				this.showContextMenu = true;
 			}
 		}
@@ -122,9 +126,7 @@ class LrudService {
 		}
 
 		if (this.selectDownFiredCounter === 1 && this.selectedLaunchPoint) {
-			ribbonService.visible = false;
-
-			void launcherStore.launch(this.selectedLaunchPoint);
+			void ribbonService.launch(this.selectedLaunchPoint);
 		}
 
 		this.selectDownFiredCounter = 0;

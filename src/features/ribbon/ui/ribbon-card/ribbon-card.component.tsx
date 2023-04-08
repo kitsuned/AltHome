@@ -34,7 +34,7 @@ const motionProps: MotionProps = {
 export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 	const cardRef = useRef<HTMLButtonElement>(null);
 
-	const icon = `./root${launchPoint.mediumLargeIcon || launchPoint.largeIcon || launchPoint.icon}`;
+	const icon = launchPoint.largeIcon?.startsWith('/') ? `./root${launchPoint?.largeIcon}` : launchPoint?.largeIcon;
 
 	const isSelected = computed(() => lrudService.isSelected(launchPoint)).get();
 	const index = computed(() => lrudService.getIndexByLaunchPoint(launchPoint)).get();
@@ -48,16 +48,12 @@ export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 
 	const handleMouseOver = useCallback(() => {
 		if (!scrollService.isAnimating) {
-			lrudService.focusToNode(launchPoint.launchPointId);
+			lrudService.focusToNode(launchPoint.id);
 		}
 	}, [scrollService, launchPoint]);
 
 	const handleClick = useCallback(() => {
-		runInAction(() => {
-			ribbonService.visible = false;
-		});
-
-		void launcherStore.launch(launchPoint);
+		void ribbonService.launch(launchPoint);
 	}, [launchPoint]);
 
 	const handleAction = useCallback((action: MenuAction) => {

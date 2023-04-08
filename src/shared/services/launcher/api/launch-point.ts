@@ -1,12 +1,10 @@
 export type LaunchPoint = {
 	id: string;
 	title: string;
-	launchPointId: string;
-	removable: boolean;
 
-	bgColor: string;
+	removable: boolean;
 	iconColor: string;
-	mediumLargeIcon: string;
 	largeIcon: string;
-	icon: string;
+
+	params?: Record<string, any>;
 };
