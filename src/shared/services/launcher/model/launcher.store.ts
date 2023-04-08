@@ -2,6 +2,7 @@ import { makeAutoObservable, observable, reaction, when } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
 import { settingsStore } from 'shared/services/settings';
+import { ribbonService } from '../../../../features/ribbon';
 
 import type { LaunchPoint } from '../api/launch-point';
 
@@ -52,15 +53,6 @@ class LauncherStore {
 			id,
 			params,
 		});
-	}
-
-	public move({ id }: Pick<LaunchPoint, 'id'>, position: number) {
-		const from = settingsStore.order.indexOf(id);
-
-		if (from !== position) {
-			settingsStore.order.splice(from, 1);
-			settingsStore.order.splice(position, 0, id);
-		}
 	}
 
 	public hide({ id }: Pick<LaunchPoint, 'id'>) {

@@ -139,6 +139,8 @@ class LrudService {
 			return;
 		}
 
+		const max = ribbonService.launchPoints.length - 1;
+
 		if (this.moving && this.selectedLaunchPoint) {
 			let newPosition = this.currentIndex!;
 
@@ -146,12 +148,18 @@ class LrudService {
 				newPosition--;
 			}
 
-			if (key === 'ArrowRight' && this.currentIndex! !== ribbonService.launchPoints.length - 1) {
-				newPosition++;
+			if (key === 'ArrowRight') {
+				if (this.currentIndex! < max - 1) {
+					newPosition++;
+				}
+
+				if (this.currentIndex! === max - 1) {
+					return;
+				}
 			}
 
 			if (newPosition !== this.currentIndex) {
-				launcherStore.move(this.selectedLaunchPoint, newPosition);
+				ribbonService.move(this.selectedLaunchPoint, newPosition);
 			}
 		}
 
@@ -159,7 +167,7 @@ class LrudService {
 			this.currentIndex--;
 		}
 
-		if (key === 'ArrowRight' && this.currentIndex !== ribbonService.launchPoints.length - 1) {
+		if (key === 'ArrowRight' && this.currentIndex !== max) {
 			this.currentIndex++;
 		}
 	}

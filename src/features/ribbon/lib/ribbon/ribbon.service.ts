@@ -1,16 +1,18 @@
+import plus from 'assets/plus.png';
 import { animationControls } from 'framer-motion';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { ActivateType, Intent } from 'shared/api/webos.d';
 
 import { launcherStore, LaunchPoint } from 'shared/services/launcher';
-
-import plus from 'assets/plus.png';
+import { settingsStore } from '../../../../shared/services/settings';
 
 class RibbonService {
 	public mounted: boolean = false;
 	public visible: boolean = false;
 	public controls = animationControls();
+
+	public addAppsDrawerActive: boolean = false;
 
 	private transition: boolean = false;
 
@@ -53,7 +55,18 @@ class RibbonService {
 		});
 	}
 
-	public get launchPoints() {
+	public get extraLaunchPoints(): LaunchPoint[] {
+		const added = launcherStore.launchPoints.map(x => x.id);
+
+		const extra = Array.from(launcherStore.availableLaunchPoints.keys())
+			.filter(id => !added.includes(id));
+
+		return Array.from(
+			extra.map(x => launcherStore.availableLaunchPoints.get(x)!)
+		);
+	}
+
+	public get launchPoints(): LaunchPoint[] {
 		if (!launcherStore.launchPoints.length) {
 			return [];
 		}
@@ -81,7 +94,24 @@ class RibbonService {
 		void launcherStore.launch(launchPoint);
 	}
 
-	private handleIntent(intent: Intent) {}
+	public move(lp: LaunchPoint, position: number) {
+		const from = this.launchPoints.indexOf(lp);
+
+		if (from !== position) {
+			const ids = launcherStore.launchPoints.map(x => x.id);
+
+			ids.splice(from, 1);
+			ids.splice(position, 0, lp.id);
+
+			settingsStore.order = ids;
+		}
+	}
+
+	private handleIntent(intent: Intent) {
+		if (intent === Intent.AddApps) {
+			this.addAppsDrawerActive = true;
+		}
+	}
 }
 
 export const ribbonService = new RibbonService();
