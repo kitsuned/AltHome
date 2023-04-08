@@ -24,6 +24,7 @@ export const RibbonAppDrawerList = observer((): JSX.Element => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			event.stopPropagation();
 			event.stopImmediatePropagation();
+			event.preventDefault();
 
 			if (event.key === 'ArrowUp') {
 				moveFocusUp();
