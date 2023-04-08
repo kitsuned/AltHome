@@ -34,8 +34,6 @@ const motionProps: MotionProps = {
 export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 	const cardRef = useRef<HTMLButtonElement>(null);
 
-	const icon = launchPoint.largeIcon?.startsWith('/') ? `./root${launchPoint?.largeIcon}` : launchPoint?.largeIcon;
-
 	const isSelected = computed(() => lrudService.isSelected(launchPoint)).get();
 	const index = computed(() => lrudService.getIndexByLaunchPoint(launchPoint)).get();
 
@@ -84,7 +82,7 @@ export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 				style={style}
 				{...motionProps}
 			>
-				<img src={icon} className={s.icon} />
+				<img src={launchPoint.icon} className={s.icon} />
 			</motion.button>
 
 			<AnimatePresence>

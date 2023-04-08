@@ -4,7 +4,14 @@ export type LaunchPoint = {
 
 	removable: boolean;
 	iconColor: string;
-	largeIcon: string;
+	icon: string;
 
 	params?: Record<string, any>;
+};
+
+export type LaunchPointIconsMixin = {
+	icon?: string;
+	mediumLargeIcon?: string;
+	largeIcon?: string;
+	extraLargeIcon?: string;
 };
