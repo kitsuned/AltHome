@@ -10,7 +10,7 @@ import { lrudService } from 'features/ribbon/lib/lrud';
 
 import { MenuAction } from '../../lib/ribbon';
 
-import { RibbonContextMenuAction } from '../ribbon-context-menu-action';
+import { RibbonContextMenuAction } from './ribbon-context-menu-action';
 
 import { RibbonContextMenuProps } from './ribbon-context-menu.interface';
 

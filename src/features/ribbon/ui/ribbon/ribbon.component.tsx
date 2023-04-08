@@ -3,9 +3,11 @@ import { useEffect } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
-import { motion, type MotionProps } from 'framer-motion';
+import { AnimatePresence, motion, type MotionProps } from 'framer-motion';
 
 import { ribbonService, scrollService } from 'features/ribbon';
+
+import { RibbonAppDrawer } from '../ribbon-app-drawer';
 
 import { RibbonCard } from '../ribbon-card';
 
@@ -37,15 +39,21 @@ export const Ribbon = observer(() => {
 	}, []);
 
 	return (
-		<motion.div
-			ref={scrollService.scrollContainerRef}
-			animate={ribbonService.controls}
-			className={s.group}
-			{...motionProps}
-		>
-			{ribbonService.launchPoints.map(point => (
-				<RibbonCard key={point.id} launchPoint={point} />
-			))}
-		</motion.div>
+		<>
+			<motion.div
+				ref={scrollService.scrollContainerRef}
+				animate={ribbonService.controls}
+				className={s.group}
+				{...motionProps}
+			>
+				{ribbonService.launchPoints.map(point => (
+					<RibbonCard key={point.id} launchPoint={point} />
+				))}
+			</motion.div>
+
+			<AnimatePresence>
+				{ribbonService.addAppsDrawerActive && <RibbonAppDrawer />}
+			</AnimatePresence>
+		</>
 	);
 });
