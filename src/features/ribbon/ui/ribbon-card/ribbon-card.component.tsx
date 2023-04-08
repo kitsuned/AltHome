@@ -1,9 +1,11 @@
 import { CSSProperties, useCallback, useMemo, useRef } from 'react';
 
-import { computed, runInAction } from 'mobx';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
 import { AnimatePresence, MotionProps, motion } from 'framer-motion';
+
+import { Portal } from '@reach/portal';
 
 import { lrudService, ribbonService, scrollService } from 'features/ribbon';
 
@@ -86,7 +88,15 @@ export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 			</motion.button>
 
 			<AnimatePresence>
-				{showContextMenu && <RibbonContextMenu cardRef={cardRef} onSelect={handleAction} />}
+				{showContextMenu && (
+					<Portal type='context-menu'>
+						<RibbonContextMenu
+							cardRef={cardRef}
+							onSelect={handleAction}
+							removable={launchPoint.removable}
+						/>
+					</Portal>
+				)}
 			</AnimatePresence>
 		</>
 	);

@@ -33,7 +33,7 @@ const animationMixin: MotionProps = {
 };
 
 export const RibbonAppDrawer = (): JSX.Element => (
-	<Portal>
+	<Portal type='app-drawer'>
 		<motion.div {...animationMixin} variants={backdropVariants} className={s.backdrop} />
 
 		<motion.div {...animationMixin} variants={dialogVariants} className={s.drawer}>
