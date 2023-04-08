@@ -108,6 +108,10 @@ class LauncherStore {
 			lp.icon = `./root${lp.icon}`;
 		}
 
+		if (lp.id === 'org.webosbrew.hbchannel') {
+			lp.removable = false;
+		}
+
 		return lp;
 	}
 }
