@@ -78,7 +78,7 @@ class RibbonService {
 				title: 'Add apps',
 				removable: false,
 				iconColor: '#242424',
-				largeIcon: plus,
+				icon: plus,
 				params: <ActivateType>{
 					intent: Intent.AddApps,
 				},

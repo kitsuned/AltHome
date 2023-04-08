@@ -2,19 +2,17 @@ import { makeAutoObservable, observable, reaction, when } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
 import { settingsStore } from 'shared/services/settings';
-import { ribbonService } from '../../../../features/ribbon';
 
-import type { LaunchPoint } from '../api/launch-point';
+import type { LaunchPoint, LaunchPointIconsMixin } from '../api/launch-point';
 
 type ListLaunchPointsMessage = {
-	launchPoints: LaunchPoint[];
+	launchPoints: (LaunchPoint & LaunchPointIconsMixin)[];
 } | (
-	LaunchPoint & ({
+	LaunchPoint & LaunchPointIconsMixin & ({
 	change: 'added' | 'removed';
 } | {
 	change: 'updated';
 	changeReason: 'movedByUser' | string;
-	position: number;
 }));
 
 class LauncherStore {
@@ -76,7 +74,10 @@ class LauncherStore {
 		}
 
 		if ('launchPoints' in message) {
-			this.availableLaunchPoints.replace(message.launchPoints.map(x => [x.id, x]));
+			this.availableLaunchPoints.replace(message.launchPoints.map(x => [
+				x.id,
+				this.normalizeLaunchPoint(x),
+			]));
 		}
 
 		if (!('change' in message)) {
@@ -84,20 +85,30 @@ class LauncherStore {
 		}
 
 		if (message.change === 'added') {
-			this.availableLaunchPoints.set(message.id, message);
+			this.availableLaunchPoints.set(message.id, this.normalizeLaunchPoint(message));
 
 			if (settingsStore.addNewApps) {
 				settingsStore.order.push(message.id);
 			}
 		}
 
-		if (message.change === 'updated') {
-			this.availableLaunchPoints.set(message.id, message);
+		if (message.change === 'updated' && message.changeReason !== 'movedByUser') {
+			this.availableLaunchPoints.set(message.id, this.normalizeLaunchPoint(message));
 		}
 
 		if (message.change === 'removed') {
 			this.availableLaunchPoints.delete(message.id);
 		}
+	}
+
+	private normalizeLaunchPoint(lp: LaunchPoint & LaunchPointIconsMixin): LaunchPoint {
+		lp.icon = lp.mediumLargeIcon || lp.largeIcon || lp.extraLargeIcon || lp.icon;
+
+		if (lp.icon.startsWith('/')) {
+			lp.icon = `./root${lp.icon}`;
+		}
+
+		return lp;
 	}
 }
 
