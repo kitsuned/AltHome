@@ -1,4 +1,4 @@
-import { makeAutoObservable, reaction } from 'mobx';
+import { makeAutoObservable, reaction, toJS } from 'mobx';
 
 import type { LunaMessage, LunaRequestParams } from '../api/luna.api';
 
@@ -14,10 +14,12 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 		reaction(
 			() => this.message,
-			message => console.log('<*-', uri, message),
+			message => console.log('<*-', uri, toJS(message)),
 		);
 
-		console.log('<!>', uri);
+		if (__DEV__) {
+			console.log('<!>', uri);
+		}
 	}
 
 	private subscribe() {
@@ -46,10 +48,12 @@ class LunaOneShot<T extends Record<string, any>, P extends LunaRequestParams = {
 
 	public call() {
 		return new Promise<T>((resolve, reject) => {
-			this.bridge.onservicecallback = message => {
+			this.bridge.onservicecallback = (message: string) => {
 				const parsed = JSON.parse(message);
 
-				console.log('<--', this.uri, parsed);
+				if (__DEV__) {
+					console.log('<--', this.uri, parsed);
+				}
 
 				if (parsed.errorCode || !parsed.returnValue) {
 					verifyMessageContents(parsed);
@@ -60,7 +64,9 @@ class LunaOneShot<T extends Record<string, any>, P extends LunaRequestParams = {
 				resolve(parsed);
 			};
 
-			console.log('-->', this.uri, this.params);
+			if (__DEV__) {
+				console.log('-->', this.uri, this.params);
+			}
 
 			this.bridge.call(this.uri, JSON.stringify(this.params ?? {}));
 		});
