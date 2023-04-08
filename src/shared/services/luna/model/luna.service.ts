@@ -12,13 +12,13 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 		this.subscribe();
 
-		reaction(
-			() => this.message,
-			message => console.log('<*-', uri, toJS(message)),
-		);
-
 		if (__DEV__) {
 			console.log('<!>', uri);
+
+			reaction(
+				() => this.message,
+				message => console.log('<*-', uri, toJS(message)),
+			);
 		}
 	}
 

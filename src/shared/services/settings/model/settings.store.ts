@@ -1,5 +1,7 @@
 import { comparer, makeAutoObservable, reaction, toJS, when } from 'mobx';
 
+import throttle from 'lodash.throttle';
+
 import { luna, LunaTopic } from 'shared/services/luna';
 
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';
@@ -20,6 +22,8 @@ class SettingsStore {
 	});
 
 	public constructor() {
+		this.saveConfig = throttle(this.saveConfig, 5 * 1000);
+
 		makeAutoObservable(this, {}, { autoBind: true });
 
 		reaction(
@@ -30,16 +34,16 @@ class SettingsStore {
 		when(
 			() => this.hydrated,
 			() =>
-				reaction(
-					() => this.serialized,
-					serialized => luna('luna://com.webos.service.config/setConfigs', {
-						configs: {
-							[KEY]: serialized,
-						},
-					}),
-					{ equals: comparer.structural },
-				),
+				reaction(() => this.serialized, this.saveConfig, { equals: comparer.structural }),
 		);
+	}
+
+	private saveConfig(serialized: Settings) {
+		void luna('luna://com.webos.service.config/setConfigs', {
+			configs: {
+				[KEY]: serialized,
+			},
+		});
 	}
 
 	private get serialized(): Settings {
