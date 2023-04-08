@@ -47,9 +47,10 @@ class LauncherStore {
 			.filter((lp): lp is LaunchPoint => lp !== undefined);
 	}
 
-	public async launch({ id }: Pick<LaunchPoint, 'id'>) {
+	public async launch({ id, params }: Pick<LaunchPoint, 'id' | 'params'>) {
 		return luna('luna://com.webos.service.applicationmanager/launch', {
 			id,
+			params,
 		});
 	}
 
