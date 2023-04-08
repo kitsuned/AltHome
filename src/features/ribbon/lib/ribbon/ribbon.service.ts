@@ -1,8 +1,11 @@
+import { animationControls } from 'framer-motion';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
-import { animationControls } from 'framer-motion';
+import { ActivateType, Intent } from 'shared/api/webos.d';
 
-import { launcherStore } from 'shared/services/launcher';
+import { launcherStore, LaunchPoint } from 'shared/services/launcher';
+
+import plus from 'assets/plus.png';
 
 class RibbonService {
 	public mounted: boolean = false;
@@ -39,8 +42,10 @@ class RibbonService {
 			},
 		);
 
-		document.addEventListener('webOSRelaunch', () => {
-			if (!this.transition) {
+		document.addEventListener('webOSRelaunch', (event) => {
+			if (event.detail?.intent) {
+				this.handleIntent(event.detail.intent);
+			} else if (!this.transition) {
 				runInAction(() => {
 					this.visible = true;
 				});
@@ -49,8 +54,34 @@ class RibbonService {
 	}
 
 	public get launchPoints() {
-		return launcherStore.launchPoints;
+		if (!launcherStore.launchPoints.length) {
+			return [];
+		}
+
+		return [
+			...launcherStore.launchPoints,
+			<LaunchPoint>{
+				id: 'com.kitsuned.althome',
+				title: 'Add apps',
+				removable: false,
+				iconColor: '#242424',
+				largeIcon: plus,
+				params: <ActivateType>{
+					intent: Intent.AddApps,
+				},
+			},
+		];
 	}
+
+	public launch(launchPoint: LaunchPoint) {
+		if (launchPoint.id !== process.env.APP_ID) {
+			ribbonService.visible = false;
+		}
+
+		void launcherStore.launch(launchPoint);
+	}
+
+	private handleIntent(intent: Intent) {}
 }
 
 export const ribbonService = new RibbonService();

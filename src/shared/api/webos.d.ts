@@ -1,23 +1,29 @@
-declare class PalmServiceBridge {
-	constructor(serviceId?: string);
-
-	onservicecallback(serializedMessage: string): void;
-
-	call(uri: string, serializedParameters: string): void;
+export enum Intent {
+	AddApps = 'add_apps',
 }
 
-declare namespace webOSSystem {
-	const identifier: string;
+interface ActivateType {
+	activateType?: 'home' | string;
 
-	const launchParams: string;
-	const launchReason: string;
-
-	function hide(): void;
+	intent?: Intent;
 }
 
 declare global {
-	interface ActivateType {
-		activateType?: 'home' | string;
+	class PalmServiceBridge {
+		constructor(serviceId?: string);
+
+		onservicecallback(serializedMessage: string): void;
+
+		call(uri: string, serializedParameters: string): void;
+	}
+
+	namespace webOSSystem {
+		const identifier: string;
+
+		const launchParams: ActivateType;
+		const launchReason: string;
+
+		function hide(): void;
 	}
 
 	interface Document {
