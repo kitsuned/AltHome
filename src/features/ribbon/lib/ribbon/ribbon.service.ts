@@ -1,11 +1,13 @@
-import plus from 'assets/plus.png';
-import { animationControls } from 'framer-motion';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
+
+import { animationControls } from 'framer-motion';
 
 import { ActivateType, Intent } from 'shared/api/webos.d';
 
 import { launcherStore, LaunchPoint } from 'shared/services/launcher';
-import { settingsStore } from '../../../../shared/services/settings';
+import { settingsStore } from 'shared/services/settings';
+
+import plus from 'assets/plus.png';
 
 class RibbonService {
 	public mounted: boolean = false;

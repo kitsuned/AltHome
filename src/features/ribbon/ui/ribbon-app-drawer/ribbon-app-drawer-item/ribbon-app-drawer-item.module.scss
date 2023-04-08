@@ -1,0 +1,30 @@
+.button {
+	--icon-color: #fff;
+
+	appearance: none;
+	background-color: transparent;
+	border: none;
+	color: inherit;
+	text-align: left;
+	transition: background-color .1s ease, color .1s ease;
+
+	line-height: 2rem;
+	font-size: 1.75rem;
+	padding: 1.5rem 2rem;
+
+	display: flex;
+	align-items: center;
+	width: 100%;
+	gap: 1.5ch;
+}
+
+.button.focused {
+	background-color: #c3c6c414;
+}
+
+.icon {
+	height: 4rem;
+	width: 4rem;
+	background-color: var(--icon-color);
+	border-radius: .5rem;
+}
