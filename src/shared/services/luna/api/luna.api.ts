@@ -4,7 +4,11 @@ export type LunaErrorMessage = {
 	errorText?: string;
 };
 
-export type LunaMessage<T extends Record<string, any> = {}> = LunaErrorMessage | (T & {
+type DeepNever<T> = {
+	[K in keyof T]: T[K] extends Record<string, any> ? DeepNever<T[K]> : never;
+};
+
+export type LunaMessage<T extends Record<string, any> = {}> = (LunaErrorMessage & DeepNever<T>) | (T & {
 	returnValue: true;
 });
 
