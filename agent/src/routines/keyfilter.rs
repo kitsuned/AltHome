@@ -63,5 +63,7 @@ pub fn rewire() -> Result<(), Box<dyn Error>> {
 
     luna::configd::set("com.webos.surfacemanager.keyFilters", policies);
 
+    println!("Updated keyfilter configuration.");
+
     Ok(())
 }
