@@ -568,15 +568,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kitsuned/webos-packager-plugin@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@kitsuned/webos-packager-plugin@npm:1.1.1"
+"@kitsuned/webos-packager-plugin@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@kitsuned/webos-packager-plugin@npm:1.1.2"
   dependencies:
     schema-utils: ^4.0.0
     tar-stream: ^3.0.0
   peerDependencies:
     webpack: 5.*
-  checksum: 263e4699eeb12d97201f09f19340d15ca8342a4a9028ed00e4fc3bb0f480a1c25992dc59674bcd7f8dbe2952d3e2bbb33d0c6b98d7aa19383b3599ffb0502679
+  checksum: 65eaa1ca41a90b4629c160c1ea08ef2a36b10a4af303f663df5e10df3dd7bb99c7daa1fce622fc9bcb3adf9218a94a3edf6facf4c957d50303f83997acbf224f
   languageName: node
   linkType: hard
 
@@ -1794,7 +1794,7 @@ __metadata:
   resolution: "com.kitsuned.althome@workspace:."
   dependencies:
     "@floating-ui/react": 0.22.3
-    "@kitsuned/webos-packager-plugin": 1.1.1
+    "@kitsuned/webos-packager-plugin": 1.1.2
     "@reach/portal": 0.18.0
     "@types/lodash.throttle": 4.1.7
     "@types/node": 18.11.18

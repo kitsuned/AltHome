@@ -122,6 +122,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 				version,
 				description,
 				emitManifest: true,
+				setExecutableBit: true,
 				metadata: {
 					title: 'AltHome',
 					iconUrl: 'https://raw.githubusercontent.com/kitsuned/AltHome/v1.0.0/manifests/icon320.png',

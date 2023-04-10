@@ -21,7 +21,7 @@
 		"react-sunbeam": "1.0.5"
 	},
 	"devDependencies": {
-		"@kitsuned/webos-packager-plugin": "1.1.1",
+		"@kitsuned/webos-packager-plugin": "1.1.2",
 		"@types/lodash.throttle": "4.1.7",
 		"@types/node": "18.11.18",
 		"@types/react": "18.0.26",
