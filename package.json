@@ -1,6 +1,6 @@
 {
 	"name": "com.kitsuned.althome",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "AltHome is a replacement for the stock home app on LG TVs running webOS 6+",
 	"packageManager": "yarn@3.3.1",
 	"repository": "https://github.com/kitsuned/AltHome",
