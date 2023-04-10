@@ -2,6 +2,7 @@ import { makeAutoObservable, observable, reaction, when } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
 import { settingsStore } from 'shared/services/settings';
+import { inputService } from '../../input';
 
 import type { LaunchPoint, LaunchPointIconsMixin } from '../api/launch-point';
 
@@ -16,7 +17,8 @@ type ListLaunchPointsMessage = {
 }));
 
 class LauncherStore {
-	public availableLaunchPoints = observable.map<string, LaunchPoint>();
+	private availableLaunchPoints = observable.map<string, LaunchPoint>();
+	private customLaunchPoints = observable.map<string, LaunchPoint>();
 
 	private launchPointsMessage = new LunaTopic<ListLaunchPointsMessage>('luna://com.webos.service.applicationmanager/listLaunchPoints');
 
@@ -24,6 +26,11 @@ class LauncherStore {
 		makeAutoObservable(this, { launch: false }, { autoBind: true });
 
 		reaction(() => this.launchPointsMessage.message, this.handleMessage);
+
+		reaction(
+			() => inputService.launchPoints,
+			lps => this.customLaunchPoints.replace(lps.map(x => [x.id, x])),
+		);
 
 		when(
 			() => settingsStore.hydrated && Boolean(this.launchPointsMessage.message),
@@ -40,10 +47,17 @@ class LauncherStore {
 		);
 	}
 
-	public get launchPoints(): LaunchPoint[] {
+	public get visibleLaunchPoints(): LaunchPoint[] {
 		return settingsStore.order
-			.map(id => this.availableLaunchPoints.get(id))
+			.map(id => this.availableLaunchPoints.get(id) ?? this.customLaunchPoints.get(id))
 			.filter((lp): lp is LaunchPoint => lp !== undefined);
+	}
+
+	public get launchPoints() {
+		return new Map([
+			...this.customLaunchPoints.entries(),
+			...this.availableLaunchPoints.entries(),
+		]);
 	}
 
 	public async launch({ id, params }: Pick<LaunchPoint, 'id' | 'params'>) {

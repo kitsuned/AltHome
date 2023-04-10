@@ -60,23 +60,23 @@ class RibbonService {
 	}
 
 	public get extraLaunchPoints(): LaunchPoint[] {
-		const added = launcherStore.launchPoints.map(x => x.id);
+		const added = launcherStore.visibleLaunchPoints.map(x => x.id);
 
-		const extra = Array.from(launcherStore.availableLaunchPoints.keys())
+		const extra = Array.from(launcherStore.launchPoints.keys())
 			.filter(id => !added.includes(id));
 
 		return Array.from(
-			extra.map(x => launcherStore.availableLaunchPoints.get(x)!),
+			extra.map(x => launcherStore.launchPoints.get(x)!),
 		);
 	}
 
 	public get launchPoints(): LaunchPoint[] {
-		if (!launcherStore.launchPoints.length) {
+		if (!launcherStore.visibleLaunchPoints.length) {
 			return [];
 		}
 
 		return [
-			...launcherStore.launchPoints,
+			...launcherStore.visibleLaunchPoints,
 			<LaunchPoint>{
 				id: 'com.kitsuned.althome',
 				title: 'Add apps',
@@ -102,7 +102,7 @@ class RibbonService {
 		const from = this.launchPoints.indexOf(lp);
 
 		if (from !== position) {
-			const ids = launcherStore.launchPoints.map(x => x.id);
+			const ids = launcherStore.visibleLaunchPoints.map(x => x.id);
 
 			ids.splice(from, 1);
 			ids.splice(position, 0, lp.id);
