@@ -31,6 +31,8 @@ class RibbonService {
 			},
 		);
 
+		reaction(() => this.visible, visible => webOSSystem.window.setFocus(visible));
+
 		reaction(
 			() => this.visible,
 			async visible => {
@@ -64,7 +66,7 @@ class RibbonService {
 			.filter(id => !added.includes(id));
 
 		return Array.from(
-			extra.map(x => launcherStore.availableLaunchPoints.get(x)!)
+			extra.map(x => launcherStore.availableLaunchPoints.get(x)!),
 		);
 	}
 

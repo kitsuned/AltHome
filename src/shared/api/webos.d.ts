@@ -24,6 +24,10 @@ declare global {
 		const launchReason: string;
 
 		function hide(): void;
+
+		const window: {
+			setFocus(value: boolean): void;
+		}
 	}
 
 	interface Document {
