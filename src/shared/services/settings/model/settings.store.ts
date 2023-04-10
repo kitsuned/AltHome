@@ -6,6 +6,13 @@ import { luna, LunaTopic } from 'shared/services/luna';
 
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';
 
+type ConfigMessage = {
+	configs: {
+		[KEY]: Settings;
+	};
+	missingConfigs: string[];
+};
+
 type Settings = Omit<SettingsStore, 'hydrated'>;
 
 class SettingsStore {
@@ -16,7 +23,7 @@ class SettingsStore {
 	public addNewApps: boolean = true;
 	public order: string[] = [];
 
-	private topic = new LunaTopic<{ configs?: { [KEY]: Settings } }>('luna://com.webos.service.config/getConfigs', {
+	private topic = new LunaTopic<ConfigMessage>('luna://com.webos.service.config/getConfigs', {
 		configNames: [KEY],
 		subscribe: true,
 	});
@@ -29,6 +36,11 @@ class SettingsStore {
 		reaction(
 			() => this.topic.message?.configs?.[KEY],
 			settings => this.hydrate(settings ?? {}),
+		);
+
+		when(
+			() => Boolean(this.topic.message?.missingConfigs),
+			() => this.hydrate({}),
 		);
 
 		when(
