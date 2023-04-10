@@ -64,11 +64,9 @@ pub mod configd {
             ConfigGetReq {
                 keys: vec![key.to_string()],
             },
-        ).unwrap();
+        )?;
 
-        let config = response.configs.get(key)
-            .cloned()
-            .unwrap();
+        let config = response.configs.get(key).cloned().unwrap();
 
         Ok(config)
     }

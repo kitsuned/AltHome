@@ -36,7 +36,14 @@ fn main() {
     keyfilter::rewire()
         .expect("Failed to rewire KeyFilters configuration.");
 
-    let config: AltHomeSettings = luna::configd::get("com.kitsuned.althome").unwrap();
+    let config = luna::configd::get::<AltHomeSettings>("com.kitsuned.althome");
+
+    let config = match config {
+        Ok(config) => config,
+        Err(_) => AltHomeSettings {
+            memory_quirks: low_memory()
+        }
+    };
 
     if config.memory_quirks {
         memory_manager::rewire()
