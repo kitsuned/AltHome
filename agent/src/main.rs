@@ -1,4 +1,4 @@
-use std::env::{current_dir, current_exe, set_current_dir};
+use std::env::{current_exe, set_current_dir};
 use std::io;
 use serde::Deserialize;
 
