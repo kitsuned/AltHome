@@ -76,7 +76,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 					test: /.png$/,
 					type: 'asset/resource',
 					generator: {
-						filename: 'res/[hash][ext]',
+						filename: 'assets/[hash][ext]',
 					},
 				},
 			],
