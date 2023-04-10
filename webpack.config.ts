@@ -4,13 +4,14 @@ import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import WebOSPackagerPlugin from '@kitsuned/webos-packager-plugin';
 
 import {
 	JsonTransformer,
 	WebpackMultipleConfigurations,
 } from 'chore/webpack-utils';
 
-import { name, version } from './package.json';
+import { name, version, description, repository } from './package.json';
 
 const transformer = new JsonTransformer({
 	APP_ID: name,
@@ -108,7 +109,25 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 						transform: transformer.transform,
 						priority: 0,
 					},
+					{
+						from: 'agentd*',
+						context: 'agent',
+						to: 'service',
+						toType: 'file',
+					},
 				],
+			}),
+			new WebOSPackagerPlugin({
+				id: name,
+				version,
+				description,
+				emitManifest: true,
+				metadata: {
+					title: 'AltHome',
+					iconUrl: 'https://raw.githubusercontent.com/kitsuned/AltHome/v1.0.0/manifests/icon320.png',
+					sourceUrl: repository,
+					rootRequired: true,
+				},
 			}),
 		],
 	}),

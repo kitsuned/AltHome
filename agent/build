@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -exo pipefail
+
+cargo build --release --target armv7-unknown-linux-gnueabihf
+
+cp -R ./target/armv7-unknown-linux-gnueabihf/release/althome_agentd agentd-armhf-release
+
+patchelf --set-interpreter /lib/ld-linux.so.3 \
+	--replace-needed ld-linux-armhf.so.3 ld-linux.so.3 \
+	agentd-armhf-release
+
+upx agentd-armhf-release

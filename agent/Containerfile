@@ -1,7 +1,7 @@
 FROM docker.io/rust:1-slim-buster AS builder
 
 RUN apt-get update -y && \
-    apt-get install -y gcc-arm-linux-gnueabihf
+    apt-get install -y gcc-arm-linux-gnueabihf patchelf upx
 
 RUN rustup target add armv7-unknown-linux-gnueabihf
 
@@ -11,6 +11,4 @@ ENV CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gnueabihf-gcc
 
 COPY . .
 
-RUN cargo build --release --target armv7-unknown-linux-gnueabihf
-
-RUN mv ./target/*/*/althome_agentd .
+RUN ./build
