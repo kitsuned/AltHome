@@ -31,8 +31,6 @@ class RibbonService {
 			},
 		);
 
-		reaction(() => this.visible, visible => webOSSystem.window.setFocus(visible));
-
 		reaction(
 			() => this.visible,
 			async visible => {
