@@ -2136,6 +2136,7 @@ __metadata:
     eslint-plugin-sonarjs: 0.19.0
     framer-motion: 9.0.0
     html-webpack-plugin: 5.5.0
+    inversify: 6.0.1
     lodash.throttle: 4.1.1
     mini-css-extract-plugin: 2.7.2
     mobx: 6.7.0
@@ -2147,6 +2148,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-sunbeam: 1.0.5
+    reflect-metadata: 0.1.13
     sass: 1.57.1
     sass-loader: 13.2.0
     style-loader: 3.3.1
@@ -4169,6 +4171,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"inversify@npm:6.0.1":
+  version: 6.0.1
+  resolution: "inversify@npm:6.0.1"
+  checksum: b6c9b56ef7817a71534b06101c2b0a0130b67c47a769f58794d9c0643591a83ac02be30a48c00cb729c0c83ece96dde369c419d48c32d0201c6cc7407629fbc5
+  languageName: node
+  linkType: hard
+
 "ip@npm:^2.0.0":
   version: 2.0.0
   resolution: "ip@npm:2.0.0"
@@ -6129,6 +6138,13 @@ __metadata:
   dependencies:
     resolve: ^1.20.0
   checksum: ad3caed8afdefbc33fbc30e6d22b86c35b3d51c2005546f4e79bcc03c074df804b3640ad18945e6bef9ed12caedc035655ec1082f64a5e94c849ff939dc0a788
+  languageName: node
+  linkType: hard
+
+"reflect-metadata@npm:0.1.13":
+  version: 0.1.13
+  resolution: "reflect-metadata@npm:0.1.13"
+  checksum: 798d379a7b6f6455501145419505c97dd11cbc23857a386add2b9ef15963ccf15a48d9d15507afe01d4cd74116df8a213247200bac00320bd7c11ddeaa5e8fb4
   languageName: node
   linkType: hard
 

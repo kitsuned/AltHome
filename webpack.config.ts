@@ -36,7 +36,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean }>>[
 		module: {
 			rules: [
 				{
-					test: /.tsx?$/,
+					test: /.[jt]sx?$/,
 					loader: 'esbuild-loader',
 					options: {
 						loader: 'tsx',

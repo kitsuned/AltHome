@@ -14,12 +14,14 @@
 		"@reach/portal": "0.18.0",
 		"clsx": "1.2.1",
 		"framer-motion": "9.0.0",
+		"inversify": "6.0.1",
 		"lodash.throttle": "4.1.1",
 		"mobx": "6.7.0",
 		"mobx-react-lite": "3.4.0",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
-		"react-sunbeam": "1.0.5"
+		"react-sunbeam": "1.0.5",
+		"reflect-metadata": "0.1.13"
 	},
 	"devDependencies": {
 		"@kitsuned/webos-packager-plugin": "1.1.2",
