@@ -3,20 +3,18 @@ import { CSSProperties, useCallback, useMemo, useRef } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
-import { AnimatePresence, MotionProps, motion } from 'framer-motion';
+import { MotionProps, AnimatePresence, motion } from 'framer-motion';
 
 import { Portal } from '@reach/portal';
 
-import { lrudService, ribbonService, scrollService } from 'features/ribbon';
-
 import { launcherStore } from 'shared/services/launcher';
 
-import { MenuAction } from '../../lib/ribbon';
+import { lrudService, ribbonService, scrollService } from 'features/ribbon';
 
+import { MenuAction } from '../../lib/ribbon';
 import { RibbonContextMenu } from '../ribbon-context-menu';
 
-import type { RibbonCardProps } from './ribbon-card.interface';
-
+import { RibbonCardProps } from './ribbon-card.interface';
 import s from './ribbon-card.module.scss';
 
 const motionProps: MotionProps = {
@@ -41,36 +39,42 @@ export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 
 	const showContextMenu = isSelected && lrudService.showContextMenu;
 
-	const style = useMemo<CSSProperties>(() => ({
-		zIndex: isSelected ? 1000 : index + 5,
-		'--card-color': launchPoint.iconColor,
-	}), [index, isSelected, launchPoint.iconColor]);
+	const style = useMemo<CSSProperties>(
+		() => ({
+			zIndex: isSelected ? 1000 : index + 5,
+			'--card-color': launchPoint.iconColor,
+		}),
+		[index, isSelected, launchPoint.iconColor],
+	);
 
 	const handleMouseOver = useCallback(() => {
 		if (!scrollService.isAnimating) {
 			lrudService.focusToNode(launchPoint.id);
 		}
-	}, [scrollService, launchPoint]);
+	}, [launchPoint]);
 
 	const handleClick = useCallback(() => {
 		void ribbonService.launch(launchPoint);
 	}, [launchPoint]);
 
-	const handleAction = useCallback((action: MenuAction) => {
-		lrudService.closeMenu();
+	const handleAction = useCallback(
+		(action: MenuAction) => {
+			lrudService.closeMenu();
 
-		if (action === MenuAction.Move) {
-			lrudService.enableMoveMode();
-		}
+			if (action === MenuAction.Move) {
+				lrudService.enableMoveMode();
+			}
 
-		if (action === MenuAction.Hide) {
-			launcherStore.hide(launchPoint);
-		}
+			if (action === MenuAction.Hide) {
+				launcherStore.hide(launchPoint);
+			}
 
-		if (action === MenuAction.Uninstall) {
-			void launcherStore.uninstall(launchPoint);
-		}
-	}, [launchPoint]);
+			if (action === MenuAction.Uninstall) {
+				void launcherStore.uninstall(launchPoint);
+			}
+		},
+		[launchPoint],
+	);
 
 	return (
 		<>
@@ -80,7 +84,7 @@ export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 				className={s.card}
 				onClick={handleClick}
 				onMouseOver={handleMouseOver}
-				animate={isSelected ? lrudService.moving ? 'moving' : 'selected' : undefined}
+				animate={isSelected ? (lrudService.moving ? 'moving' : 'selected') : undefined}
 				style={style}
 				{...motionProps}
 			>

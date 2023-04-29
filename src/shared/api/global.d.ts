@@ -3,6 +3,7 @@ declare module '*.module.scss' {
 	export default content;
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 declare const __DEV__: boolean;
 
 declare const process: {

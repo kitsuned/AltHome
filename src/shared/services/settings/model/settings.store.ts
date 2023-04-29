@@ -45,8 +45,7 @@ class SettingsStore {
 
 		when(
 			() => this.hydrated,
-			() =>
-				reaction(() => this.serialized, this.saveConfig, { equals: comparer.structural }),
+			() => reaction(() => this.serialized, this.saveConfig, { equals: comparer.structural }),
 		);
 	}
 

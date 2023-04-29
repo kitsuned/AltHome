@@ -3,8 +3,7 @@ import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 import { animationControls } from 'framer-motion';
 
 import { ActivateType, Intent } from 'shared/api/webos.d';
-
-import { launcherStore, LaunchPoint } from 'shared/services/launcher';
+import { LaunchPoint, launcherStore } from 'shared/services/launcher';
 import { settingsStore } from 'shared/services/settings';
 
 import plus from 'assets/plus.png';
@@ -46,7 +45,7 @@ class RibbonService {
 			},
 		);
 
-		document.addEventListener('webOSRelaunch', (event) => {
+		document.addEventListener('webOSRelaunch', event => {
 			if (event.detail?.intent) {
 				this.handleIntent(event.detail.intent);
 			} else if (!this.transition) {
@@ -60,12 +59,11 @@ class RibbonService {
 	public get extraLaunchPoints(): LaunchPoint[] {
 		const added = launcherStore.visibleLaunchPoints.map(x => x.id);
 
-		const extra = Array.from(launcherStore.launchPoints.keys())
-			.filter(id => !added.includes(id));
-
-		return Array.from(
-			extra.map(x => launcherStore.launchPoints.get(x)!),
+		const extra = Array.from(launcherStore.launchPoints.keys()).filter(
+			id => !added.includes(id),
 		);
+
+		return Array.from(extra.map(x => launcherStore.launchPoints.get(x)!));
 	}
 
 	public get launchPoints(): LaunchPoint[] {
@@ -90,7 +88,7 @@ class RibbonService {
 
 	public launch(launchPoint: LaunchPoint) {
 		if (launchPoint.id !== process.env.APP_ID) {
-			ribbonService.visible = false;
+			this.visible = false;
 		}
 
 		void launcherStore.launch(launchPoint);

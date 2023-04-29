@@ -3,7 +3,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { motion } from 'framer-motion';
 
 import { arrow, FloatingArrow, offset, shift, useFloating } from '@floating-ui/react';
-
 import { useSunbeam } from 'react-sunbeam';
 
 import { lrudService } from 'features/ribbon/lib/lrud';
@@ -11,12 +10,14 @@ import { lrudService } from 'features/ribbon/lib/lrud';
 import { MenuAction } from '../../lib/ribbon';
 
 import { RibbonContextMenuAction } from './ribbon-context-menu-action';
-
 import { RibbonContextMenuProps } from './ribbon-context-menu.interface';
-
 import s from './ribbon-context-menu.module.scss';
 
-export const RibbonContextMenu = ({ cardRef, removable = true, onSelect }: RibbonContextMenuProps): JSX.Element => {
+export const RibbonContextMenu = ({
+	cardRef,
+	onSelect,
+	removable = true,
+}: RibbonContextMenuProps): JSX.Element => {
 	const { moveFocusUp, moveFocusDown } = useSunbeam();
 
 	const [selectedAction, setAction] = useState<MenuAction>(MenuAction.Move);
@@ -38,46 +39,50 @@ export const RibbonContextMenu = ({ cardRef, removable = true, onSelect }: Ribbo
 		keyReleasedRef.current = true;
 	}, []);
 
-	const handleKeyDown = useCallback((event: KeyboardEvent) => {
-		event.stopPropagation();
-		event.stopImmediatePropagation();
+	const handleKeyDown = useCallback(
+		(event: KeyboardEvent) => {
+			event.stopPropagation();
+			event.stopImmediatePropagation();
 
-		if (!keyReleasedRef.current) {
-			return;
-		}
+			if (!keyReleasedRef.current) {
+				return;
+			}
 
-		switch (event.key) {
-			case 'ArrowRight':
-			case 'ArrowLeft':
-			case 'GoBack':
-				lrudService.closeMenu();
-				return;
-			case 'ArrowUp':
-				moveFocusUp();
-				return;
-			case 'ArrowDown':
-				moveFocusDown();
-				return;
-			case 'Enter':
-				onSelect(selectedAction);
-				return;
-		}
-	}, [selectedAction]);
+			switch (event.key) {
+				case 'ArrowRight':
+				case 'ArrowLeft':
+				case 'GoBack':
+					lrudService.closeMenu();
+					return;
+				case 'ArrowUp':
+					moveFocusUp();
+					return;
+				case 'ArrowDown':
+					moveFocusDown();
+					return;
+				case 'Enter':
+					onSelect(selectedAction);
+			}
+		},
+		[moveFocusDown, moveFocusUp, onSelect, selectedAction],
+	);
 
 	useLayoutEffect(() => {
 		menuRef.current?.focus();
 		refs.setReference(cardRef.current);
-	}, [refs]);
+	}, [cardRef, refs]);
 
 	useEffect(() => {
-		menuRef.current?.addEventListener('keydown', handleKeyDown);
-		menuRef.current?.addEventListener('keyup', handleKeyUp);
+		const maybeElement = menuRef.current;
+
+		maybeElement?.addEventListener('keydown', handleKeyDown);
+		maybeElement?.addEventListener('keyup', handleKeyUp);
 
 		return () => {
-			menuRef.current?.removeEventListener('keydown', handleKeyDown);
-			menuRef.current?.removeEventListener('keyup', handleKeyUp);
+			maybeElement?.removeEventListener('keydown', handleKeyDown);
+			maybeElement?.removeEventListener('keyup', handleKeyUp);
 		};
-	}, [handleKeyDown]);
+	}, [handleKeyDown, handleKeyUp]);
 
 	return (
 		<motion.div
@@ -94,8 +99,12 @@ export const RibbonContextMenu = ({ cardRef, removable = true, onSelect }: Ribbo
 		>
 			<div ref={menuRef} tabIndex={0} className={s.menu}>
 				<RibbonContextMenuAction action={MenuAction.Move} onSelect={setAction} />
+
 				<RibbonContextMenuAction action={MenuAction.Hide} onSelect={setAction} />
-				{removable && <RibbonContextMenuAction action={MenuAction.Uninstall} onSelect={setAction} />}
+
+				{removable && (
+					<RibbonContextMenuAction action={MenuAction.Uninstall} onSelect={setAction} />
+				)}
 			</div>
 
 			<FloatingArrow ref={arrowRef} context={context} className={s.arrow} />

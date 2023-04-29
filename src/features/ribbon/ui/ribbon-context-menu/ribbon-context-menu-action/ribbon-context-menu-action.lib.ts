@@ -1,8 +1,8 @@
 import { MenuAction } from 'features/ribbon/lib/ribbon';
 
 import hide from 'assets/hide.png';
-import swap from 'assets/swap.png';
 import remove from 'assets/remove.png';
+import swap from 'assets/swap.png';
 
 const map: Record<MenuAction, string> = {
 	[MenuAction.Hide]: hide,

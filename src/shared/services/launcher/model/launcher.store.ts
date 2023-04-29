@@ -2,25 +2,33 @@ import { makeAutoObservable, observable, reaction, when } from 'mobx';
 
 import { luna, LunaTopic } from 'shared/services/luna';
 import { settingsStore } from 'shared/services/settings';
+
 import { inputService } from '../../input';
+import { LaunchPoint, LaunchPointIconsMixin } from '../api/launch-point';
 
-import type { LaunchPoint, LaunchPointIconsMixin } from '../api/launch-point';
-
-type ListLaunchPointsMessage = {
-	launchPoints: (LaunchPoint & LaunchPointIconsMixin)[];
-} | (
-	LaunchPoint & LaunchPointIconsMixin & ({
-	change: 'added' | 'removed';
-} | {
-	change: 'updated';
-	changeReason: 'movedByUser' | string;
-}));
+type ListLaunchPointsMessage =
+	| {
+			launchPoints: (LaunchPoint & LaunchPointIconsMixin)[];
+	  }
+	| (LaunchPoint &
+			LaunchPointIconsMixin &
+			(
+				| {
+						change: 'added' | 'removed';
+				  }
+				| {
+						change: 'updated';
+						changeReason: 'movedByUser' | string;
+				  }
+			));
 
 class LauncherStore {
 	private availableLaunchPoints = observable.map<string, LaunchPoint>();
 	private customLaunchPoints = observable.map<string, LaunchPoint>();
 
-	private launchPointsMessage = new LunaTopic<ListLaunchPointsMessage>('luna://com.webos.service.applicationmanager/listLaunchPoints');
+	private launchPointsMessage = new LunaTopic<ListLaunchPointsMessage>(
+		'luna://com.webos.service.applicationmanager/listLaunchPoints',
+	);
 
 	public constructor() {
 		makeAutoObservable(this, { launch: false }, { autoBind: true });
@@ -36,8 +44,9 @@ class LauncherStore {
 			() => settingsStore.hydrated && Boolean(this.launchPointsMessage.message),
 			() => {
 				if (settingsStore.order.length === 0) {
-					settingsStore.order = Array.from(this.availableLaunchPoints.keys())
-						.filter(id => !id.startsWith('com.webos'));
+					settingsStore.order = Array.from(this.availableLaunchPoints.keys()).filter(
+						id => !id.startsWith('com.webos'),
+					);
 				}
 
 				if (settingsStore.order.length === 0) {
@@ -88,10 +97,9 @@ class LauncherStore {
 		}
 
 		if ('launchPoints' in message) {
-			this.availableLaunchPoints.replace(message.launchPoints.map(x => [
-				x.id,
-				this.normalizeLaunchPoint(x),
-			]));
+			this.availableLaunchPoints.replace(
+				message.launchPoints.map(x => [x.id, this.normalizeLaunchPoint(x)]),
+			);
 		}
 
 		if (!('change' in message)) {
@@ -116,17 +124,20 @@ class LauncherStore {
 	}
 
 	private normalizeLaunchPoint(lp: LaunchPoint & LaunchPointIconsMixin): LaunchPoint {
-		lp.icon = lp.mediumLargeIcon || lp.largeIcon || lp.extraLargeIcon || lp.icon;
+		const normalized = {
+			...lp,
+			icon: lp.mediumLargeIcon || lp.largeIcon || lp.extraLargeIcon || lp.icon,
+		};
 
-		if (lp.icon.startsWith('/')) {
-			lp.icon = `./root${lp.icon}`;
+		if (normalized.icon.startsWith('/')) {
+			normalized.icon = `./root${normalized.icon}`;
 		}
 
-		if (lp.id === 'org.webosbrew.hbchannel') {
-			lp.removable = false;
+		if (normalized.id === 'org.webosbrew.hbchannel') {
+			normalized.removable = false;
 		}
 
-		return lp;
+		return normalized;
 	}
 }
 
