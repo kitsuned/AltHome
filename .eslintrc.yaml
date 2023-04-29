@@ -1,0 +1,141 @@
+parser: '@typescript-eslint/parser'
+parserOptions:
+  project: ./tsconfig.json
+  ecmaVersion: 2020
+  ecmaFeatures:
+    jsx: true
+
+settings:
+  react:
+    version: detect
+  import/resolver:
+    typescript: true
+
+root: true
+
+env:
+  node: true
+
+extends:
+  - airbnb-base
+  - airbnb-typescript/base
+  - prettier
+  - 'plugin:sonarjs/recommended'
+  - 'plugin:react/jsx-runtime'
+  - 'plugin:react-hooks/recommended'
+  - 'plugin:import/recommended'
+  - 'plugin:import/typescript'
+
+plugins:
+  - prettier
+
+rules:
+  prettier/prettier: warn
+
+  max-len:
+    - error
+    - code: 120
+
+  curly:
+    - error
+    - all
+
+  no-void:
+    - error
+    - allowAsStatement: true
+
+  no-underscore-dangle:
+    - error
+    - allow: [ __DEV__ ]
+
+  no-restricted-globals:
+    - error
+    - React
+
+  no-restricted-imports:
+    - error
+    - patterns: [ '../../../*' ]
+
+  no-restricted-exports:
+    - error
+    - restrictDefaultExports:
+        direct: true
+
+  no-unused-vars:
+    - error
+    - argsIgnorePattern: '^_'
+      ignoreRestSiblings: true
+
+  no-console: off
+  no-plusplus: off
+  no-nested-ternary: off
+  no-restricted-syntax: off
+
+  default-case: off
+
+  lines-between-class-members:
+    - error
+    - always
+    - exceptAfterSingleLine: true
+
+  react/jsx-newline: error
+  react/no-array-index-key: error
+  react/jsx-curly-brace-presence:
+    - error
+    - never
+
+  '@typescript-eslint/no-floating-promises':
+    - error
+    - ignoreVoid: true
+
+  '@typescript-eslint/no-unused-vars': off
+  '@typescript-eslint/lines-between-class-members': off
+
+  import/prefer-default-export: off
+  import/no-extraneous-dependencies: off
+  import/no-cycle: off
+
+  import/consistent-type-specifier-style:
+    - error
+    - prefer-top-level
+  '@typescript-eslint/consistent-type-imports':
+    - error
+    - prefer: no-type-imports
+
+  import/order:
+    - error
+    - alphabetize:
+        order: asc
+      newlines-between: always
+      groups: [ builtin, external, internal, parent, sibling ]
+      pathGroupsExcludedImportTypes: [ builtin ]
+      pathGroups:
+        - pattern: webpack{,-dev-server}
+          group: external
+          position: before
+        - pattern: react{,-dom/*}
+          group: external
+          position: before
+        - pattern: mobx{,-react-lite}
+          group: external
+          position: before
+        - pattern: framer-motion
+          group: external
+          position: before
+        - pattern: shared/**
+          group: internal
+          position: before
+        - pattern: assets/**
+          group: internal
+          position: after
+
+  class-methods-use-this: off
+
+overrides:
+  - files: '*.config.ts'
+    rules:
+      no-restricted-exports: off
+  - files: '*.d.ts'
+    rules:
+      no-unused-vars: off
+      no-restricted-exports: off
