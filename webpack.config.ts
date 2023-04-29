@@ -1,15 +1,12 @@
 import { ProvidePlugin, DefinePlugin } from 'webpack';
 
+import WebOSPackagerPlugin from '@kitsuned/webos-packager-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import WebOSPackagerPlugin from '@kitsuned/webos-packager-plugin';
+import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
-import {
-	JsonTransformer,
-	WebpackMultipleConfigurations,
-} from 'chore/webpack-utils';
+import { WebpackMultipleConfigurations, JsonTransformer } from 'chore/webpack-utils';
 
 import { name, version, description, repository } from './package.json';
 
@@ -18,7 +15,7 @@ const transformer = new JsonTransformer({
 	APP_VERSION: version,
 });
 
-export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
+export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean }>>[
 	(_, argv) => ({
 		name: 'app',
 		target: 'web',
@@ -33,15 +30,8 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 			filename: 'app.js',
 		},
 		resolve: {
-			extensions: [
-				...argv.mode !== 'development' ? [] : ['.dev.ts'],
-				'.js',
-				'.ts',
-				'.tsx',
-			],
-			plugins: [
-				new TSConfigPathsPlugin(),
-			],
+			extensions: [...(argv.mode !== 'development' ? [] : ['.dev.ts']), '.js', '.ts', '.tsx'],
+			plugins: [new TSConfigPathsPlugin()],
 		},
 		module: {
 			rules: [
@@ -63,10 +53,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 							loader: 'postcss-loader',
 							options: {
 								postcssOptions: {
-									plugins: [
-										'autoprefixer',
-										'postcss-preset-env',
-									],
+									plugins: ['autoprefixer', 'postcss-preset-env'],
 								},
 							},
 						},
@@ -125,7 +112,8 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 				setExecutableBit: true,
 				metadata: {
 					title: 'AltHome',
-					iconUrl: 'https://raw.githubusercontent.com/kitsuned/AltHome/v1.0.0/manifests/icon320.png',
+					iconUrl:
+						'https://raw.githubusercontent.com/kitsuned/AltHome/v1.0.0/manifests/icon320.png',
 					sourceUrl: repository,
 					rootRequired: true,
 				},
