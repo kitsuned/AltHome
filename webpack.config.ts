@@ -89,7 +89,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean; }>>[
 				React: 'react',
 			}),
 			new DefinePlugin({
-				__DEV__: JSON.stringify(!process.env.PRODUCTION),
+				__DEV__: JSON.stringify(argv.mode === 'development'),
 				'process.env.APP_ID': JSON.stringify(name),
 			}),
 			new MiniCssExtractPlugin(),
