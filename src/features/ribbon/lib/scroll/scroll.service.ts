@@ -60,9 +60,10 @@ class ScrollService {
 			return this.container?.scrollLeft ?? 0;
 		}
 
-		const element = this.container.children.length <= lrudService.selectedLaunchPointIndex
-		                ? this.container.lastElementChild!
-		                : this.container.children[lrudService.selectedLaunchPointIndex];
+		const element =
+			this.container.children.length <= lrudService.selectedLaunchPointIndex
+				? this.container.lastElementChild!
+				: this.container.children[lrudService.selectedLaunchPointIndex];
 
 		const box = element.getBoundingClientRect();
 

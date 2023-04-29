@@ -1,14 +1,14 @@
-import { runInAction } from 'mobx';
 import { useCallback, useEffect, useRef } from 'react';
 
+import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
 import { useSunbeam } from 'react-sunbeam';
 
-import { ribbonService } from 'features/ribbon';
-
 import { LaunchPoint } from 'shared/services/launcher';
 import { settingsStore } from 'shared/services/settings';
+
+import { ribbonService } from 'features/ribbon';
 
 import { RibbonAppDrawerItem } from '../ribbon-app-drawer-item';
 
@@ -21,6 +21,8 @@ export const RibbonAppDrawerList = observer((): JSX.Element => {
 	const { moveFocusUp, moveFocusDown } = useSunbeam();
 
 	useEffect(() => {
+		const maybeElement = ref.current;
+
 		const handleKeyDown = (event: KeyboardEvent) => {
 			event.stopPropagation();
 			event.stopImmediatePropagation();
@@ -48,10 +50,11 @@ export const RibbonAppDrawerList = observer((): JSX.Element => {
 			}
 		};
 
-		ref.current?.focus();
-		ref.current?.addEventListener('keydown', handleKeyDown);
-		return () => ref.current?.removeEventListener('keydown', handleKeyDown);
-	}, []);
+		maybeElement?.focus();
+		maybeElement?.addEventListener('keydown', handleKeyDown);
+
+		return () => maybeElement?.removeEventListener('keydown', handleKeyDown);
+	}, [moveFocusDown, moveFocusUp]);
 
 	const handleSelected = useCallback((lp: LaunchPoint) => {
 		selectedLpIdRef.current = lp.id;

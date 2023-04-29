@@ -1,4 +1,5 @@
-import type { TriggerZone } from '../../lib/zone';
+// TODO
+type TriggerZone = never;
 
 export type RibbonScrollTriggerProps = {
 	hiddenEdge: TriggerZone;

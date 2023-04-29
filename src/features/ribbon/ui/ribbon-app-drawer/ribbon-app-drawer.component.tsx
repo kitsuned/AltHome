@@ -1,8 +1,8 @@
+import { MotionProps, Variants, motion } from 'framer-motion';
+
 import { Portal } from '@reach/portal';
 
-import { motion, MotionProps, Variants } from 'framer-motion';
 import { RibbonAppDrawerList } from './ribbon-app-drawer-list';
-
 import s from './ribbon-app-drawer.module.scss';
 
 const dialogVariants: Variants = {
@@ -37,9 +37,7 @@ export const RibbonAppDrawer = (): JSX.Element => (
 		<motion.div {...animationMixin} variants={backdropVariants} className={s.backdrop} />
 
 		<motion.div {...animationMixin} variants={dialogVariants} className={s.drawer}>
-			<h1 className={s.header}>
-				Apps
-			</h1>
+			<h1 className={s.header}>Apps</h1>
 
 			<RibbonAppDrawerList />
 		</motion.div>

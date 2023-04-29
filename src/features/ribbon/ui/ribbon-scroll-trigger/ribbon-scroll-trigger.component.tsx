@@ -1,26 +1,26 @@
 import { memo } from 'react';
 
-import type { RibbonScrollTriggerProps } from './ribbon-scroll-trigger.interface';
-
+import { RibbonScrollTriggerProps } from './ribbon-scroll-trigger.interface';
 import s from './ribbon-scroll-trigger.module.scss';
 
-// it's okay to use inline callbacks here
-export const RibbonScrollTrigger = memo(({ hiddenEdge, onTrigger }: RibbonScrollTriggerProps): JSX.Element => (
-	<>
-		{hiddenEdge !== 'left' && (
-			<div
-				className={s.left}
-				onMouseOver={() => onTrigger('left')}
-				onMouseOut={() => onTrigger(null)}
-			/>
-		)}
+export const RibbonScrollTrigger = memo(
+	({ hiddenEdge, onTrigger }: RibbonScrollTriggerProps): JSX.Element => (
+		<>
+			{hiddenEdge !== 'left' && (
+				<div
+					className={s.left}
+					onMouseOver={() => onTrigger('left')}
+					onMouseOut={() => onTrigger(null)}
+				/>
+			)}
 
-		{hiddenEdge !== 'right' && (
-			<div
-				className={s.right}
-				onMouseOver={() => onTrigger('right')}
-				onMouseOut={() => onTrigger(null)}
-			/>
-		)}
-	</>
-));
+			{hiddenEdge !== 'right' && (
+				<div
+					className={s.right}
+					onMouseOver={() => onTrigger('right')}
+					onMouseOut={() => onTrigger(null)}
+				/>
+			)}
+		</>
+	),
+);

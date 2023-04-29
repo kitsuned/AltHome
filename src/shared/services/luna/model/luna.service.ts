@@ -1,6 +1,9 @@
+// TODO
+// eslint-disable-next-line max-classes-per-file
 import { makeAutoObservable, reaction, toJS } from 'mobx';
 
-import type { LunaMessage, LunaRequestParams } from '../api/luna.api';
+import { LunaMessage, LunaRequestParams } from '../api/luna.api';
+import { verifyMessageContents } from '../lib/auto-elevator.lib';
 
 export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParams = {}> {
 	public message: LunaMessage<T> | null = null;
@@ -27,9 +30,14 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 		this.bridge.onservicecallback = this.handleCallback;
 
-		this.bridge.call(this.uri, JSON.stringify(this.params ?? {
-			subscribe: true,
-		}));
+		this.bridge.call(
+			this.uri,
+			JSON.stringify(
+				this.params ?? {
+					subscribe: true,
+				},
+			),
+		);
 	}
 
 	private handleCallback(serialized: string) {
@@ -73,33 +81,7 @@ class LunaOneShot<T extends Record<string, any>, P extends LunaRequestParams = {
 	}
 }
 
-export const luna = <T extends Record<string, any>, P extends LunaRequestParams = {}>(uri: string, params?: P) =>
-	new LunaOneShot<T, P>(uri, params).call();
-
-const verifyMessageContents = (message: LunaMessage) => {
-	if (!message.returnValue && message.errorText?.startsWith('Denied method call')) {
-		void requestElevation();
-	}
-};
-
-const requestElevation = async () => {
-	const { root } = await luna<{ root: boolean; }>('luna://org.webosbrew.hbchannel.service/getConfiguration');
-
-	if (!root) {
-		await luna('luna://com.webos.notification/createToast', {
-			message: '[AltHome] Check root status!',
-		});
-
-		return;
-	}
-
-	await luna('luna://com.webos.notification/createToast', {
-		message: '[AltHome] Getting things ready…',
-	});
-
-	await luna('luna://org.webosbrew.hbchannel.service/exec', {
-		command: '/media/developer/apps/usr/palm/applications/com.kitsuned.althome/service --self-elevation',
-	});
-
-	window.close();
-};
+export const luna = <T extends Record<string, any>, P extends LunaRequestParams = {}>(
+	uri: string,
+	params?: P,
+) => new LunaOneShot<T, P>(uri, params).call();

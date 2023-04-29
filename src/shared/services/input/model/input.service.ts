@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
-import { LunaTopic } from 'shared/services/luna';
 import { LaunchPoint } from 'shared/services/launcher';
+import { LunaTopic } from 'shared/services/luna';
 
 import { InputDevice } from '../api/input-device.api';
 
@@ -29,7 +29,7 @@ class InputService {
 			removable: false,
 			iconColor: '#ffffff',
 			icon: `./root${device.iconPrefix}${device.icon}`,
-		}
+		};
 	}
 }
 

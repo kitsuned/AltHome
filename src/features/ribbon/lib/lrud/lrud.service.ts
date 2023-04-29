@@ -1,16 +1,12 @@
 import { makeAutoObservable, reaction } from 'mobx';
 
-import { launcherStore, type LaunchPoint } from 'shared/services/launcher';
+import { LaunchPoint } from 'shared/services/launcher';
 
 import { ribbonService } from '../ribbon';
 import { scrollService } from '../scroll';
 
 const enum SystemKey {
 	Home = 0x3f5,
-	Red = 0x193,
-	Green = 0x194,
-	Yellow = 0x195,
-	Blue = 0x196
 }
 
 class LrudService {
@@ -132,10 +128,11 @@ class LrudService {
 		this.selectDownFiredCounter = 0;
 	}
 
+	// TODO
+	// eslint-disable-next-line sonarjs/cognitive-complexity
 	private handleArrow(key: string) {
 		if (this.currentIndex === null) {
 			this.focusToFirstVisibleNode();
-
 			return;
 		}
 

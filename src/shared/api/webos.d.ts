@@ -27,12 +27,18 @@ declare global {
 
 		const window: {
 			setFocus(value: boolean): void;
-		}
+		};
 	}
 
 	interface Document {
-		addEventListener(type: 'webOSRelaunch', listener: (this: Document, event: CustomEvent<ActivateType>) => void): void;
+		addEventListener(
+			type: 'webOSRelaunch',
+			listener: (this: Document, event: CustomEvent<ActivateType>) => void,
+		): void;
 
-		removeEventListener(type: 'webOSRelaunch', listener: (this: Document, event: CustomEvent<ActivateType>) => void): void;
+		removeEventListener(
+			type: 'webOSRelaunch',
+			listener: (this: Document, event: CustomEvent<ActivateType>) => void,
+		): void;
 	}
 }

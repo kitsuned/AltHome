@@ -1,5 +1,5 @@
-import type { Configuration as WebpackConfiguration } from 'webpack';
-import type { Configuration as DevServerConfiguration } from 'webpack-dev-server';
+import { Configuration as WebpackConfiguration } from 'webpack';
+import { Configuration as DevServerConfiguration } from 'webpack-dev-server';
 
 type Configuration = WebpackConfiguration & DevServerConfiguration;
 
@@ -9,6 +9,11 @@ export type WebpackArgv<T extends Record<string, any>> = Partial<Pick<Configurat
 	env: WebpackEnvironment<T>;
 };
 
-export type WebpackConfigFunction<T extends Record<string, any> = {}> = (env: WebpackEnvironment<T>, argv: WebpackArgv<T>) => Configuration;
+export type WebpackConfigFunction<T extends Record<string, any> = {}> = (
+	env: WebpackEnvironment<T>,
+	argv: WebpackArgv<T>,
+) => Configuration;
 
-export type WebpackMultipleConfigurations<T extends Record<string, any>> = Array<Configuration | WebpackConfigFunction<T>>;
+export type WebpackMultipleConfigurations<T extends Record<string, any>> = Array<
+	Configuration | WebpackConfigFunction<T>
+>;
