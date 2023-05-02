@@ -122,11 +122,14 @@ rules:
         - pattern: framer-motion
           group: external
           position: before
+        - pattern: '@**'
+          group: internal
+          position: before
         - pattern: shared/**
           group: internal
           position: before
         - pattern: assets/**
-          group: internal
+          group: sibling
           position: after
 
   class-methods-use-this: off
