@@ -1,4 +1,4 @@
-import { MenuAction } from 'features/ribbon/lib/ribbon';
+import { MenuAction } from 'features/ribbon';
 
 export type RibbonContextMenuActionProps = {
 	action: MenuAction;

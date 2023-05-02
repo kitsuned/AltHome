@@ -7,7 +7,7 @@ import { AnimatePresence, motion, MotionProps } from 'framer-motion';
 
 import { useContainer } from '@di';
 
-import { RibbonService } from 'features/ribbon/lib/ribbon/ribbon.service';
+import { RibbonService } from 'features/ribbon';
 
 import { RibbonAppDrawer } from '../ribbon-app-drawer';
 import { RibbonCard } from '../ribbon-card';

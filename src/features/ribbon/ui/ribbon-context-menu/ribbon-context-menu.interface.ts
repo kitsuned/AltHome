@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MenuAction } from '../../lib/ribbon';
+import { MenuAction } from 'features/ribbon';
 
 export type RibbonContextMenuProps = {
 	cardRef: React.MutableRefObject<HTMLElement | null>;

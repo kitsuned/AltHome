@@ -10,7 +10,7 @@ import { useContainer } from '@di';
 import { LaunchPoint } from 'shared/services/launcher';
 import { SettingsService } from 'shared/services/settings';
 
-import { RibbonService } from 'features/ribbon/lib';
+import { RibbonService } from 'features/ribbon';
 
 import { RibbonAppDrawerItem } from '../ribbon-app-drawer-item';
 

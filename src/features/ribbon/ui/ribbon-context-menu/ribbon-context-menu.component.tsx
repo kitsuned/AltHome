@@ -8,7 +8,7 @@ import { useSunbeam } from 'react-sunbeam';
 import { useContainer } from '@di';
 
 import { MenuAction } from 'features/ribbon';
-import { LrudService } from 'features/ribbon/lib';
+import { LrudService } from 'features/ribbon/model';
 
 import { RibbonContextMenuAction } from './ribbon-context-menu-action';
 import { RibbonContextMenuProps } from './ribbon-context-menu.interface';

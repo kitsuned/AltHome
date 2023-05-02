@@ -3,7 +3,7 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { Focusable } from 'react-sunbeam';
 
-import { MenuAction } from 'features/ribbon/lib';
+import { MenuAction } from 'features/ribbon';
 
 import { RibbonContextMenuActionProps } from './ribbon-context-menu-action.interface';
 import { mapMenuActionToIcon } from './ribbon-context-menu-action.lib';

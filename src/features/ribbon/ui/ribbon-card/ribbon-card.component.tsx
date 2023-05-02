@@ -12,7 +12,7 @@ import { useContainer } from '@di';
 import { LauncherService } from 'shared/services/launcher';
 
 import { MenuAction } from 'features/ribbon';
-import { LrudService, RibbonService, ScrollService } from 'features/ribbon/lib';
+import { LrudService, RibbonService, ScrollService } from 'features/ribbon/model';
 
 import { RibbonContextMenu } from '../ribbon-context-menu';
 
