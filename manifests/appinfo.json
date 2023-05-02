@@ -8,7 +8,9 @@
 	"largeIcon": "icon130.png",
 	"iconColor": "#2f3e46",
 	"noSplashOnLaunch": true,
+	"spinnerOnLaunch": false,
 	"disableBackHistoryAPI": true,
+	"supportQuickStart": true,
 	"visible": false,
 	"defaultWindowType": "floating"
 }
