@@ -5,9 +5,10 @@ import { motion } from 'framer-motion';
 import { arrow, FloatingArrow, offset, shift, useFloating } from '@floating-ui/react';
 import { useSunbeam } from 'react-sunbeam';
 
-import { lrudService } from 'features/ribbon/lib/lrud';
+import { useContainer } from '@di';
 
-import { MenuAction } from '../../lib/ribbon';
+import { MenuAction } from 'features/ribbon';
+import { LrudService } from 'features/ribbon/lib';
 
 import { RibbonContextMenuAction } from './ribbon-context-menu-action';
 import { RibbonContextMenuProps } from './ribbon-context-menu.interface';
@@ -18,6 +19,9 @@ export const RibbonContextMenu = ({
 	onSelect,
 	removable = true,
 }: RibbonContextMenuProps): JSX.Element => {
+	const container = useContainer();
+	const lrudService = container.get(LrudService);
+
 	const { moveFocusUp, moveFocusDown } = useSunbeam();
 
 	const [selectedAction, setAction] = useState<MenuAction>(MenuAction.Move);

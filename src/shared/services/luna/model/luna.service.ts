@@ -10,7 +10,7 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 	private bridge!: PalmServiceBridge;
 
-	public constructor(private readonly uri: string, readonly params?: P) {
+	public constructor(private readonly uri: string, private readonly params?: P) {
 		makeAutoObservable<LunaTopic<T>, 'bridge'>(this, { bridge: false }, { autoBind: true });
 
 		this.subscribe();

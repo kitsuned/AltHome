@@ -7,11 +7,13 @@ import { MotionProps, AnimatePresence, motion } from 'framer-motion';
 
 import { Portal } from '@reach/portal';
 
-import { launcherStore } from 'shared/services/launcher';
+import { useContainer } from '@di';
 
-import { lrudService, ribbonService, scrollService } from 'features/ribbon';
+import { LauncherService } from 'shared/services/launcher';
 
-import { MenuAction } from '../../lib/ribbon';
+import { MenuAction } from 'features/ribbon';
+import { LrudService, RibbonService, ScrollService } from 'features/ribbon/lib';
+
 import { RibbonContextMenu } from '../ribbon-context-menu';
 
 import { RibbonCardProps } from './ribbon-card.interface';
@@ -32,6 +34,12 @@ const motionProps: MotionProps = {
 };
 
 export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
+	const container = useContainer();
+	const lrudService = container.get(LrudService);
+	const scrollService = container.get(ScrollService);
+	const ribbonService = container.get(RibbonService);
+	const launcherService = container.get(LauncherService);
+
 	const cardRef = useRef<HTMLButtonElement>(null);
 
 	const isSelected = computed(() => lrudService.isSelected(launchPoint)).get();
@@ -66,11 +74,11 @@ export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 			}
 
 			if (action === MenuAction.Hide) {
-				launcherStore.hide(launchPoint);
+				launcherService.hide(launchPoint);
 			}
 
 			if (action === MenuAction.Uninstall) {
-				void launcherStore.uninstall(launchPoint);
+				void launcherService.uninstall(launchPoint);
 			}
 		},
 		[launchPoint],

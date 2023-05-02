@@ -2,17 +2,23 @@ import { makeAutoObservable, observable, reaction, when } from 'mobx';
 
 import { animate, motionValue } from 'framer-motion';
 
-import { settingsStore } from 'shared/services/settings';
+import { inject, injectable } from 'inversify';
 
-import { lrudService } from '../lrud';
+import { SettingsService } from 'shared/services/settings';
 
-class ScrollService {
+import { LrudService } from '../lrud/lrud.service';
+
+@injectable()
+export class ScrollService {
 	public container: HTMLElement | null = null;
 
 	private wheelShift: number = 0;
 	private scrollPosition = motionValue(0);
 
-	public constructor() {
+	public constructor(
+		@inject(LrudService) private readonly lrudService: LrudService,
+		@inject(SettingsService) private readonly settingsService: SettingsService,
+	) {
 		makeAutoObservable<ScrollService, 'scrollPosition' | 'containerBox'>(
 			this,
 			{
@@ -27,7 +33,7 @@ class ScrollService {
 			() => this.container !== null,
 			() => {
 				reaction(
-					() => lrudService.selectedLaunchPointIndex,
+					() => this.lrudService.selectedLaunchPointIndex,
 					() => {
 						this.wheelShift = this.focusedElementPosition;
 					},
@@ -56,14 +62,14 @@ class ScrollService {
 	}
 
 	private get focusedElementPosition() {
-		if (!this.container || lrudService.selectedLaunchPointIndex === null) {
+		if (!this.container || this.lrudService.selectedLaunchPointIndex === null) {
 			return this.container?.scrollLeft ?? 0;
 		}
 
 		const element =
-			this.container.children.length <= lrudService.selectedLaunchPointIndex
+			this.container.children.length <= this.lrudService.selectedLaunchPointIndex
 				? this.container.lastElementChild!
-				: this.container.children[lrudService.selectedLaunchPointIndex];
+				: this.container.children[this.lrudService.selectedLaunchPointIndex];
 
 		const box = element.getBoundingClientRect();
 
@@ -91,12 +97,10 @@ class ScrollService {
 	}
 
 	private handleScroll({ deltaY }: WheelEvent) {
-		this.wheelShift += deltaY * settingsStore.wheelVelocityFactor;
+		this.wheelShift += deltaY * this.settingsService.wheelVelocityFactor;
 
 		this.wheelShift = Math.max(0, Math.min(this.shiftThreshold, this.wheelShift));
 
-		lrudService.blur();
+		this.lrudService.blur();
 	}
 }
-
-export const scrollService = new ScrollService();

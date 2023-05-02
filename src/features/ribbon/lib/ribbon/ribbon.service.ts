@@ -2,13 +2,14 @@ import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 import { animationControls } from 'framer-motion';
 
-import { ActivateType, Intent } from 'shared/api/webos.d';
-import { LaunchPoint, launcherStore } from 'shared/services/launcher';
-import { settingsStore } from 'shared/services/settings';
+import { inject, injectable } from 'inversify';
 
-import plus from 'assets/plus.png';
+import { Intent } from 'shared/api/webos.d';
+import { LauncherService, LaunchPoint } from 'shared/services/launcher';
+import { SettingsService } from 'shared/services/settings';
 
-class RibbonService {
+@injectable()
+export class RibbonService {
 	public mounted: boolean = false;
 	public visible: boolean = false;
 	public controls = animationControls();
@@ -17,14 +18,17 @@ class RibbonService {
 
 	private transition: boolean = false;
 
-	public constructor() {
+	public constructor(
+		@inject(LauncherService) private readonly launcherService: LauncherService,
+		@inject(SettingsService) private readonly settingsService: SettingsService,
+	) {
 		makeAutoObservable(this, { controls: false }, { autoBind: true });
 
 		// consequences of imperative life
 		this.controls.mount();
 
 		when(
-			() => this.mounted && this.launchPoints.length !== 0,
+			() => this.mounted && this.launcherService.fulfilled,
 			() => {
 				this.visible = webOSSystem.launchReason !== 'preload';
 			},
@@ -57,33 +61,13 @@ class RibbonService {
 	}
 
 	public get extraLaunchPoints(): LaunchPoint[] {
-		const added = launcherStore.visibleLaunchPoints.map(x => x.id);
-
-		const extra = Array.from(launcherStore.launchPoints.keys()).filter(
-			id => !added.includes(id),
-		);
-
-		return Array.from(extra.map(x => launcherStore.launchPoints.get(x)!));
+		// TODO
+		return [];
 	}
 
 	public get launchPoints(): LaunchPoint[] {
-		if (!launcherStore.visibleLaunchPoints.length) {
-			return [];
-		}
-
-		return [
-			...launcherStore.visibleLaunchPoints,
-			<LaunchPoint>{
-				id: 'com.kitsuned.althome',
-				title: 'Add apps',
-				removable: false,
-				iconColor: '#242424',
-				icon: plus,
-				params: <ActivateType>{
-					intent: Intent.AddApps,
-				},
-			},
-		];
+		// TODO
+		return this.launcherService.launchPoints;
 	}
 
 	public launch(launchPoint: LaunchPoint) {
@@ -91,19 +75,19 @@ class RibbonService {
 			this.visible = false;
 		}
 
-		void launcherStore.launch(launchPoint);
+		void this.launcherService.launch(launchPoint);
 	}
 
 	public move(lp: LaunchPoint, position: number) {
 		const from = this.launchPoints.indexOf(lp);
 
 		if (from !== position) {
-			const ids = launcherStore.visibleLaunchPoints.map(x => x.id);
+			const ids = this.launcherService.launchPoints.map(x => x.id);
 
 			ids.splice(from, 1);
 			ids.splice(position, 0, lp.id);
 
-			settingsStore.order = ids;
+			this.settingsService.order = ids;
 		}
 	}
 
@@ -113,5 +97,3 @@ class RibbonService {
 		}
 	}
 }
-
-export const ribbonService = new RibbonService();

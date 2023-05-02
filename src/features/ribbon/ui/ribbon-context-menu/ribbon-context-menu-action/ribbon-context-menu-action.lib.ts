@@ -1,4 +1,4 @@
-import { MenuAction } from 'features/ribbon/lib/ribbon';
+import { MenuAction } from 'features/ribbon/lib';
 
 import hide from 'assets/hide.png';
 import remove from 'assets/remove.png';

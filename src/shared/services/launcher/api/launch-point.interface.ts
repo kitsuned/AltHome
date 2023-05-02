@@ -2,6 +2,8 @@ export type LaunchPoint = {
 	id: string;
 	title: string;
 
+	launchPointId: string;
+
 	removable: boolean;
 	iconColor: string;
 	icon: string;

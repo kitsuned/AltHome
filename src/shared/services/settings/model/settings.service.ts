@@ -1,5 +1,6 @@
 import { comparer, makeAutoObservable, reaction, toJS, when } from 'mobx';
 
+import { injectable } from 'inversify';
 import throttle from 'lodash.throttle';
 
 import { luna, LunaTopic } from 'shared/services/luna';
@@ -13,9 +14,10 @@ type ConfigMessage = {
 	missingConfigs: string[];
 };
 
-type Settings = Omit<SettingsStore, 'hydrated'>;
+type Settings = Omit<SettingsService, 'hydrated'>;
 
-class SettingsStore {
+@injectable()
+export class SettingsService {
 	public hydrated: boolean = false;
 
 	public memoryQuirks: boolean = true;
@@ -69,5 +71,3 @@ class SettingsStore {
 		Object.assign(this, json);
 	}
 }
-
-export const settingsStore = new SettingsStore();

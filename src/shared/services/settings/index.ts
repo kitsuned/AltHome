@@ -1,1 +1,3 @@
-export { settingsStore } from './model/settings.store';
+export { settingsModule } from './settings.module';
+
+export { SettingsService } from './model/settings.service';

@@ -5,7 +5,9 @@ import { observer } from 'mobx-react-lite';
 
 import { AnimatePresence, motion, MotionProps } from 'framer-motion';
 
-import { ribbonService, scrollService } from 'features/ribbon';
+import { useContainer } from '@di';
+
+import { RibbonService } from 'features/ribbon/lib/ribbon/ribbon.service';
 
 import { RibbonAppDrawer } from '../ribbon-app-drawer';
 import { RibbonCard } from '../ribbon-card';
@@ -31,6 +33,9 @@ const motionProps: MotionProps = {
 };
 
 export const Ribbon = observer(() => {
+	const container = useContainer();
+	const ribbonService = container.get(RibbonService);
+
 	useEffect(() => {
 		runInAction(() => {
 			ribbonService.mounted = true;
@@ -40,13 +45,13 @@ export const Ribbon = observer(() => {
 	return (
 		<>
 			<motion.div
-				ref={scrollService.scrollContainerRef}
+				// ref={scrollService.scrollContainerRef}
 				animate={ribbonService.controls}
 				className={s.group}
 				{...motionProps}
 			>
 				{ribbonService.launchPoints.map(point => (
-					<RibbonCard key={point.id} launchPoint={point} />
+					<RibbonCard key={point.launchPointId} launchPoint={point} />
 				))}
 			</motion.div>
 

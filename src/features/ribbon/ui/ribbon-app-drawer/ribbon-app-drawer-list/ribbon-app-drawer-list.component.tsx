@@ -5,16 +5,22 @@ import { observer } from 'mobx-react-lite';
 
 import { useSunbeam } from 'react-sunbeam';
 
-import { LaunchPoint } from 'shared/services/launcher';
-import { settingsStore } from 'shared/services/settings';
+import { useContainer } from '@di';
 
-import { ribbonService } from 'features/ribbon';
+import { LaunchPoint } from 'shared/services/launcher';
+import { SettingsService } from 'shared/services/settings';
+
+import { RibbonService } from 'features/ribbon/lib';
 
 import { RibbonAppDrawerItem } from '../ribbon-app-drawer-item';
 
 import s from './ribbon-app-drawer-list.module.scss';
 
 export const RibbonAppDrawerList = observer((): JSX.Element => {
+	const container = useContainer();
+	const settingsService = container.get(SettingsService);
+	const ribbonService = container.get(RibbonService);
+
 	const ref = useRef<HTMLDivElement>(null);
 	const selectedLpIdRef = useRef<string | null>(null);
 
@@ -44,7 +50,7 @@ export const RibbonAppDrawerList = observer((): JSX.Element => {
 
 			if (event.key === 'Enter' && selectedLpIdRef.current) {
 				runInAction(() => {
-					settingsStore.order.push(selectedLpIdRef.current!);
+					settingsService.order.push(selectedLpIdRef.current!);
 					ribbonService.addAppsDrawerActive = false;
 				});
 			}
@@ -56,14 +62,18 @@ export const RibbonAppDrawerList = observer((): JSX.Element => {
 		return () => maybeElement?.removeEventListener('keydown', handleKeyDown);
 	}, [moveFocusDown, moveFocusUp]);
 
-	const handleSelected = useCallback((lp: LaunchPoint) => {
-		selectedLpIdRef.current = lp.id;
+	const handleSelected = useCallback(({ launchPointId }: LaunchPoint) => {
+		selectedLpIdRef.current = launchPointId;
 	}, []);
 
 	return (
 		<div ref={ref} tabIndex={0} className={s.list}>
 			{ribbonService.extraLaunchPoints.map(lp => (
-				<RibbonAppDrawerItem key={lp.id} launchPoint={lp} onSelect={handleSelected} />
+				<RibbonAppDrawerItem
+					key={lp.launchPointId}
+					launchPoint={lp}
+					onSelect={handleSelected}
+				/>
 			))}
 		</div>
 	);
