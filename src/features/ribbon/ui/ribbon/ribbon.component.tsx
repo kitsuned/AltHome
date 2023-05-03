@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
-
-import { runInAction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import type { MotionProps } from 'framer-motion';
 
-import { useRibbonService } from '../../services';
+import { useRibbonService } from 'features/ribbon/services';
+
 import { RibbonAppDrawer } from '../ribbon-app-drawer';
 import { RibbonCard } from '../ribbon-card';
 
@@ -31,30 +29,22 @@ const motionProps: MotionProps = {
 };
 
 export const Ribbon = observer(() => {
-	const ribbonService = useRibbonService();
-
-	useEffect(() => {
-		runInAction(() => {
-			ribbonService.mounted = true;
-		});
-	}, [ribbonService]);
+	const svc = useRibbonService();
 
 	return (
 		<>
 			<motion.div
-				ref={ribbonService.ribbonRef}
-				animate={ribbonService.controls}
+				ref={svc.ribbonRef}
+				animate={svc.controls}
 				className={s.group}
 				{...motionProps}
 			>
-				{ribbonService.visibleLaunchPoints.map(lp => (
+				{svc.visibleLaunchPoints.map(lp => (
 					<RibbonCard key={lp.launchPointId} launchPoint={lp} />
 				))}
 			</motion.div>
 
-			<AnimatePresence>
-				{ribbonService.addAppsDrawerActive && <RibbonAppDrawer />}
-			</AnimatePresence>
+			<AnimatePresence>{svc.addAppsDrawerActive && <RibbonAppDrawer />}</AnimatePresence>
 		</>
 	);
 });

@@ -15,12 +15,12 @@ import type { ScrollService } from '../scroll';
 
 @injectable()
 export class RibbonService {
-	public mounted: boolean = false;
 	public visible: boolean = false;
 	public controls = animationControls();
 
 	public addAppsDrawerActive: boolean = false;
 
+	private mounted: boolean = false;
 	private transition: boolean = false;
 
 	public constructor(
@@ -77,6 +77,7 @@ export class RibbonService {
 	}
 
 	public ribbonRef(ref: HTMLElement | null) {
+		this.mounted = true;
 		this.scrollService.container = ref;
 	}
 
