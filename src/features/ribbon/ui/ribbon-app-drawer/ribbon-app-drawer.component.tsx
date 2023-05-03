@@ -1,4 +1,5 @@
-import { MotionProps, Variants, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import type { MotionProps, Variants } from 'framer-motion';
 
 import { Portal } from '@reach/portal';
 

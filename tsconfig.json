@@ -23,7 +23,6 @@
 		"strict": true,
 		"useDefineForClassFields": true,
 		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
 		"paths": {
 			"@di": ["shared/core/di"]
 		}

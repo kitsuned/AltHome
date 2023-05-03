@@ -7,11 +7,10 @@ import { useSunbeam } from 'react-sunbeam';
 
 import { useContainer } from '@di';
 
-import { MenuAction } from 'features/ribbon';
-import { LrudService } from 'features/ribbon/model';
+import { LrudService, MenuAction } from 'features/ribbon/services';
 
 import { RibbonContextMenuAction } from './ribbon-context-menu-action';
-import { RibbonContextMenuProps } from './ribbon-context-menu.interface';
+import type { RibbonContextMenuProps } from './ribbon-context-menu.interface';
 import s from './ribbon-context-menu.module.scss';
 
 export const RibbonContextMenu = ({

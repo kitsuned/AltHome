@@ -4,10 +4,10 @@ import { injectable } from 'inversify';
 
 import { LunaTopic } from 'shared/services/luna';
 
-import { LaunchPoint } from '../..';
-import { LaunchPointsProvider } from '../launch-points.provider';
+import type { LaunchPoint } from '../..';
+import type { LaunchPointsProvider } from '../launch-points.provider';
 
-import { Device, InputManagerMessage } from './input-manager.interface';
+import type { Device, InputManagerMessage } from './input-manager.interface';
 
 @injectable()
 export class InputProvider implements LaunchPointsProvider {

@@ -1,5 +1,5 @@
-import { Configuration as WebpackConfiguration } from 'webpack';
-import { Configuration as DevServerConfiguration } from 'webpack-dev-server';
+import type { Configuration as WebpackConfiguration } from 'webpack';
+import type { Configuration as DevServerConfiguration } from 'webpack-dev-server';
 
 type Configuration = WebpackConfiguration & DevServerConfiguration;
 

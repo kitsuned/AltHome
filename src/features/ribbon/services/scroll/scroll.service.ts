@@ -4,9 +4,11 @@ import { animate, motionValue } from 'framer-motion';
 
 import { inject, injectable } from 'inversify';
 
+import { RibbonSymbols } from '@di';
+
 import { SettingsService } from 'shared/services/settings';
 
-import { LrudService } from '../lrud/lrud.service';
+import type { LrudService } from '../lrud';
 
 @injectable()
 export class ScrollService {
@@ -16,10 +18,10 @@ export class ScrollService {
 	private scrollPosition = motionValue(0);
 
 	public constructor(
-		@inject(LrudService) private readonly lrudService: LrudService,
+		@inject(RibbonSymbols.LrudService) private readonly lrudService: LrudService,
 		@inject(SettingsService) private readonly settingsService: SettingsService,
 	) {
-		makeAutoObservable<ScrollService, 'scrollPosition' | 'containerBox'>(
+		makeAutoObservable<ScrollService, 'scrollPosition' | 'container' | 'containerBox'>(
 			this,
 			{
 				container: observable.ref,
@@ -51,10 +53,6 @@ export class ScrollService {
 		});
 
 		document.addEventListener('wheel', this.handleScroll);
-	}
-
-	public scrollContainerRef(ref: HTMLElement | null) {
-		this.container = ref;
 	}
 
 	public get isAnimating() {

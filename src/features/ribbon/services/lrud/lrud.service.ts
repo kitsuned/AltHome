@@ -2,9 +2,12 @@ import { makeAutoObservable, reaction } from 'mobx';
 
 import { inject, injectable } from 'inversify';
 
-import { LaunchPoint } from 'shared/services/launcher';
+import { RibbonSymbols } from '@di';
 
-import { RibbonService } from '../ribbon/ribbon.service';
+import type { LaunchPoint } from 'shared/services/launcher';
+
+import type { RibbonService } from '../ribbon';
+import type { ScrollService } from '../scroll';
 
 const enum SystemKey {
 	Home = 0x3f5,
@@ -18,7 +21,10 @@ export class LrudService {
 	public moving: boolean = false;
 	public showContextMenu: boolean = false;
 
-	public constructor(@inject(RibbonService) private readonly ribbonService: RibbonService) {
+	public constructor(
+		@inject(RibbonSymbols.RibbonService) private readonly ribbonService: RibbonService,
+		@inject(RibbonSymbols.ScrollService) private readonly scrollService: ScrollService,
+	) {
 		makeAutoObservable<LrudService, 'selectDownFiredCounter'>(
 			this,
 			{ selectDownFiredCounter: false },
@@ -26,7 +32,7 @@ export class LrudService {
 		);
 
 		reaction(
-			() => this.ribbonService.launchPoints.length,
+			() => this.ribbonService.visibleLaunchPoints.length,
 			count => {
 				if (this.currentIndex !== null && count <= this.currentIndex) {
 					this.currentIndex = count - 1;
@@ -40,7 +46,7 @@ export class LrudService {
 
 	public get selectedLaunchPoint() {
 		return this.currentIndex !== null
-			? this.ribbonService.launchPoints[this.currentIndex]
+			? this.ribbonService.visibleLaunchPoints[this.currentIndex]
 			: null;
 	}
 
@@ -53,7 +59,7 @@ export class LrudService {
 	}
 
 	public getIndexByLaunchPoint(launchPoint: LaunchPoint) {
-		return this.ribbonService.launchPoints.indexOf(launchPoint);
+		return this.ribbonService.visibleLaunchPoints.indexOf(launchPoint);
 	}
 
 	public blur() {
@@ -61,7 +67,7 @@ export class LrudService {
 	}
 
 	public focusToNode(id: string) {
-		this.currentIndex = this.ribbonService.launchPoints.findIndex(x => x.id === id);
+		this.currentIndex = this.ribbonService.visibleLaunchPoints.findIndex(x => x.id === id);
 	}
 
 	public closeMenu() {
@@ -73,12 +79,12 @@ export class LrudService {
 	}
 
 	private focusToFirstVisibleNode() {
-		// for (const [index, child] of Array.from(this.scrollService.container!.children).entries()) {
-		// 	if (child.getBoundingClientRect().left >= 0) {
-		// 		this.currentIndex = index;
-		// 		return;
-		// 	}
-		// }
+		for (const [index, child] of Array.from(this.scrollService.container!.children).entries()) {
+			if (child.getBoundingClientRect().left >= 0) {
+				this.currentIndex = index;
+				return;
+			}
+		}
 	}
 
 	private handleKeyDown(event: KeyboardEvent) {
@@ -140,7 +146,7 @@ export class LrudService {
 			return;
 		}
 
-		const max = this.ribbonService.launchPoints.length - 1;
+		const max = this.ribbonService.visibleLaunchPoints.length - 1;
 
 		if (this.moving && this.selectedLaunchPoint) {
 			let newPosition = this.currentIndex!;

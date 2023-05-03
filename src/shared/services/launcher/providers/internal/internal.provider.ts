@@ -1,9 +1,10 @@
 import { injectable } from 'inversify';
 
-import { ActivateType, Intent } from 'shared/api/webos.d';
+import { Intent } from 'shared/api/webos.d';
+import type { ActivateType } from 'shared/api/webos.d';
 
-import { LaunchPoint } from '../..';
-import { LaunchPointsProvider } from '../launch-points.provider';
+import type { LaunchPoint } from '../..';
+import type { LaunchPointsProvider } from '../launch-points.provider';
 
 import plus from 'assets/plus.png';
 

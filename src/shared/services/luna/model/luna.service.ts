@@ -2,7 +2,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { makeAutoObservable, reaction, toJS } from 'mobx';
 
-import { LunaMessage, LunaRequestParams } from '../api/luna.api';
+import type { LunaMessage, LunaRequestParams } from '../api/luna.api';
 import { verifyMessageContents } from '../lib/auto-elevator.lib';
 
 export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParams = {}> {
@@ -30,14 +30,7 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 		this.bridge.onservicecallback = this.handleCallback;
 
-		this.bridge.call(
-			this.uri,
-			JSON.stringify(
-				this.params ?? {
-					subscribe: true,
-				},
-			),
-		);
+		this.bridge.call(this.uri, JSON.stringify(this.params ?? { subscribe: true }));
 	}
 
 	private handleCallback(serialized: string) {

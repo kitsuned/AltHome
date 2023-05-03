@@ -1,11 +1,12 @@
-import { CSSProperties, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import type { CSSProperties } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
 import clsx from 'clsx';
 import { useFocusable } from 'react-sunbeam';
 
-import { RibbonAppDrawerItemProps } from './ribbon-app-drawer-item.interface';
+import type { RibbonAppDrawerItemProps } from './ribbon-app-drawer-item.interface';
 import s from './ribbon-app-drawer-item.module.scss';
 
 export const RibbonAppDrawerItem = observer(

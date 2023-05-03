@@ -1,12 +1,14 @@
 import { ProvidePlugin, DefinePlugin } from 'webpack';
 
 import WebOSPackagerPlugin from '@kitsuned/webos-packager-plugin';
+import CircularDependencyPlugin from 'circular-dependency-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
-import { WebpackMultipleConfigurations, JsonTransformer } from 'chore/webpack-utils';
+import { JsonTransformer } from 'chore/webpack-utils';
+import type { WebpackMultipleConfigurations } from 'chore/webpack-utils';
 
 import { name, version, description, repository } from './package.json';
 
@@ -72,6 +74,9 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean }>>[
 			hints: false,
 		},
 		plugins: [
+			new CircularDependencyPlugin({
+				exclude: /node_modules\/.+/,
+			}),
 			new ProvidePlugin({
 				React: 'react',
 			}),

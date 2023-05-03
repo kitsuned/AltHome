@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { Container } from 'inversify';
+import type { Container } from 'inversify';
 
 type ContainerContextValue = Container | null;
 

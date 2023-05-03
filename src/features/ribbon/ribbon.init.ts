@@ -1,5 +1,5 @@
 import { container } from '@di';
 
-import { ribbonModule } from './ribbon.module';
+import { lrudModule, ribbonModule, scrollModule } from './services';
 
-container.load(ribbonModule);
+container.load(lrudModule, scrollModule, ribbonModule);

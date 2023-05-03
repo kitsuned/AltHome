@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import { Container } from 'inversify';
+import type { Container } from 'inversify';
 
 import { ContainerContext } from './container.context';
 

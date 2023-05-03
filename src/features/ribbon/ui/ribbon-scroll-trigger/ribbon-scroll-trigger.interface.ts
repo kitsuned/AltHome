@@ -1,5 +1,5 @@
 // TODO
-type TriggerZone = never;
+type TriggerZone = any;
 
 export type RibbonScrollTriggerProps = {
 	hiddenEdge: TriggerZone;

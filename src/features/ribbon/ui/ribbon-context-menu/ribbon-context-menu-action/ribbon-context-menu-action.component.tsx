@@ -3,9 +3,9 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { Focusable } from 'react-sunbeam';
 
-import { MenuAction } from 'features/ribbon';
+import { MenuAction } from 'features/ribbon/services';
 
-import { RibbonContextMenuActionProps } from './ribbon-context-menu-action.interface';
+import type { RibbonContextMenuActionProps } from './ribbon-context-menu-action.interface';
 import { mapMenuActionToIcon } from './ribbon-context-menu-action.lib';
 import s from './ribbon-context-menu-action.module.scss';
 

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { RibbonScrollTriggerProps } from './ribbon-scroll-trigger.interface';
+import type { RibbonScrollTriggerProps } from './ribbon-scroll-trigger.interface';
 import s from './ribbon-scroll-trigger.module.scss';
 
 export const RibbonScrollTrigger = memo(

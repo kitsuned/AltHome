@@ -7,10 +7,10 @@ import { useSunbeam } from 'react-sunbeam';
 
 import { useContainer } from '@di';
 
-import { LaunchPoint } from 'shared/services/launcher';
+import type { LaunchPoint } from 'shared/services/launcher';
 import { SettingsService } from 'shared/services/settings';
 
-import { RibbonService } from 'features/ribbon';
+import { RibbonService } from 'features/ribbon/services';
 
 import { RibbonAppDrawerItem } from '../ribbon-app-drawer-item';
 
@@ -68,7 +68,7 @@ export const RibbonAppDrawerList = observer((): JSX.Element => {
 
 	return (
 		<div ref={ref} tabIndex={0} className={s.list}>
-			{ribbonService.extraLaunchPoints.map(lp => (
+			{ribbonService.availableLaunchPoints.map(lp => (
 				<RibbonAppDrawerItem
 					key={lp.launchPointId}
 					launchPoint={lp}

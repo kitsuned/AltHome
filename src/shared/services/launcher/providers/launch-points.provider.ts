@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 
-import { LaunchPoint } from '..';
+import type { LaunchPoint } from '..';
 
 @injectable()
 export abstract class LaunchPointsProvider {

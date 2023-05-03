@@ -1,9 +1,11 @@
-import { CSSProperties, useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
+import type { CSSProperties } from 'react';
 
 import { computed } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
-import { MotionProps, AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import type { MotionProps } from 'framer-motion';
 
 import { Portal } from '@reach/portal';
 
@@ -11,12 +13,10 @@ import { useContainer } from '@di';
 
 import { LauncherService } from 'shared/services/launcher';
 
-import { MenuAction } from 'features/ribbon';
-import { LrudService, RibbonService, ScrollService } from 'features/ribbon/model';
-
+import { MenuAction, useLrudService, useRibbonService, useScrollService } from '../../services';
 import { RibbonContextMenu } from '../ribbon-context-menu';
 
-import { RibbonCardProps } from './ribbon-card.interface';
+import type { RibbonCardProps } from './ribbon-card.interface';
 import s from './ribbon-card.module.scss';
 
 const motionProps: MotionProps = {
@@ -34,11 +34,11 @@ const motionProps: MotionProps = {
 };
 
 export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
-	const container = useContainer();
-	const lrudService = container.get(LrudService);
-	const scrollService = container.get(ScrollService);
-	const ribbonService = container.get(RibbonService);
-	const launcherService = container.get(LauncherService);
+	const lrudService = useLrudService();
+	const ribbonService = useRibbonService();
+	const scrollService = useScrollService();
+
+	const launcherService = useContainer().get(LauncherService);
 
 	const cardRef = useRef<HTMLButtonElement>(null);
 

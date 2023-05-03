@@ -1,6 +1,6 @@
-import { LunaMessage } from 'shared/services/luna';
+import type { LunaMessage } from 'shared/services/luna';
 
-import { LaunchPoint, LaunchPointIconsMixin } from '../..';
+import type { LaunchPoint, LaunchPointIconsMixin } from '../..';
 
 export type AppManagerLaunchPoint = LaunchPoint & LaunchPointIconsMixin;
 

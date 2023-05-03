@@ -4,9 +4,14 @@ import { animationControls } from 'framer-motion';
 
 import { inject, injectable } from 'inversify';
 
+import { RibbonSymbols } from '@di';
+
 import { Intent } from 'shared/api/webos.d';
-import { LauncherService, LaunchPoint } from 'shared/services/launcher';
+import { LauncherService } from 'shared/services/launcher';
+import type { LaunchPoint } from 'shared/services/launcher';
 import { SettingsService } from 'shared/services/settings';
+
+import type { ScrollService } from '../scroll';
 
 @injectable()
 export class RibbonService {
@@ -21,6 +26,7 @@ export class RibbonService {
 	public constructor(
 		@inject(LauncherService) private readonly launcherService: LauncherService,
 		@inject(SettingsService) private readonly settingsService: SettingsService,
+		@inject(RibbonSymbols.ScrollService) private readonly scrollService: ScrollService,
 	) {
 		makeAutoObservable(this, { controls: false }, { autoBind: true });
 
@@ -60,14 +66,18 @@ export class RibbonService {
 		});
 	}
 
-	public get extraLaunchPoints(): LaunchPoint[] {
+	public get availableLaunchPoints(): LaunchPoint[] {
 		// TODO
 		return [];
 	}
 
-	public get launchPoints(): LaunchPoint[] {
+	public get visibleLaunchPoints(): LaunchPoint[] {
 		// TODO
 		return this.launcherService.launchPoints;
+	}
+
+	public ribbonRef(ref: HTMLElement | null) {
+		this.scrollService.container = ref;
 	}
 
 	public launch(launchPoint: LaunchPoint) {
@@ -79,7 +89,7 @@ export class RibbonService {
 	}
 
 	public move(lp: LaunchPoint, position: number) {
-		const from = this.launchPoints.indexOf(lp);
+		const from = this.visibleLaunchPoints.indexOf(lp);
 
 		if (from !== position) {
 			const ids = this.launcherService.launchPoints.map(x => x.id);

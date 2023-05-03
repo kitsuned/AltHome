@@ -4,10 +4,10 @@ import { injectable } from 'inversify';
 
 import { LunaTopic } from 'shared/services/luna';
 
-import { LaunchPoint } from '../..';
-import { LaunchPointsProvider } from '../launch-points.provider';
+import type { LaunchPoint } from '../..';
+import type { LaunchPointsProvider } from '../launch-points.provider';
 
-import { AppManagerLaunchPoint, AppManagerMessage } from './app-manager.interface';
+import type { AppManagerLaunchPoint, AppManagerMessage } from './app-manager.interface';
 import { pick } from './app-manager.lib';
 
 @injectable()

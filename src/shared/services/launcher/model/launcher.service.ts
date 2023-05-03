@@ -5,7 +5,7 @@ import { inject, injectable, multiInject } from 'inversify';
 import { luna } from 'shared/services/luna';
 import { SettingsService } from 'shared/services/settings';
 
-import { LaunchPoint } from '..';
+import type { LaunchPoint } from '..';
 import { LaunchPointsProvider } from '../providers';
 
 @injectable()

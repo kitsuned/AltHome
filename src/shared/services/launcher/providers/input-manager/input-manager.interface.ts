@@ -1,4 +1,4 @@
-import { LunaMessage } from 'shared/services/luna';
+import type { LunaMessage } from 'shared/services/luna';
 
 export type Device = {
 	label: string;

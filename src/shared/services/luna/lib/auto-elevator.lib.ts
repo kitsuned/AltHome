@@ -1,4 +1,4 @@
-import { LunaMessage } from '../api/luna.api';
+import type { LunaMessage } from '../api/luna.api';
 import { luna } from '../model/luna.service';
 
 export const requestElevation = async () => {
