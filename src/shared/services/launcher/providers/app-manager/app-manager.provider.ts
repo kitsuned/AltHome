@@ -4,18 +4,17 @@ import { injectable } from 'inversify';
 
 import { LunaTopic } from 'shared/services/luna';
 
-import type { LaunchPoint } from '../..';
+import type { LaunchPointInput } from '../../api/launch-point.interface';
 import type { LaunchPointsProvider } from '../launch-points.provider';
 
-import type { AppManagerLaunchPoint, AppManagerMessage } from './app-manager.interface';
-import { pick } from './app-manager.lib';
+import type { AppManagerMessage } from './app-manager.interface';
 
 @injectable()
 export class AppManagerProvider implements LaunchPointsProvider {
-	public launchPoints: LaunchPoint[] = observable.array([], { equals: comparer.structural });
+	public launchPoints: LaunchPointInput[] = observable.array([], { equals: comparer.structural });
 
 	private topic = new LunaTopic<AppManagerMessage>(
-		'luna://com.webos.service.applicationmanager/listLaunchPoints',
+		'luna://com.webos.service.applicationManager/listLaunchPoints',
 	);
 
 	public constructor() {
@@ -34,7 +33,7 @@ export class AppManagerProvider implements LaunchPointsProvider {
 		}
 
 		if ('launchPoints' in message) {
-			this.launchPoints = message.launchPoints.map(this.normalizeLaunchPoint);
+			this.launchPoints = message.launchPoints;
 
 			return;
 		}
@@ -43,11 +42,10 @@ export class AppManagerProvider implements LaunchPointsProvider {
 			return;
 		}
 
-		const normalized = this.normalizeLaunchPoint(message);
 		const { change } = message;
 
 		if (change === 'added') {
-			this.launchPoints.push(normalized);
+			this.launchPoints.push(message);
 		}
 
 		const ref = this.launchPoints.find(x => x.id === message.id);
@@ -58,28 +56,11 @@ export class AppManagerProvider implements LaunchPointsProvider {
 		}
 
 		if (change === 'updated') {
-			Object.assign(ref, normalized);
+			Object.assign(ref, message);
 		}
 
 		if (change === 'removed') {
 			this.launchPoints = this.launchPoints.filter(x => ref !== x);
 		}
-	}
-
-	private normalizeLaunchPoint(lp: AppManagerLaunchPoint): LaunchPoint {
-		const normalized: LaunchPoint = {
-			...pick(lp, 'id', 'launchPointId', 'title', 'removable', 'iconColor', 'params'),
-			icon: lp.mediumLargeIcon || lp.largeIcon || lp.extraLargeIcon || lp.icon,
-		};
-
-		if (normalized.icon.startsWith('/')) {
-			normalized.icon = `./root${normalized.icon}`;
-		}
-
-		if (normalized.id === 'org.webosbrew.hbchannel') {
-			normalized.removable = false;
-		}
-
-		return normalized;
 	}
 }

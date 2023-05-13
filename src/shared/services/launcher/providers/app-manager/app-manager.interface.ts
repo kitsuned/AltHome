@@ -1,17 +1,15 @@
 import type { LunaMessage } from 'shared/services/luna';
 
-import type { LaunchPoint, LaunchPointIconsMixin } from '../..';
-
-export type AppManagerLaunchPoint = LaunchPoint & LaunchPointIconsMixin;
+import type { LaunchPointInput } from '../../api/launch-point.interface';
 
 type LaunchPointChangeMixin = {
 	change: 'added' | 'removed' | 'updated';
 };
 
 type LaunchPointsListMessage = {
-	launchPoints: AppManagerLaunchPoint[];
+	launchPoints: LaunchPointInput[];
 };
 
-type LaunchPointMutationMessage = AppManagerLaunchPoint & LaunchPointChangeMixin;
+type LaunchPointMutationMessage = LaunchPointInput & LaunchPointChangeMixin;
 
 export type AppManagerMessage = LunaMessage<LaunchPointsListMessage | LaunchPointMutationMessage>;

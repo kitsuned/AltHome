@@ -1,10 +1,10 @@
 import { injectable } from 'inversify';
 
-import type { LaunchPoint } from '..';
+import type { LaunchPointInput } from '../api/launch-point.interface';
 
 @injectable()
 export abstract class LaunchPointsProvider {
 	public abstract get fulfilled(): boolean;
 
-	public abstract get launchPoints(): LaunchPoint[];
+	public abstract get launchPoints(): LaunchPointInput[];
 }

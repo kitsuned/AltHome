@@ -2330,6 +2330,7 @@ __metadata:
     mini-css-extract-plugin: 2.7.2
     mobx: 6.7.0
     mobx-react-lite: 3.4.0
+    mobx-state-tree: 5.1.8
     postcss: 8.4.21
     postcss-loader: 7.0.2
     postcss-preset-env: 8.0.1
@@ -5148,6 +5149,15 @@ __metadata:
     react-native:
       optional: true
   checksum: 9294e127e281c8b37ec7bcaf17de479f50519e6ad485b58d7b991291900511541a5a718653759d3cf6503462c70325d025e1c2ed376d4584fb1b2d3aac9d9b48
+  languageName: node
+  linkType: hard
+
+"mobx-state-tree@npm:5.1.8":
+  version: 5.1.8
+  resolution: "mobx-state-tree@npm:5.1.8"
+  peerDependencies:
+    mobx: ^6.3.0
+  checksum: 251e69a17dd025dd080a38cf446ae59febcf1a95f88abfc9e7eff04db139783b5da5e8f997b365da2da13259140695c3f0cd46b5be63cb25658219e86321defb
   languageName: node
   linkType: hard
 

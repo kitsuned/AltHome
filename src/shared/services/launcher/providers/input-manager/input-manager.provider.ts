@@ -4,7 +4,7 @@ import { injectable } from 'inversify';
 
 import { LunaTopic } from 'shared/services/luna';
 
-import type { LaunchPoint } from '../..';
+import type { LaunchPointInput } from '../../api/launch-point.interface';
 import type { LaunchPointsProvider } from '../launch-points.provider';
 
 import type { Device, InputManagerMessage } from './input-manager.interface';
@@ -16,14 +16,14 @@ export class InputProvider implements LaunchPointsProvider {
 	);
 
 	public constructor() {
-		makeObservable(this, { launchPoints: computed.struct });
+		makeObservable(this, { launchPoints: computed.struct }, { autoBind: true });
 	}
 
 	public get fulfilled(): boolean {
 		return Boolean(this.topic.message);
 	}
 
-	public get launchPoints(): LaunchPoint[] {
+	public get launchPoints(): LaunchPointInput[] {
 		const { message } = this.topic;
 
 		if (!message?.returnValue) {
@@ -33,7 +33,7 @@ export class InputProvider implements LaunchPointsProvider {
 		return message.devices.map(this.mapDeviceToLaunchPoint);
 	}
 
-	private mapDeviceToLaunchPoint(device: Device): LaunchPoint {
+	private mapDeviceToLaunchPoint(device: Device): LaunchPointInput {
 		return {
 			id: device.appId,
 			launchPointId: device.appId,

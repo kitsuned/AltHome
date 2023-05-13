@@ -2,6 +2,10 @@ export { launcherModule } from './launcher.module';
 
 export { LauncherService } from './model/launcher.service';
 
-export { LaunchPointsProvider } from './providers/launch-points.provider';
+export { LaunchPoint } from './model/launch-point.model';
 
-export type { LaunchPoint, LaunchPointIconsMixin } from './api/launch-point.interface';
+export type {
+	LaunchPointInput,
+	LaunchPointInstance,
+	LaunchPointFactory,
+} from './api/launch-point.interface';

@@ -3,7 +3,7 @@ import { injectable } from 'inversify';
 import { Intent } from 'shared/api/webos.d';
 import type { ActivateType } from 'shared/api/webos.d';
 
-import type { LaunchPoint } from '../..';
+import type { LaunchPointInput } from '../../api/launch-point.interface';
 import type { LaunchPointsProvider } from '../launch-points.provider';
 
 import plus from 'assets/plus.png';
@@ -13,7 +13,7 @@ export class InternalProvider implements LaunchPointsProvider {
 	public fulfilled = true;
 
 	public launchPoints = [
-		<LaunchPoint>{
+		<LaunchPointInput>{
 			id: 'com.kitsuned.althome',
 			launchPointId: '@intent:add_apps',
 			title: 'Add apps',
