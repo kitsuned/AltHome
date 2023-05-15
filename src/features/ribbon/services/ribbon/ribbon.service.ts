@@ -15,7 +15,6 @@ import { ScrollService } from '../scroll';
 @injectable()
 export class RibbonService {
 	public visible: boolean = false;
-	public moving: boolean = false;
 	public controls = animationControls();
 
 	private transition: boolean = false;
@@ -66,6 +65,9 @@ export class RibbonService {
 				this.open();
 			}
 		});
+
+		// TODO lazy inject ribbon into ctx menu by symbol
+		contextMenuService.ribbonService = this;
 	}
 
 	public open() {

@@ -9,7 +9,7 @@ import type { MotionProps } from 'framer-motion';
 
 import { Portal } from '@reach/portal';
 
-import { MenuAction, useRibbonService } from '../../services';
+import { useRibbonService } from '../../services';
 import { RibbonContextMenu } from '../ribbon-context-menu';
 
 import type { RibbonCardProps } from './ribbon-card.interface';
@@ -52,25 +52,6 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 
 	const handleClick = useCallback(() => launchPoint.launch(), [launchPoint]);
 
-	// const handleAction = useCallback(
-	// 	(action: MenuAction) => {
-	// 		lrudService.closeMenu();
-	//
-	// 		if (action === MenuAction.Move) {
-	// 			lrudService.enableMoveMode();
-	// 		}
-	//
-	// 		if (action === MenuAction.Hide) {
-	// 			launchPoint.hide();
-	// 		}
-	//
-	// 		if (action === MenuAction.Uninstall) {
-	// 			void launchPoint.uninstall();
-	// 		}
-	// 	},
-	// 	[launchPoint],
-	// );
-
 	return (
 		<>
 			<motion.button
@@ -79,8 +60,9 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 				className={s.card}
 				onClick={handleClick}
 				onMouseOver={handleMouseOver}
-				animate={isSelected ? 'selected' : undefined}
-				// animate={isSelected ? (lrudService.moving ? 'moving' : 'selected') : undefined}
+				animate={
+					isSelected ? (svc.contextMenuService.moving ? 'moving' : 'selected') : undefined
+				}
 				style={style}
 				{...motionProps}
 			>
@@ -93,9 +75,6 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 						<RibbonContextMenu
 							ref={svc.contextMenuService.containerRef}
 							cardRef={cardRef}
-							onSelect={x => {
-								console.log('sel menu act', x);
-							}}
 							removable={launchPoint.removable}
 						/>
 					</Portal>
