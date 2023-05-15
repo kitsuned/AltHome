@@ -1,4 +1,4 @@
-import { autorun, makeAutoObservable, reaction, when } from 'mobx';
+import { makeAutoObservable, reaction, when } from 'mobx';
 
 import { animationControls } from 'framer-motion';
 
@@ -54,6 +54,13 @@ export class RibbonService {
 		);
 
 		reaction(
+			() => this.visible,
+			() => {
+				this.contextMenuService.visible = false;
+			},
+		);
+
+		reaction(
 			() => this.index,
 			index => {
 				this.scrollService.selectedLaunchPointIndex = index;
@@ -63,9 +70,10 @@ export class RibbonService {
 		keyboardService.emitter.on('shiftX', this.handleShift);
 		keyboardService.emitter.on('enter', this.handleEnter);
 		keyboardService.emitter.on('hold', this.handleHold);
+		keyboardService.emitter.on('back', this.handleBack);
 		keyboardService.subscribe();
 
-		// TODO move to lifecycle manager?
+		// TODO move to lifecycle manager
 		document.addEventListener('webOSRelaunch', event => {
 			if (event.detail?.intent) {
 				this.handleIntent(event.detail.intent);
@@ -140,6 +148,10 @@ export class RibbonService {
 
 	private handleHold() {
 		this.contextMenuService.visible = true;
+	}
+
+	private handleBack() {
+		this.visible = false;
 	}
 
 	private handleIntent(intent: Intent) {
