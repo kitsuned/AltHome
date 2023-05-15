@@ -1,28 +1,19 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import mitt from 'mitt';
 
 import type { KeyboardEvents } from './keyboard.interface';
+import { ArrowKey } from './keyboard.lib';
+import { TimerRef } from './timer-ref';
 
 const HOLD_THRESHOLD = 500;
-
-type IsomorphicTimeoutId = ReturnType<typeof setTimeout>;
-
-export enum ArrowKey {
-	Left = 'ArrowLeft',
-	Right = 'ArrowRight',
-	Up = 'ArrowUp',
-	Down = 'ArrowDown',
-}
 
 @injectable()
 export class KeyboardService {
 	private ref!: HTMLElement;
-	private timerId: IsomorphicTimeoutId | null = null;
-	private timerFired: boolean = false;
 
 	public emitter = mitt<KeyboardEvents>();
 
-	public constructor() {
+	public constructor(@inject(TimerRef) private readonly timerRef: TimerRef) {
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 	}
@@ -67,28 +58,31 @@ export class KeyboardService {
 	}
 
 	private handleEnterKeyDown() {
-		if (this.timerId !== null) {
+		if (this.timerRef.id !== null) {
 			return;
 		}
 
-		this.timerId = setTimeout(() => {
-			this.timerFired = true;
+		this.timerRef.id = setTimeout(() => {
+			this.timerRef.id = null;
+			this.timerRef.fired = true;
 
 			this.emitter.emit('hold');
 		}, HOLD_THRESHOLD);
 	}
 
 	private handleEnterKeyUp() {
-		if (this.timerId !== null) {
-			clearTimeout(this.timerId);
+		if (this.timerRef.id !== null) {
+			if (this.timerRef.id) {
+				clearTimeout(this.timerRef.id);
+			}
 
-			this.timerId = null;
+			this.timerRef.id = null;
 
-			if (!this.timerFired) {
+			if (!this.timerRef.fired) {
 				this.emitter.emit('enter');
 			}
 
-			this.timerFired = false;
+			this.timerRef.fired = false;
 		}
 	}
 
