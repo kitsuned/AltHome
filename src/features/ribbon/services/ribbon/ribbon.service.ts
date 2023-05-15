@@ -70,6 +70,10 @@ export class RibbonService {
 		contextMenuService.ribbonService = this;
 	}
 
+	public get selectedLaunchPoint(): LaunchPointInstance | null {
+		return this.index !== null ? this.launcherService.visible[this.index] : null;
+	}
+
 	public open() {
 		if (!this.transition) {
 			this.visible = true;
@@ -82,8 +86,8 @@ export class RibbonService {
 		this.controls.mount();
 	}
 
-	public get selectedLaunchPoint(): LaunchPointInstance | null {
-		return this.index !== null ? this.launcherService.visible[this.index] : null;
+	public focusToLaunchPoint(launchPoint: LaunchPointInstance) {
+		this.index = this.launcherService.visible.indexOf(launchPoint);
 	}
 
 	private get mounted() {

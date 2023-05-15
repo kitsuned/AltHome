@@ -46,9 +46,9 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 
 	const handleMouseOver = useCallback(() => {
 		if (!svc.scrollService.isAnimating) {
-			// TODO focusToNode(launchPoint.id)
+			svc.focusToLaunchPoint(launchPoint);
 		}
-	}, [svc.scrollService.isAnimating]);
+	}, [svc, launchPoint]);
 
 	const handleClick = useCallback(() => launchPoint.launch(), [launchPoint]);
 
