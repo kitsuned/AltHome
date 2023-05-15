@@ -17,9 +17,10 @@ const UnprocessedLaunchPoint = types
 		removable: types.boolean,
 		iconColor: types.string,
 		icon: types.string,
-
-		params: types.map(types.frozen()),
 	})
+	.volatile(() => ({
+		params: {},
+	}))
 	.actions(self => {
 		const { launcherService } = getEnv<Environment>(self);
 

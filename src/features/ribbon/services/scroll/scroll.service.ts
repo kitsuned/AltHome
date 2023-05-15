@@ -4,23 +4,17 @@ import { animate, motionValue } from 'framer-motion';
 
 import { inject, injectable } from 'inversify';
 
-import { RibbonSymbols } from '@di';
-
 import { SettingsService } from 'shared/services/settings';
-
-import type { LrudService } from '../lrud';
 
 @injectable()
 export class ScrollService {
 	public container: HTMLElement | null = null;
+	public selectedLaunchPointIndex: number | null = null;
 
 	private wheelShift: number = 0;
 	private scrollPosition = motionValue(0);
 
-	public constructor(
-		@inject(RibbonSymbols.LrudService) private readonly lrudService: LrudService,
-		@inject(SettingsService) private readonly settingsService: SettingsService,
-	) {
+	public constructor(@inject(SettingsService) private readonly settingsService: SettingsService) {
 		makeAutoObservable<ScrollService, 'scrollPosition' | 'container' | 'containerBox'>(
 			this,
 			{
@@ -35,7 +29,7 @@ export class ScrollService {
 			() => this.container !== null,
 			() => {
 				reaction(
-					() => this.lrudService.selectedLaunchPointIndex,
+					() => this.selectedLaunchPointIndex,
 					() => {
 						this.wheelShift = this.focusedElementPosition;
 					},
@@ -60,14 +54,14 @@ export class ScrollService {
 	}
 
 	private get focusedElementPosition() {
-		if (!this.container || this.lrudService.selectedLaunchPointIndex === null) {
+		if (!this.container || this.selectedLaunchPointIndex === null) {
 			return this.container?.scrollLeft ?? 0;
 		}
 
 		const element =
-			this.container.children.length <= this.lrudService.selectedLaunchPointIndex
+			this.container.children.length <= this.selectedLaunchPointIndex
 				? this.container.lastElementChild!
-				: this.container.children[this.lrudService.selectedLaunchPointIndex];
+				: this.container.children[this.selectedLaunchPointIndex];
 
 		const box = element.getBoundingClientRect();
 
@@ -99,6 +93,7 @@ export class ScrollService {
 
 		this.wheelShift = Math.max(0, Math.min(this.shiftThreshold, this.wheelShift));
 
-		this.lrudService.blur();
+		// TODO react to isAnimating
+		// this.lrudService.blur();
 	}
 }

@@ -1,37 +1,32 @@
-import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
+import { makeAutoObservable, reaction, when } from 'mobx';
 
 import { animationControls } from 'framer-motion';
 
 import { inject, injectable } from 'inversify';
 
-import { RibbonSymbols } from '@di';
-
 import { Intent } from 'shared/api/webos.d';
 import { LauncherService } from 'shared/services/launcher';
-import type { LaunchPoint } from 'shared/services/launcher';
-import { SettingsService } from 'shared/services/settings';
+import type { LaunchPointInstance } from 'shared/services/launcher';
 
-import type { ScrollService } from '../scroll';
+import { KeyboardService } from '../keyboard';
+import { ScrollService } from '../scroll';
 
 @injectable()
 export class RibbonService {
 	public visible: boolean = false;
 	public controls = animationControls();
 
-	public addAppsDrawerActive: boolean = false;
-
-	private mounted: boolean = false;
 	private transition: boolean = false;
+	private ref: HTMLElement | null = null;
+
+	private index: number | null = null;
 
 	public constructor(
-		@inject(LauncherService) private readonly launcherService: LauncherService,
-		@inject(SettingsService) private readonly settingsService: SettingsService,
-		@inject(RibbonSymbols.ScrollService) private readonly scrollService: ScrollService,
+		@inject(LauncherService) public readonly launcherService: LauncherService,
+		@inject(ScrollService) public readonly scrollService: ScrollService,
+		@inject(KeyboardService) keyboardService: KeyboardService,
 	) {
 		makeAutoObservable(this, { controls: false }, { autoBind: true });
-
-		// consequences of imperative life
-		this.controls.mount();
 
 		when(
 			() => this.mounted && this.launcherService.fulfilled,
@@ -55,56 +50,73 @@ export class RibbonService {
 			},
 		);
 
+		keyboardService.emitter.on('shiftX', this.handleShift);
+		keyboardService.emitter.on('enter', this.handleEnter);
+		keyboardService.emitter.on('hold', this.handleHold);
+		keyboardService.subscribe();
+
+		// TODO move to lifecycle manager?
 		document.addEventListener('webOSRelaunch', event => {
 			if (event.detail?.intent) {
 				this.handleIntent(event.detail.intent);
-			} else if (!this.transition) {
-				runInAction(() => {
-					this.visible = true;
-				});
+			} else {
+				this.open();
 			}
 		});
 	}
 
-	public get availableLaunchPoints(): LaunchPoint[] {
-		// TODO
-		return [];
-	}
-
-	public get visibleLaunchPoints(): LaunchPoint[] {
-		// TODO
-		return this.launcherService.launchPoints;
+	public open() {
+		if (!this.transition) {
+			this.visible = true;
+		}
 	}
 
 	public ribbonRef(ref: HTMLElement | null) {
-		this.mounted = true;
+		this.ref = ref;
 		this.scrollService.container = ref;
+		this.controls.mount();
 	}
 
-	public launch(launchPoint: LaunchPoint) {
-		if (launchPoint.id !== process.env.APP_ID) {
-			this.visible = false;
-		}
-
-		void this.launcherService.launch(launchPoint);
+	public get selectedLaunchPoint(): LaunchPointInstance | null {
+		return this.index !== null ? this.launcherService.visible[this.index] : null;
 	}
 
-	public move(lp: LaunchPoint, position: number) {
-		const from = this.visibleLaunchPoints.indexOf(lp);
+	private get mounted() {
+		return Boolean(this.ref);
+	}
 
-		if (from !== position) {
-			const ids = this.launcherService.launchPoints.map(x => x.id);
-
-			ids.splice(from, 1);
-			ids.splice(position, 0, lp.id);
-
-			this.settingsService.order = ids;
+	private focusToFirstVisibleNode() {
+		for (const [index, child] of Array.from(this.ref?.children ?? []).entries()) {
+			if (child.getBoundingClientRect().left >= 0) {
+				this.index = index;
+				return;
+			}
 		}
+	}
+
+	private handleShift(shift: number) {
+		if (!this.index) {
+			this.focusToFirstVisibleNode();
+			return;
+		}
+
+		this.index = Math.min(
+			this.launcherService.visible.length - 1,
+			Math.max(0, this.index + shift),
+		);
+	}
+
+	private handleEnter() {
+		void this.selectedLaunchPoint?.launch();
+	}
+
+	private handleHold() {
+		console.log('open ctx menu');
 	}
 
 	private handleIntent(intent: Intent) {
 		if (intent === Intent.AddApps) {
-			this.addAppsDrawerActive = true;
+			// this.showAppsDrawer = true;
 		}
 	}
 }

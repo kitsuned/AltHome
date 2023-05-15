@@ -1,5 +1,6 @@
-import type { LaunchPoint } from 'shared/services/launcher';
+import type { LaunchPointInstance } from 'shared/services/launcher';
 
 export type RibbonCardProps = {
-	launchPoint: LaunchPoint;
+	position: number;
+	launchPoint: LaunchPointInstance;
 };

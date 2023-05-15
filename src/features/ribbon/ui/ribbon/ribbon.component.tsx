@@ -39,12 +39,12 @@ export const Ribbon = observer(() => {
 				className={s.group}
 				{...motionProps}
 			>
-				{svc.visibleLaunchPoints.map(lp => (
-					<RibbonCard key={lp.launchPointId} launchPoint={lp} />
+				{svc.launcherService.visible.map((lp, index) => (
+					<RibbonCard key={lp.launchPointId} position={index} launchPoint={lp} />
 				))}
 			</motion.div>
 
-			<AnimatePresence>{svc.addAppsDrawerActive && <RibbonAppDrawer />}</AnimatePresence>
+			{/* <AnimatePresence>{svc.showAppsDrawer && <RibbonAppDrawer />}</AnimatePresence> */}
 		</>
 	);
 });

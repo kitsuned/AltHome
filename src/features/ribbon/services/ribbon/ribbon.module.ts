@@ -1,12 +1,11 @@
 import { ContainerModule } from 'inversify';
 
-import { RibbonSymbols, useContainer } from '@di';
+import { useContainer } from '@di';
 
 import { RibbonService } from './ribbon.service';
 
 export const ribbonModule = new ContainerModule(bind => {
-	bind(RibbonSymbols.RibbonService).to(RibbonService);
+	bind(RibbonService).toSelf();
 });
 
-export const useRibbonService = () =>
-	useContainer().get<RibbonService>(RibbonSymbols.RibbonService);
+export const useRibbonService = () => useContainer().get<RibbonService>(RibbonService);

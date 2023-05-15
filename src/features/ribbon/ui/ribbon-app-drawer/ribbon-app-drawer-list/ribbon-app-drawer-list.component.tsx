@@ -44,14 +44,14 @@ export const RibbonAppDrawerList = observer((): JSX.Element => {
 
 			if (event.key === 'GoBack') {
 				runInAction(() => {
-					ribbonService.addAppsDrawerActive = false;
+					ribbonService.showAppsDrawer = false;
 				});
 			}
 
 			if (event.key === 'Enter' && selectedLpIdRef.current) {
 				runInAction(() => {
 					settingsService.order.push(selectedLpIdRef.current!);
-					ribbonService.addAppsDrawerActive = false;
+					ribbonService.showAppsDrawer = false;
 				});
 			}
 		};

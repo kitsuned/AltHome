@@ -9,11 +9,7 @@ import type { MotionProps } from 'framer-motion';
 
 import { Portal } from '@reach/portal';
 
-import { useContainer } from '@di';
-
-import { LauncherService } from 'shared/services/launcher';
-
-import { MenuAction, useLrudService, useRibbonService, useScrollService } from '../../services';
+import { MenuAction, useRibbonService } from '../../services';
 import { RibbonContextMenu } from '../ribbon-context-menu';
 
 import type { RibbonCardProps } from './ribbon-card.interface';
@@ -33,56 +29,47 @@ const motionProps: MotionProps = {
 	},
 };
 
-export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
-	const lrudService = useLrudService();
-	const ribbonService = useRibbonService();
-	const scrollService = useScrollService();
-
-	const launcherService = useContainer().get(LauncherService);
+export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) => {
+	const svc = useRibbonService();
 
 	const cardRef = useRef<HTMLButtonElement>(null);
 
-	const isSelected = computed(() => lrudService.isSelected(launchPoint)).get();
-	const index = computed(() => lrudService.getIndexByLaunchPoint(launchPoint)).get();
-
-	const showContextMenu = isSelected && lrudService.showContextMenu;
+	const isSelected = computed(() => svc.selectedLaunchPoint === launchPoint).get();
 
 	const style = useMemo<CSSProperties>(
 		() => ({
-			zIndex: isSelected ? 1000 : index + 5,
+			zIndex: isSelected ? 1000 : position + 5,
 			'--card-color': launchPoint.iconColor,
 		}),
-		[index, isSelected, launchPoint.iconColor],
+		[position, isSelected, launchPoint.iconColor],
 	);
 
 	const handleMouseOver = useCallback(() => {
-		if (!scrollService.isAnimating) {
-			lrudService.focusToNode(launchPoint.id);
+		if (!svc.scrollService.isAnimating) {
+			// TODO focusToNode(launchPoint.id)
 		}
-	}, [launchPoint]);
+	}, [svc.scrollService.isAnimating]);
 
-	const handleClick = useCallback(() => {
-		void ribbonService.launch(launchPoint);
-	}, [launchPoint]);
+	const handleClick = useCallback(() => launchPoint.launch(), [launchPoint]);
 
-	const handleAction = useCallback(
-		(action: MenuAction) => {
-			lrudService.closeMenu();
-
-			if (action === MenuAction.Move) {
-				lrudService.enableMoveMode();
-			}
-
-			if (action === MenuAction.Hide) {
-				launcherService.hide(launchPoint);
-			}
-
-			if (action === MenuAction.Uninstall) {
-				void launcherService.uninstall(launchPoint);
-			}
-		},
-		[launchPoint],
-	);
+	// const handleAction = useCallback(
+	// 	(action: MenuAction) => {
+	// 		lrudService.closeMenu();
+	//
+	// 		if (action === MenuAction.Move) {
+	// 			lrudService.enableMoveMode();
+	// 		}
+	//
+	// 		if (action === MenuAction.Hide) {
+	// 			launchPoint.hide();
+	// 		}
+	//
+	// 		if (action === MenuAction.Uninstall) {
+	// 			void launchPoint.uninstall();
+	// 		}
+	// 	},
+	// 	[launchPoint],
+	// );
 
 	return (
 		<>
@@ -92,24 +79,25 @@ export const RibbonCard = observer<RibbonCardProps>(({ launchPoint }) => {
 				className={s.card}
 				onClick={handleClick}
 				onMouseOver={handleMouseOver}
-				animate={isSelected ? (lrudService.moving ? 'moving' : 'selected') : undefined}
+				animate={isSelected ? 'selected' : undefined}
+				// animate={isSelected ? (lrudService.moving ? 'moving' : 'selected') : undefined}
 				style={style}
 				{...motionProps}
 			>
 				<img src={launchPoint.icon} className={s.icon} />
 			</motion.button>
 
-			<AnimatePresence>
-				{showContextMenu && (
-					<Portal type='context-menu'>
-						<RibbonContextMenu
-							cardRef={cardRef}
-							onSelect={handleAction}
-							removable={launchPoint.removable}
-						/>
-					</Portal>
-				)}
-			</AnimatePresence>
+			{/* <AnimatePresence> */}
+			{/*	{showContextMenu && ( */}
+			{/*		<Portal type='context-menu'> */}
+			{/*			<RibbonContextMenu */}
+			{/*				cardRef={cardRef} */}
+			{/*				onSelect={handleAction} */}
+			{/*				removable={launchPoint.removable} */}
+			{/*			/> */}
+			{/*		</Portal> */}
+			{/*	)} */}
+			{/* </AnimatePresence> */}
 		</>
 	);
 });

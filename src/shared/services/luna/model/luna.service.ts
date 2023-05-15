@@ -26,11 +26,6 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 	}
 
 	private subscribe() {
-		if (__DEV__) {
-			console.warn('noop!');
-			return;
-		}
-
 		this.bridge = new PalmServiceBridge();
 
 		this.bridge.onservicecallback = this.handleCallback;
