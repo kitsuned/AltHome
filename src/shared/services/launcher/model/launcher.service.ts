@@ -69,6 +69,26 @@ export class LauncherService {
 		return luna('luna://com.webos.appInstallService/remove', { id: lp.appId });
 	}
 
+	public move(lp: LaunchPointInstance, shift: number) {
+		console.log(lp.appId, shift);
+
+		const from = this.visible.indexOf(lp);
+		const to = from + shift;
+
+		if (to < 0 || to > this.visible.length - 1) {
+			return;
+		}
+
+		if (from !== to) {
+			const ids = this.visible.map(x => x.launchPointId);
+
+			ids.splice(from, 1);
+			ids.splice(to, 0, lp.launchPointId);
+
+			this.settingsService.order = ids;
+		}
+	}
+
 	private get hiddenIds() {
 		return keys(this.launchPointsMap as ObservableMap<string>).filter(
 			id => !this.settingsService.order.includes(id),

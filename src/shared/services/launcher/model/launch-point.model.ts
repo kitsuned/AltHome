@@ -8,6 +8,8 @@ type Environment = {
 	launcherService: LauncherService;
 };
 
+const normalizeIcon = (path: string) => (path.startsWith('/') ? `./root${path}` : path);
+
 const UnprocessedLaunchPoint = types
 	.model('LaunchPoint', {
 		appId: types.string,
@@ -26,6 +28,7 @@ const UnprocessedLaunchPoint = types
 
 		return {
 			launch: () => launcherService.launch(self as LaunchPointInstance),
+			move: (shift: number) => launcherService.move(self as LaunchPointInstance, shift),
 			hide: () => launcherService.hide(self as LaunchPointInstance),
 			uninstall: () => launcherService.uninstall(self as LaunchPointInstance),
 		};
@@ -35,10 +38,11 @@ export const LaunchPoint = types.snapshotProcessor(UnprocessedLaunchPoint, {
 	preProcessor: (snapshot: LaunchPointInput) => ({
 		...snapshot,
 		appId: snapshot.id,
-		icon:
+		icon: normalizeIcon(
 			snapshot.mediumLargeIcon ||
-			snapshot.largeIcon ||
-			snapshot.extraLargeIcon ||
-			snapshot.icon,
+				snapshot.largeIcon ||
+				snapshot.extraLargeIcon ||
+				snapshot.icon,
+		),
 	}),
 });

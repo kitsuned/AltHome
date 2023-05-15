@@ -36,6 +36,8 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 
 	const isSelected = computed(() => svc.selectedLaunchPoint === launchPoint).get();
 
+	const showContextMenu = isSelected && svc.contextMenuService.visible;
+
 	const style = useMemo<CSSProperties>(
 		() => ({
 			zIndex: isSelected ? 1000 : position + 5,
@@ -60,9 +62,7 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 				className={s.card}
 				onClick={handleClick}
 				onMouseOver={handleMouseOver}
-				animate={
-					isSelected ? (svc.contextMenuService.moving ? 'moving' : 'selected') : undefined
-				}
+				animate={isSelected ? (svc.moving ? 'moving' : 'selected') : undefined}
 				style={style}
 				{...motionProps}
 			>
@@ -70,7 +70,7 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 			</motion.button>
 
 			<AnimatePresence>
-				{svc.contextMenuService.visible && (
+				{showContextMenu && (
 					<Portal type='context-menu'>
 						<RibbonContextMenu
 							ref={svc.contextMenuService.containerRef}

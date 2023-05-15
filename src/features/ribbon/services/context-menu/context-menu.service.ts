@@ -9,7 +9,6 @@ import type { RibbonService } from '../ribbon';
 @injectable()
 export class ContextMenuService {
 	public visible: boolean = false;
-	public moving: boolean = false;
 
 	public ribbonService!: RibbonService;
 
@@ -26,6 +25,8 @@ export class ContextMenuService {
 					keyboardService.subscribe(ref);
 				} else {
 					keyboardService.unsubscribe();
+
+					this.action = MenuAction.Move;
 				}
 			},
 		);
@@ -45,22 +46,22 @@ export class ContextMenuService {
 	}
 
 	private handleUp() {
-		if (this.action === MenuAction.Uninstall) {
-			this.action = MenuAction.Hide;
-		}
-
 		if (this.action === MenuAction.Hide) {
 			this.action = MenuAction.Move;
+		}
+
+		if (this.action === MenuAction.Uninstall) {
+			this.action = MenuAction.Hide;
 		}
 	}
 
 	private handleDown() {
-		if (this.action === MenuAction.Move) {
-			this.action = MenuAction.Hide;
-		}
-
 		if (this.action === MenuAction.Hide && this.ribbonService.selectedLaunchPoint?.removable) {
 			this.action = MenuAction.Uninstall;
+		}
+
+		if (this.action === MenuAction.Move) {
+			this.action = MenuAction.Hide;
 		}
 	}
 
@@ -71,8 +72,10 @@ export class ContextMenuService {
 			return;
 		}
 
+		this.visible = false;
+
 		if (this.action === MenuAction.Move) {
-			this.moving = true;
+			this.ribbonService.moving = true;
 		}
 
 		if (this.action === MenuAction.Hide) {

@@ -1,4 +1,4 @@
-import { makeAutoObservable, reaction, when } from 'mobx';
+import { autorun, makeAutoObservable, reaction, when } from 'mobx';
 
 import { animationControls } from 'framer-motion';
 
@@ -15,6 +15,7 @@ import { ScrollService } from '../scroll';
 @injectable()
 export class RibbonService {
 	public visible: boolean = false;
+	public moving: boolean = false;
 	public controls = animationControls();
 
 	private transition: boolean = false;
@@ -49,6 +50,13 @@ export class RibbonService {
 				if (!visible) {
 					webOSSystem.hide();
 				}
+			},
+		);
+
+		reaction(
+			() => this.index,
+			index => {
+				this.scrollService.selectedLaunchPointIndex = index;
 			},
 		);
 
@@ -104,18 +112,29 @@ export class RibbonService {
 	}
 
 	private handleShift(shift: number) {
-		if (!this.index) {
+		if (this.index === null) {
 			this.focusToFirstVisibleNode();
 			return;
 		}
 
-		this.index = Math.min(
+		const target = Math.min(
 			this.launcherService.visible.length - 1,
 			Math.max(0, this.index + shift),
 		);
+
+		if (this.moving && this.index !== target) {
+			this.selectedLaunchPoint?.move(shift);
+		}
+
+		this.index = target;
 	}
 
 	private handleEnter() {
+		if (this.moving) {
+			this.moving = false;
+			return;
+		}
+
 		void this.selectedLaunchPoint?.launch();
 	}
 
