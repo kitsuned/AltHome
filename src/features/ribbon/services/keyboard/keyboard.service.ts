@@ -38,7 +38,17 @@ export class KeyboardService {
 		this.ref.removeEventListener('keyup', this.handleKeyUp);
 	}
 
+	private handleKeyboardEvent(event: KeyboardEvent) {
+		event.stopPropagation();
+	}
+
 	private handleKeyDown(event: KeyboardEvent) {
+		this.handleKeyboardEvent(event);
+
+		if (event.key === 'GoBack') {
+			this.emitter.emit('back');
+		}
+
 		if (event.key === 'Enter') {
 			this.handleEnterKeyDown();
 		}
@@ -49,6 +59,8 @@ export class KeyboardService {
 	}
 
 	private handleKeyUp(event: KeyboardEvent) {
+		this.handleKeyboardEvent(event);
+
 		if (event.key === 'Enter') {
 			this.handleEnterKeyUp();
 		}

@@ -87,17 +87,20 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 				<img src={launchPoint.icon} className={s.icon} />
 			</motion.button>
 
-			{/* <AnimatePresence> */}
-			{/*	{showContextMenu && ( */}
-			{/*		<Portal type='context-menu'> */}
-			{/*			<RibbonContextMenu */}
-			{/*				cardRef={cardRef} */}
-			{/*				onSelect={handleAction} */}
-			{/*				removable={launchPoint.removable} */}
-			{/*			/> */}
-			{/*		</Portal> */}
-			{/*	)} */}
-			{/* </AnimatePresence> */}
+			<AnimatePresence>
+				{svc.contextMenuService.visible && (
+					<Portal type='context-menu'>
+						<RibbonContextMenu
+							ref={svc.contextMenuService.containerRef}
+							cardRef={cardRef}
+							onSelect={x => {
+								console.log('sel menu act', x);
+							}}
+							removable={launchPoint.removable}
+						/>
+					</Portal>
+				)}
+			</AnimatePresence>
 		</>
 	);
 });

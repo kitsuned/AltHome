@@ -66,6 +66,10 @@ rules:
     - argsIgnorePattern: '^_'
       ignoreRestSiblings: true
 
+  no-param-reassign:
+    - error
+    - ignorePropertyModificationsFor: [ ref ]
+
   no-console: off
   no-plusplus: off
   no-nested-ternary: off

@@ -44,7 +44,9 @@ export const Ribbon = observer(() => {
 				))}
 			</motion.div>
 
-			{/* <AnimatePresence>{svc.showAppsDrawer && <RibbonAppDrawer />}</AnimatePresence> */}
+			{/* <AnimatePresence> */}
+			{/*	{svc.???.visible && <RibbonAppDrawer />} */}
+			{/* </AnimatePresence> */}
 		</>
 	);
 });

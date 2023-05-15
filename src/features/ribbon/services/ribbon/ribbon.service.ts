@@ -8,12 +8,14 @@ import { Intent } from 'shared/api/webos.d';
 import { LauncherService } from 'shared/services/launcher';
 import type { LaunchPointInstance } from 'shared/services/launcher';
 
+import { ContextMenuService } from '../context-menu';
 import { KeyboardService } from '../keyboard';
 import { ScrollService } from '../scroll';
 
 @injectable()
 export class RibbonService {
 	public visible: boolean = false;
+	public moving: boolean = false;
 	public controls = animationControls();
 
 	private transition: boolean = false;
@@ -24,6 +26,7 @@ export class RibbonService {
 	public constructor(
 		@inject(LauncherService) public readonly launcherService: LauncherService,
 		@inject(ScrollService) public readonly scrollService: ScrollService,
+		@inject(ContextMenuService) public readonly contextMenuService: ContextMenuService,
 		@inject(KeyboardService) keyboardService: KeyboardService,
 	) {
 		makeAutoObservable(this, { controls: false }, { autoBind: true });
@@ -111,7 +114,7 @@ export class RibbonService {
 	}
 
 	private handleHold() {
-		console.log('open ctx menu');
+		this.contextMenuService.visible = true;
 	}
 
 	private handleIntent(intent: Intent) {

@@ -22,7 +22,6 @@
 		"mobx-state-tree": "5.1.8",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
-		"react-sunbeam": "1.0.5",
 		"reflect-metadata": "0.1.13"
 	},
 	"devDependencies": {

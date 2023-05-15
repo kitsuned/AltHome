@@ -2338,7 +2338,6 @@ __metadata:
     prettier: 2.8.8
     react: 18.2.0
     react-dom: 18.2.0
-    react-sunbeam: 1.0.5
     reflect-metadata: 0.1.13
     sass: 1.57.1
     sass-loader: 13.2.0
@@ -6278,15 +6277,6 @@ __metadata:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
-  languageName: node
-  linkType: hard
-
-"react-sunbeam@npm:1.0.5":
-  version: 1.0.5
-  resolution: "react-sunbeam@npm:1.0.5"
-  peerDependencies:
-    react: ^16.13.1
-  checksum: cae4a8cb5dd931760168894d5386de10d1db34a93060934da36079646b9edcda2c08ca430b9908ba18fdfada8b70155bdabb45a8b60cd4923c1c770fbd0ce46a
   languageName: node
   linkType: hard
 

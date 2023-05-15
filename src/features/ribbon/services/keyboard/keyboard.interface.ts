@@ -11,6 +11,7 @@ export type KeyboardEvents = {
 	right: void;
 	up: void;
 	down: void;
+	back: void;
 };
 
 export type KeyboardEmitter = Emitter<KeyboardEvents>;
