@@ -58,6 +58,7 @@ export class RibbonService {
 		reaction(
 			() => this.visible,
 			() => {
+				this.moving = false;
 				this.contextMenuService.visible = false;
 			},
 		);
@@ -125,13 +126,16 @@ export class RibbonService {
 			return;
 		}
 
-		const target = Math.min(
-			this.launcherService.visible.length - 1,
-			Math.max(0, this.index + shift),
-		);
+		const max = this.launcherService.visible.length - 1;
+		const target = Math.max(0, Math.min(max, this.index + shift));
 
 		if (this.moving && this.index !== target) {
-			this.selectedLaunchPoint?.move(shift);
+			// TODO find a better way to handle internal lps
+			if (this.selectedLaunchPoint && target !== max) {
+				this.selectedLaunchPoint.move(shift);
+			} else {
+				return;
+			}
 		}
 
 		this.index = target;
@@ -151,6 +155,12 @@ export class RibbonService {
 	}
 
 	private handleBack() {
-		this.visible = false;
+		if (this.contextMenuService.visible) {
+			this.contextMenuService.visible = false;
+		} else if (this.moving) {
+			this.moving = false;
+		} else {
+			this.visible = false;
+		}
 	}
 }
