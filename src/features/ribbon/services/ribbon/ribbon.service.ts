@@ -4,7 +4,6 @@ import { animationControls } from 'framer-motion';
 
 import { inject, injectable } from 'inversify';
 
-import { Intent } from 'shared/api/webos.d';
 import { LauncherService } from 'shared/services/launcher';
 import type { LaunchPointInstance } from 'shared/services/launcher';
 import { LifecycleManagerService } from 'shared/services/lifecycle-manager';
@@ -151,7 +150,9 @@ export class RibbonService {
 	}
 
 	private handleHold() {
-		this.contextMenuService.visible = true;
+		if (this.selectedLaunchPoint?.builtin === false) {
+			this.contextMenuService.visible = true;
+		}
 	}
 
 	private handleBack() {
