@@ -52,8 +52,10 @@ export class LauncherService {
 		return this.pickByIds(this.hiddenIds);
 	}
 
-	public async launch({ appId, params }: LaunchPointInstance) {
-		this.lifecycleManager.broadcastHide();
+	public async launch({ appId, builtin, params }: LaunchPointInstance) {
+		if (!builtin) {
+			this.lifecycleManager.broadcastHide();
+		}
 
 		return luna('luna://com.webos.service.applicationManager/launch', { id: appId, params });
 	}
