@@ -30,15 +30,6 @@ export class LauncherService {
 		autorun(() => {
 			this.launchPointsMap.replace(this.launchPoints.map(lp => [lp.launchPointId, lp]));
 		});
-
-		if (__DEV__) {
-			autorun(() => {
-				console.log({
-					visible: this.visible.map(x => toJS(x)),
-					hidden: this.hidden.map(x => toJS(x)),
-				});
-			});
-		}
 	}
 
 	public get fulfilled() {
@@ -46,6 +37,10 @@ export class LauncherService {
 	}
 
 	public get launchPoints(): LaunchPointInstance[] {
+		if (!this.fulfilled) {
+			return [];
+		}
+
 		return this.providers.flatMap(x => x.launchPoints).map(this.launchPointFactory);
 	}
 
@@ -74,8 +69,6 @@ export class LauncherService {
 	}
 
 	public move(lp: LaunchPointInstance, shift: number) {
-		console.log(lp.appId, shift);
-
 		const from = this.visible.indexOf(lp);
 		const to = from + shift;
 
