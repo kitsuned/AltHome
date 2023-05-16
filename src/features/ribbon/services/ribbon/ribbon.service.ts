@@ -7,6 +7,7 @@ import { inject, injectable } from 'inversify';
 import { Intent } from 'shared/api/webos.d';
 import { LauncherService } from 'shared/services/launcher';
 import type { LaunchPointInstance } from 'shared/services/launcher';
+import { LifecycleManagerService } from 'shared/services/lifecycle-manager';
 
 import { ContextMenuService } from '../context-menu';
 import { KeyboardService } from '../keyboard';
@@ -26,6 +27,7 @@ export class RibbonService {
 	public constructor(
 		@inject(LauncherService) public readonly launcherService: LauncherService,
 		@inject(ScrollService) public readonly scrollService: ScrollService,
+		@inject(LifecycleManagerService) private readonly lifecycleManager: LifecycleManagerService,
 		@inject(ContextMenuService) public readonly contextMenuService: ContextMenuService,
 		@inject(KeyboardService) keyboardService: KeyboardService,
 	) {
@@ -47,8 +49,10 @@ export class RibbonService {
 
 				this.transition = false;
 
-				if (!visible) {
-					webOSSystem.hide();
+				if (visible) {
+					this.lifecycleManager.show();
+				} else {
+					this.lifecycleManager.hide();
 				}
 			},
 		);
@@ -74,13 +78,7 @@ export class RibbonService {
 		keyboardService.subscribe();
 
 		// TODO move to lifecycle manager
-		document.addEventListener('webOSRelaunch', event => {
-			if (event.detail?.intent) {
-				this.handleIntent(event.detail.intent);
-			} else {
-				this.open();
-			}
-		});
+		document.addEventListener('webOSRelaunch', this.toggle);
 
 		// TODO lazy inject ribbon into ctx menu by symbol
 		contextMenuService.ribbonService = this;
@@ -88,12 +86,6 @@ export class RibbonService {
 
 	public get selectedLaunchPoint(): LaunchPointInstance | null {
 		return this.index !== null ? this.launcherService.visible[this.index] : null;
-	}
-
-	public open() {
-		if (!this.transition) {
-			this.visible = true;
-		}
 	}
 
 	public ribbonRef(ref: HTMLElement | null) {
@@ -108,6 +100,12 @@ export class RibbonService {
 
 	private get mounted() {
 		return Boolean(this.ref);
+	}
+
+	private toggle() {
+		if (!this.transition) {
+			this.visible = !this.visible;
+		}
 	}
 
 	private focusToFirstVisibleNode() {
@@ -152,11 +150,5 @@ export class RibbonService {
 
 	private handleBack() {
 		this.visible = false;
-	}
-
-	private handleIntent(intent: Intent) {
-		if (intent === Intent.AddApps) {
-			// this.showAppsDrawer = true;
-		}
 	}
 }

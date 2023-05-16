@@ -74,6 +74,7 @@ rules:
   no-plusplus: off
   no-nested-ternary: off
   no-restricted-syntax: off
+  no-promise-executor-return: off
 
   default-case: off
 

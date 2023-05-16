@@ -10,9 +10,7 @@ type DeepNever<T> = {
 
 export type LunaMessage<T extends Record<string, any> = {}> =
 	| (LunaErrorMessage & DeepNever<T>)
-	| (T & {
-			returnValue: true;
-	  });
+	| (T & { returnValue: true });
 
 export type LunaRequestParams<T extends Record<string, any> = Record<string, any>> = T & {
 	subscribe?: boolean;

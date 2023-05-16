@@ -8,6 +8,13 @@ interface ActivateType {
 	intent?: Intent;
 }
 
+interface InputRegion {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
 declare global {
 	class PalmServiceBridge {
 		constructor(serviceId?: string);
@@ -23,10 +30,26 @@ declare global {
 		const launchParams: ActivateType;
 		const launchReason: string;
 
+		/**
+		 * Serialized JSON with basic device info.
+		 */
+		const deviceInfo: string;
+
+		/**
+		 * Tells compositor to hide the current layer. Works only on webOS 7+.
+		 */
 		function hide(): void;
 
 		const window: {
-			setFocus(value: boolean): void;
+			/**
+			 * Set keyboard focus
+			 */
+			setFocus(focus: boolean): void;
+
+			/**
+			 * Set floating window input region
+			 */
+			setInputRegion(regions: [region: InputRegion]): void;
 		};
 	}
 
