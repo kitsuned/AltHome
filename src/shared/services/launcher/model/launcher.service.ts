@@ -1,4 +1,4 @@
-import { autorun, keys, makeAutoObservable, observable, toJS } from 'mobx';
+import { autorun, keys, makeAutoObservable, observable } from 'mobx';
 import type { ObservableMap } from 'mobx';
 
 import { inject, injectable, multiInject } from 'inversify';
@@ -16,7 +16,7 @@ export class LauncherService {
 	private readonly launchPointsMap = observable.map<string, LaunchPointInstance>();
 
 	public constructor(
-		@inject(SettingsService) private settingsService: SettingsService,
+		@inject(SettingsService) private readonly settingsService: SettingsService,
 		@inject(LifecycleManagerService) private readonly lifecycleManager: LifecycleManagerService,
 		@inject(launchPointFactorySymbol) private readonly launchPointFactory: LaunchPointFactory,
 		@multiInject(LaunchPointsProvider) private readonly providers: LaunchPointsProvider[],
@@ -50,7 +50,7 @@ export class LauncherService {
 	}
 
 	public get visible() {
-		return this.pickByIds(this.settingsService.order);
+		return this.pickByIds([...this.order, '@intent:add_apps']);
 	}
 
 	public get hidden() {
@@ -64,7 +64,7 @@ export class LauncherService {
 	}
 
 	public hide({ launchPointId }: LaunchPointInstance) {
-		this.settingsService.order = this.settingsService.order.filter(x => x !== launchPointId);
+		this.order = this.order.filter(x => x !== launchPointId);
 	}
 
 	public async uninstall(lp: LaunchPointInstance) {
@@ -89,13 +89,21 @@ export class LauncherService {
 			ids.splice(from, 1);
 			ids.splice(to, 0, lp.launchPointId);
 
-			this.settingsService.order = ids;
+			this.order = ids;
 		}
+	}
+
+	private get order() {
+		return this.settingsService.order.filter(x => !x.startsWith('@'));
+	}
+
+	private set order(value: string[]) {
+		this.settingsService.order = value;
 	}
 
 	private get hiddenIds() {
 		return keys(this.launchPointsMap as ObservableMap<string>).filter(
-			id => !this.settingsService.order.includes(id),
+			id => !this.order.includes(id) && id.startsWith('@'),
 		);
 	}
 
