@@ -5,18 +5,17 @@ import mitt from 'mitt';
 
 import type { ActivateType } from 'shared/api/webos';
 
-import { LunaTopic } from '../../luna';
+import { luna, LunaTopic } from '../../luna';
 import { SystemInfoService } from '../../system-info';
-import type { ForegroundAppsMessage } from '../api/compositor.interface';
+import type { LifecycleEvent } from '../api/compositor.interface';
 import type { LifecycleManagerEvents } from '../api/lifecycle-manager.interface';
 
 @injectable()
 export class LifecycleManagerService {
 	public emitter = mitt<LifecycleManagerEvents>();
 
-	private topic = new LunaTopic<ForegroundAppsMessage>(
-		'luna://com.webos.service.applicationManager/getForegroundApps',
-		{ extraInfo: true, subscribe: true },
+	private topic = new LunaTopic<LifecycleEvent>(
+		'luna://com.webos.service.applicationManager/getAppLifeEvents',
 	);
 
 	private visible: boolean = true;
@@ -28,7 +27,14 @@ export class LifecycleManagerService {
 
 		reaction(
 			() => this.topic.message,
-			() => this.broadcastHide(),
+			message => {
+				if (
+					message?.appId !== process.env.APP_ID &&
+					(message?.event === 'splash' || message?.event === 'launch')
+				) {
+					this.broadcastHide();
+				}
+			},
 		);
 
 		document.addEventListener('webOSRelaunch', this.handleRelaunch);
@@ -36,11 +42,6 @@ export class LifecycleManagerService {
 
 	public show() {
 		this.visible = true;
-
-		if (this.compositorShimsRequired) {
-			webOSSystem.window.setFocus(true);
-			webOSSystem.window.setInputRegion([document.body.getBoundingClientRect()]); // imagine trollface emoji here
-		}
 	}
 
 	public hide() {
@@ -48,17 +49,15 @@ export class LifecycleManagerService {
 
 		if (!this.compositorShimsRequired) {
 			webOSSystem.hide();
-			return;
+		} else {
+			this.requestSuspense();
 		}
-
-		webOSSystem.window.setFocus(false);
-		webOSSystem.window.setInputRegion([{ x: 0, y: 0, width: 0, height: 0 }]);
 	}
 
 	public broadcastHide() {
 		if (this.visible) {
 			if (__DEV__) {
-				console.log('broadcasting hide request...');
+				console.log('broadcasting hide request');
 			}
 
 			this.emitter.emit('requestHide');
@@ -66,13 +65,13 @@ export class LifecycleManagerService {
 	}
 
 	private get compositorShimsRequired() {
-		return this.systemInfoService.osMajorVersion && this.systemInfoService.osMajorVersion < 7;
-	}
+		if (this.systemInfoService.osMajorVersion === 7) {
+			return this.systemInfoService.osMinorVersion! < 3;
+		}
 
-	private get isLayerVisible(): boolean {
-		return this.topic.message?.returnValue
-			? this.topic.message.foregroundApps.some(({ appId }) => appId === process.env.APP_ID)
-			: false;
+		return this.systemInfoService.osMajorVersion
+			? this.systemInfoService?.osMajorVersion > 7
+			: true;
 	}
 
 	private handleRelaunch(event: CustomEvent<ActivateType>) {
@@ -81,5 +80,15 @@ export class LifecycleManagerService {
 		} else {
 			this.emitter.emit('relaunch');
 		}
+	}
+
+	private requestSuspense() {
+		if (__DEV__) {
+			console.log('requesting suspense');
+		}
+
+		void luna('luna://com.webos.service.applicationManager/pause', {
+			id: process.env.APP_ID,
+		});
 	}
 }

@@ -1,11 +1,12 @@
-import type { LunaMessage } from '../../luna';
+export type LifecycleEventType =
+	| 'splash'
+	| 'launch'
+	| 'foreground'
+	| 'background'
+	| 'stop'
+	| 'close';
 
-export type AppLayer = {
+export type LifecycleEvent = {
+	event: LifecycleEventType;
 	appId: string;
-	primary: boolean;
-	windowType: string;
 };
-
-export type ForegroundAppsMessage = LunaMessage<{
-	foregroundApps: AppLayer[];
-}>;

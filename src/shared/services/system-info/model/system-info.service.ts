@@ -25,6 +25,16 @@ export class SystemInfoService {
 	}
 
 	public get osMajorVersion(): number | null {
-		return this.sdkVersion ? Number(this.sdkVersion.split('.', 1)[0]) : null;
+		return this.osVersionParts ? this.osVersionParts[0] : null;
+	}
+
+	public get osMinorVersion(): number | null {
+		return this.osVersionParts ? this.osVersionParts[1] : null;
+	}
+
+	private get osVersionParts(): [number, number, number] | null {
+		return this.sdkVersion
+			? (this.sdkVersion.split('.').map(x => Number(x)) as [number, number, number])
+			: null;
 	}
 }
