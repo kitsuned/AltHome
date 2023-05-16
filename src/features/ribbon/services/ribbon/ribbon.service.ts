@@ -27,8 +27,8 @@ export class RibbonService {
 	public constructor(
 		@inject(LauncherService) public readonly launcherService: LauncherService,
 		@inject(ScrollService) public readonly scrollService: ScrollService,
-		@inject(LifecycleManagerService) private readonly lifecycleManager: LifecycleManagerService,
 		@inject(ContextMenuService) public readonly contextMenuService: ContextMenuService,
+		@inject(LifecycleManagerService) lifecycleManager: LifecycleManagerService,
 		@inject(KeyboardService) keyboardService: KeyboardService,
 	) {
 		makeAutoObservable(this, { controls: false }, { autoBind: true });
@@ -43,17 +43,15 @@ export class RibbonService {
 		reaction(
 			() => this.visible,
 			async visible => {
+				const def = visible ? 'show' : 'hide';
+
 				this.transition = true;
 
-				await this.controls.start(visible ? 'show' : 'hide');
+				await this.controls.start(def);
 
 				this.transition = false;
 
-				if (visible) {
-					this.lifecycleManager.show();
-				} else {
-					this.lifecycleManager.hide();
-				}
+				lifecycleManager[def]();
 			},
 		);
 
@@ -77,8 +75,8 @@ export class RibbonService {
 		keyboardService.emitter.on('back', this.handleBack);
 		keyboardService.subscribe();
 
-		// TODO move to lifecycle manager
-		document.addEventListener('webOSRelaunch', this.toggle);
+		lifecycleManager.emitter.on('relaunch', this.toggle);
+		lifecycleManager.emitter.on('requestHide', this.hide);
 
 		// TODO lazy inject ribbon into ctx menu by symbol
 		contextMenuService.ribbonService = this;
@@ -106,6 +104,10 @@ export class RibbonService {
 		if (!this.transition) {
 			this.visible = !this.visible;
 		}
+	}
+
+	private hide() {
+		this.visible = false;
 	}
 
 	private focusToFirstVisibleNode() {

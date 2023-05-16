@@ -6,6 +6,7 @@ import { inject, injectable, multiInject } from 'inversify';
 import { luna } from 'shared/services/luna';
 import { SettingsService } from 'shared/services/settings';
 
+import { LifecycleManagerService } from '../../lifecycle-manager';
 import type { LaunchPointFactory, LaunchPointInstance } from '../api/launch-point.interface';
 import { launchPointFactorySymbol } from '../launcher.tokens';
 import { LaunchPointsProvider } from '../providers';
@@ -16,7 +17,8 @@ export class LauncherService {
 
 	public constructor(
 		@inject(SettingsService) private settingsService: SettingsService,
-		@inject(launchPointFactorySymbol) private launchPointFactory: LaunchPointFactory,
+		@inject(LifecycleManagerService) private readonly lifecycleManager: LifecycleManagerService,
+		@inject(launchPointFactorySymbol) private readonly launchPointFactory: LaunchPointFactory,
 		@multiInject(LaunchPointsProvider) private readonly providers: LaunchPointsProvider[],
 	) {
 		makeAutoObservable<LauncherService, 'pickByIds'>(
@@ -56,6 +58,8 @@ export class LauncherService {
 	}
 
 	public async launch({ appId, params }: LaunchPointInstance) {
+		this.lifecycleManager.broadcastHide();
+
 		return luna('luna://com.webos.service.applicationManager/launch', { id: appId, params });
 	}
 
