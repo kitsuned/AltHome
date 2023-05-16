@@ -16,7 +16,11 @@ export class InputProvider implements LaunchPointsProvider {
 	);
 
 	public constructor() {
-		makeObservable(this, { launchPoints: computed.struct }, { autoBind: true });
+		makeObservable(
+			this,
+			{ fulfilled: computed, launchPoints: computed.struct },
+			{ autoBind: true },
+		);
 	}
 
 	public get fulfilled(): boolean {
