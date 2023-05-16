@@ -16,6 +16,7 @@ const UnprocessedLaunchPoint = types
 		title: types.string,
 		launchPointId: types.identifier,
 
+		builtin: types.optional(types.boolean, false),
 		removable: types.boolean,
 		iconColor: types.string,
 		icon: types.string,

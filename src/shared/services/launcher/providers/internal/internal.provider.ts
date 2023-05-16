@@ -17,6 +17,7 @@ export class InternalProvider implements LaunchPointsProvider {
 			id: 'com.kitsuned.althome',
 			launchPointId: '@intent:add_apps',
 			title: 'Add apps',
+			builtin: true,
 			removable: false,
 			iconColor: '#242424',
 			icon: plus,
