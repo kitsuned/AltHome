@@ -70,7 +70,7 @@ export class LifecycleManagerService {
 		}
 
 		return this.systemInfoService.osMajorVersion
-			? this.systemInfoService?.osMajorVersion > 7
+			? this.systemInfoService?.osMajorVersion < 7
 			: true;
 	}
 
