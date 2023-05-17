@@ -1,5 +1,3 @@
-import type { Instance } from 'mobx-state-tree';
-
 import type { LaunchPoint } from '../model/launch-point.model';
 
 export type LaunchPointInput = {
@@ -19,6 +17,6 @@ export type LaunchPointInput = {
 	params?: Record<string, any>;
 };
 
-export type LaunchPointInstance = Instance<typeof LaunchPoint>;
+export type LaunchPointInstance = LaunchPoint;
 
 export type LaunchPointFactory = (snapshot: LaunchPointInput) => LaunchPointInstance;

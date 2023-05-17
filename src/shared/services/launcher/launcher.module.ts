@@ -13,12 +13,10 @@ import {
 
 export const launcherModule = new ContainerModule(bind => {
 	bind(LauncherService).toSelf();
+	bind(LaunchPoint).toSelf().inTransientScope();
 
 	bind(launchPointFactorySymbol).toFactory<LaunchPointInstance, [LaunchPointInput]>(
-		context => snapshot =>
-			LaunchPoint.create(snapshot, {
-				launcherService: context.container.get(LauncherService),
-			}),
+		context => snapshot => context.container.get(LaunchPoint).apply(snapshot),
 	);
 
 	bind(LaunchPointsProvider).to(InputProvider);

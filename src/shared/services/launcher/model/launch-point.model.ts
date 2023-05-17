@@ -1,49 +1,70 @@
-import { getEnv, types } from 'mobx-state-tree';
+import { inject, injectable } from 'inversify';
+import { pick } from 'lodash';
 
-import type { LaunchPointInput, LaunchPointInstance } from '../api/launch-point.interface';
+import type { LaunchPointInput } from '../api/launch-point.interface';
 
-import type { LauncherService } from './launcher.service';
+import { LauncherService } from './launcher.service';
 
-type Environment = {
-	launcherService: LauncherService;
-};
+type NonFunctionPropertyNames<T> = {
+	[K in keyof T]: T[K] extends Function ? never : K;
+}[keyof T];
 
-const normalizeIcon = (path: string) => (path.startsWith('/') ? `./root${path}` : path);
+type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
 
-const UnprocessedLaunchPoint = types
-	.model('LaunchPoint', {
-		appId: types.string,
-		title: types.string,
-		launchPointId: types.identifier,
+@injectable()
+export class LaunchPoint {
+	appId!: string;
+	title!: string;
+	launchPointId!: string;
 
-		builtin: types.optional(types.boolean, false),
-		removable: types.boolean,
-		iconColor: types.string,
-		icon: types.string,
-	})
-	.volatile(() => ({
-		params: {},
-	}))
-	.actions(self => {
-		const { launcherService } = getEnv<Environment>(self);
+	builtin!: boolean;
+	removable!: boolean;
 
-		return {
-			launch: () => launcherService.launch(self as LaunchPointInstance),
-			move: (shift: number) => launcherService.move(self as LaunchPointInstance, shift),
-			hide: () => launcherService.hide(self as LaunchPointInstance),
-			uninstall: () => launcherService.uninstall(self as LaunchPointInstance),
-		};
-	});
+	icon!: string;
+	iconColor!: string;
 
-export const LaunchPoint = types.snapshotProcessor(UnprocessedLaunchPoint, {
-	preProcessor: (snapshot: LaunchPointInput) => ({
-		...snapshot,
-		appId: snapshot.id,
-		icon: normalizeIcon(
+	params: Record<string, any> = {};
+
+	public constructor(
+		@inject(LauncherService) private readonly launcherService: LauncherService,
+	) {}
+
+	public launch(): Promise<any> {
+		return this.launcherService.launch(this);
+	}
+
+	public move(shift: number) {
+		this.launcherService.move(this, shift);
+	}
+
+	public hide() {
+		this.launcherService.hide(this);
+	}
+
+	public uninstall() {
+		return this.launcherService.uninstall(this);
+	}
+
+	public apply(snapshot: LaunchPointInput): LaunchPoint {
+		return Object.assign(this, {
+			appId: snapshot.id,
+			icon: LaunchPoint.normalizeIcon(snapshot),
+			builtin: false,
+			params: {},
+			...pick(snapshot, ['title', 'launchPointId', 'removable', 'iconColor', 'params']),
+		} satisfies NonFunctionProperties<LaunchPoint>);
+	}
+
+	private static normalizePath(path: string) {
+		return path.startsWith('/') ? `./root${path}` : path;
+	}
+
+	private static normalizeIcon(snapshot: LaunchPointInput) {
+		return LaunchPoint.normalizePath(
 			snapshot.mediumLargeIcon ||
 				snapshot.largeIcon ||
 				snapshot.extraLargeIcon ||
 				snapshot.icon,
-		),
-	}),
-});
+		);
+	}
+}

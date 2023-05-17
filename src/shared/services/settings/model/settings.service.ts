@@ -1,7 +1,7 @@
 import { comparer, makeAutoObservable, reaction, toJS, when } from 'mobx';
 
 import { injectable } from 'inversify';
-import throttle from 'lodash.throttle';
+import { throttle } from 'lodash';
 
 import { luna, LunaTopic } from 'shared/services/luna';
 

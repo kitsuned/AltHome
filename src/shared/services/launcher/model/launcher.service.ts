@@ -1,4 +1,4 @@
-import { autorun, keys, makeAutoObservable, observable } from 'mobx';
+import { keys, makeAutoObservable, observable, reaction } from 'mobx';
 import type { ObservableMap } from 'mobx';
 
 import { inject, injectable, multiInject } from 'inversify';
@@ -7,7 +7,11 @@ import { luna } from 'shared/services/luna';
 import { SettingsService } from 'shared/services/settings';
 
 import { LifecycleManagerService } from '../../lifecycle-manager';
-import type { LaunchPointFactory, LaunchPointInstance } from '../api/launch-point.interface';
+import type {
+	LaunchPointFactory,
+	LaunchPointInput,
+	LaunchPointInstance,
+} from '../api/launch-point.interface';
 import { launchPointFactorySymbol } from '../launcher.tokens';
 import { LaunchPointsProvider } from '../providers';
 
@@ -27,9 +31,10 @@ export class LauncherService {
 			{ autoBind: true },
 		);
 
-		autorun(() => {
-			this.launchPointsMap.replace(this.launchPoints.map(lp => [lp.launchPointId, lp]));
-		});
+		reaction(
+			() => this.launchPoints,
+			lps => this.launchPointsMap.replace(lps.map(lp => [lp.launchPointId, lp])),
+		);
 	}
 
 	public get fulfilled() {
@@ -41,10 +46,11 @@ export class LauncherService {
 			return [];
 		}
 
-		return this.providers.flatMap(x => x.launchPoints).map(this.launchPointFactory);
+		return this.providers.flatMap(x => x.launchPoints).map(this.resolveLaunchPoint);
 	}
 
 	public get visible() {
+		// TODO
 		return this.pickByIds([...this.order, '@intent:add_apps']);
 	}
 
@@ -99,6 +105,13 @@ export class LauncherService {
 	private get hiddenIds() {
 		return keys(this.launchPointsMap as ObservableMap<string>).filter(
 			id => !this.order.includes(id) && id.startsWith('@'),
+		);
+	}
+
+	private resolveLaunchPoint(snapshot: LaunchPointInput) {
+		return (
+			this.launchPointsMap.get(snapshot.launchPointId)?.apply(snapshot) ??
+			this.launchPointFactory(snapshot)
 		);
 	}
 
