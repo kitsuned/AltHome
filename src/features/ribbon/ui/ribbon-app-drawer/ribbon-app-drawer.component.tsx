@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import type { MotionProps, Variants } from 'framer-motion';
 
-import { Portal } from '@reach/portal';
+import { FloatingPortal } from '@floating-ui/react';
 
 import { RibbonAppDrawerList } from './ribbon-app-drawer-list';
 import s from './ribbon-app-drawer.module.scss';
@@ -34,7 +34,7 @@ const animationMixin: MotionProps = {
 };
 
 export const RibbonAppDrawer = (): JSX.Element => (
-	<Portal type='app-drawer'>
+	<FloatingPortal id='app-drawer'>
 		<motion.div {...animationMixin} variants={backdropVariants} className={s.backdrop} />
 
 		<motion.div {...animationMixin} variants={dialogVariants} className={s.drawer}>
@@ -42,5 +42,5 @@ export const RibbonAppDrawer = (): JSX.Element => (
 
 			<RibbonAppDrawerList />
 		</motion.div>
-	</Portal>
+	</FloatingPortal>
 );

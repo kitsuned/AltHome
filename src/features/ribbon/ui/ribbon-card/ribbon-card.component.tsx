@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { MotionProps } from 'framer-motion';
 
-import { Portal } from '@reach/portal';
+import { FloatingPortal } from '@floating-ui/react';
 
 import { useRibbonService } from '../../services';
 import { RibbonContextMenu } from '../ribbon-context-menu';
@@ -71,13 +71,13 @@ export const RibbonCard = observer<RibbonCardProps>(({ position, launchPoint }) 
 
 			<AnimatePresence>
 				{showContextMenu && (
-					<Portal type='context-menu'>
+					<FloatingPortal id='context-menu'>
 						<RibbonContextMenu
 							ref={svc.contextMenuService.containerRef}
 							cardRef={cardRef}
 							removable={launchPoint.removable}
 						/>
-					</Portal>
+					</FloatingPortal>
 				)}
 			</AnimatePresence>
 		</>
