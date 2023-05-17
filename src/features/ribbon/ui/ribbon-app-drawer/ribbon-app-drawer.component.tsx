@@ -8,10 +8,10 @@ import s from './ribbon-app-drawer.module.scss';
 
 const dialogVariants: Variants = {
 	active: {
-		right: '0px',
+		translateX: 0,
 	},
 	exit: {
-		right: '-640px',
+		translateX: 640,
 	},
 };
 
