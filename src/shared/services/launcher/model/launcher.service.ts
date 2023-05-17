@@ -66,6 +66,12 @@ export class LauncherService {
 		return luna('luna://com.webos.service.applicationManager/launch', { id: appId, params });
 	}
 
+	public show({ launchPointId }: LaunchPointInstance) {
+		if (!this.order.includes(launchPointId)) {
+			this.order = [...this.order, launchPointId];
+		}
+	}
+
 	public hide({ launchPointId }: LaunchPointInstance) {
 		this.order = this.order.filter(x => x !== launchPointId);
 	}
@@ -104,7 +110,7 @@ export class LauncherService {
 
 	private get hiddenIds() {
 		return keys(this.launchPointsMap as ObservableMap<string>).filter(
-			id => !this.order.includes(id) && id.startsWith('@'),
+			id => !this.order.includes(id) && !id.startsWith('@'),
 		);
 	}
 

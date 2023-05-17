@@ -4,10 +4,12 @@ import { animationControls } from 'framer-motion';
 
 import { inject, injectable } from 'inversify';
 
-import { LauncherService } from 'shared/services/launcher';
+import { Intent } from 'shared/api/webos.d';
 import type { LaunchPointInstance } from 'shared/services/launcher';
+import { LauncherService } from 'shared/services/launcher';
 import { LifecycleManagerService } from 'shared/services/lifecycle-manager';
 
+import { AppDrawerService } from '../app-drawer';
 import { ContextMenuService } from '../context-menu';
 import { KeyboardService } from '../keyboard';
 import { ScrollService } from '../scroll';
@@ -26,6 +28,7 @@ export class RibbonService {
 	public constructor(
 		@inject(LauncherService) public readonly launcherService: LauncherService,
 		@inject(ScrollService) public readonly scrollService: ScrollService,
+		@inject(AppDrawerService) public readonly appDrawerService: AppDrawerService,
 		@inject(ContextMenuService) public readonly contextMenuService: ContextMenuService,
 		@inject(LifecycleManagerService) lifecycleManager: LifecycleManagerService,
 		@inject(KeyboardService) keyboardService: KeyboardService,
@@ -59,6 +62,7 @@ export class RibbonService {
 			() => {
 				this.moving = false;
 				this.contextMenuService.visible = false;
+				this.appDrawerService.visible = false;
 			},
 		);
 
@@ -75,6 +79,7 @@ export class RibbonService {
 		keyboardService.emitter.on('back', this.handleBack);
 		keyboardService.subscribe();
 
+		lifecycleManager.emitter.on('intent', this.handleIntent);
 		lifecycleManager.emitter.on('relaunch', this.toggle);
 		lifecycleManager.emitter.on('requestHide', this.hide);
 
@@ -119,6 +124,13 @@ export class RibbonService {
 		}
 	}
 
+	private handleIntent(intent: Intent) {
+		if (intent === Intent.AddApps) {
+			this.contextMenuService.visible = false;
+			this.appDrawerService.visible = true;
+		}
+	}
+
 	private handleShift(shift: number) {
 		if (this.index === null) {
 			this.focusToFirstVisibleNode();
@@ -156,9 +168,7 @@ export class RibbonService {
 	}
 
 	private handleBack() {
-		if (this.contextMenuService.visible) {
-			this.contextMenuService.visible = false;
-		} else if (this.moving) {
+		if (this.moving) {
 			this.moving = false;
 		} else {
 			this.visible = false;

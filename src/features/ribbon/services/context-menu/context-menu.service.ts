@@ -1,4 +1,4 @@
-import { makeAutoObservable, reaction } from 'mobx';
+import { makeAutoObservable, observable, reaction } from 'mobx';
 
 import { inject, injectable } from 'inversify';
 
@@ -16,7 +16,11 @@ export class ContextMenuService {
 	private ref: HTMLElement | null = null;
 
 	public constructor(@inject(KeyboardService) keyboardService: KeyboardService) {
-		makeAutoObservable(this, {}, { autoBind: true });
+		makeAutoObservable<ContextMenuService, 'ref'>(
+			this,
+			{ ref: observable.ref },
+			{ autoBind: true },
+		);
 
 		reaction(
 			() => this.ref,

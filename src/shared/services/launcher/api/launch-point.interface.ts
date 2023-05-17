@@ -14,6 +14,7 @@ export type LaunchPointInput = {
 	largeIcon?: string;
 	extraLargeIcon?: string;
 
+	builtin?: boolean;
 	params?: Record<string, any>;
 };
 

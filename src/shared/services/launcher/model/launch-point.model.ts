@@ -37,6 +37,10 @@ export class LaunchPoint {
 		this.launcherService.move(this, shift);
 	}
 
+	public show() {
+		this.launcherService.show(this);
+	}
+
 	public hide() {
 		this.launcherService.hide(this);
 	}
@@ -51,7 +55,14 @@ export class LaunchPoint {
 			icon: LaunchPoint.normalizeIcon(snapshot),
 			builtin: false,
 			params: {},
-			...pick(snapshot, ['title', 'launchPointId', 'removable', 'iconColor', 'params']),
+			...pick(snapshot, [
+				'title',
+				'launchPointId',
+				'removable',
+				'iconColor',
+				'builtin',
+				'params',
+			]),
 		} satisfies NonFunctionProperties<LaunchPoint>);
 	}
 
