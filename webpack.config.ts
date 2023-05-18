@@ -42,7 +42,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean }>>[
 					loader: 'esbuild-loader',
 					options: {
 						loader: 'tsx',
-						target: 'chrome79',
+						target: 'chrome71',
 					},
 				},
 				{
