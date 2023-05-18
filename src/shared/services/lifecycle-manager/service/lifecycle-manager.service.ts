@@ -3,10 +3,10 @@ import { makeAutoObservable, reaction } from 'mobx';
 import { inject, injectable } from 'inversify';
 import mitt from 'mitt';
 
-import type { ActivateType } from 'shared/api/webos';
+import type { ActivateType } from 'shared/api/webos.d';
+import { luna, LunaTopic } from 'shared/services/luna';
+import { SystemInfoService } from 'shared/services/system-info';
 
-import { luna, LunaTopic } from '../../luna';
-import { SystemInfoService } from '../../system-info';
 import type { LifecycleEvent } from '../api/compositor.interface';
 import type { LifecycleManagerEvents } from '../api/lifecycle-manager.interface';
 
@@ -42,15 +42,17 @@ export class LifecycleManagerService {
 
 	public show() {
 		this.visible = true;
+
+		webOSSystem.activate();
 	}
 
 	public hide() {
 		this.visible = false;
 
-		if (!this.compositorShimsRequired) {
-			webOSSystem.hide();
-		} else {
+		if (this.compositorShimsRequired) {
 			this.requestSuspense();
+		} else {
+			webOSSystem.hide();
 		}
 	}
 
@@ -76,18 +78,20 @@ export class LifecycleManagerService {
 
 	private handleRelaunch(event: CustomEvent<ActivateType>) {
 		if (event.detail?.intent) {
+			if (__DEV__) {
+				console.log('broadcasting intent', event.detail);
+			}
+
 			this.emitter.emit('intent', event.detail.intent);
-		} else {
+		} else if (event.detail?.activateType === 'home' && !this.visible) {
 			this.emitter.emit('relaunch');
+		} else if (this.visible) {
+			this.emitter.emit('requestHide');
 		}
 	}
 
 	private requestSuspense() {
-		if (__DEV__) {
-			console.log('requesting suspense');
-		}
-
-		void luna('luna://com.webos.service.applicationManager/pause', {
+		void luna('luna://com.webos.service.applicationManager/suspense', {
 			id: process.env.APP_ID,
 		});
 	}

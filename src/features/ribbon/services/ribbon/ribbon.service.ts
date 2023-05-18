@@ -45,15 +45,15 @@ export class RibbonService {
 		reaction(
 			() => this.visible,
 			async visible => {
-				const def = visible ? 'show' : 'hide';
+				const definition = visible ? 'show' : 'hide';
 
 				this.transition = true;
 
-				await this.controls.start(def);
+				await this.controls.start(definition);
 
 				this.transition = false;
 
-				lifecycleManager[def]();
+				lifecycleManager[definition]();
 			},
 		);
 

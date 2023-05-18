@@ -12,5 +12,6 @@
 	"disableBackHistoryAPI": true,
 	"supportQuickStart": true,
 	"visible": false,
-	"defaultWindowType": "floating"
+	"defaultWindowType": "floating",
+	"handlesRelaunch": true
 }

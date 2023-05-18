@@ -40,6 +40,11 @@ declare global {
 		 */
 		function hide(): void;
 
+		/**
+		 * Tells compositor to activate the UI layer.
+		 */
+		function activate(): void;
+
 		const window: {
 			/**
 			 * Set keyboard focus
