@@ -8,7 +8,7 @@ import { useRibbonService } from 'features/ribbon/services';
 import { RibbonAppDrawer } from '../ribbon-app-drawer';
 import { RibbonCard } from '../ribbon-card';
 
-import s from './ribbon.module.scss';
+import s from './ribbon.module.css';
 
 const motionProps: MotionProps = {
 	variants: {

@@ -4,7 +4,7 @@ import { useRibbonService } from 'features/ribbon/services';
 
 import { RibbonAppDrawerItem } from '../ribbon-app-drawer-item';
 
-import s from './ribbon-app-drawer-list.module.scss';
+import s from './ribbon-app-drawer-list.module.css';
 
 export const RibbonAppDrawerList = observer((): JSX.Element => {
 	const svc = useRibbonService();

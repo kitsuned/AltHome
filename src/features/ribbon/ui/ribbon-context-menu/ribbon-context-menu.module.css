@@ -1,6 +1,5 @@
-$bg: #f8f8f8;
-
 .container {
+	--bg: #f8f8f8;
 	padding: 0 16px;
 }
 
@@ -10,10 +9,10 @@ $bg: #f8f8f8;
 	overflow: hidden;
 	width: 320px;
 	border-radius: 12px;
-	background: $bg;
+	background: var(--bg);
 }
 
 .arrow {
 	padding-left: 21px;
-	fill: $bg;
+	fill: var(--bg);
 }

@@ -1,7 +1,8 @@
 import { memo } from 'react';
 
 import type { RibbonScrollTriggerProps } from './ribbon-scroll-trigger.interface';
-import s from './ribbon-scroll-trigger.module.scss';
+
+import s from './ribbon-scroll-trigger.module.css';
 
 export const RibbonScrollTrigger = memo(
 	({ hiddenEdge, onTrigger }: RibbonScrollTriggerProps): JSX.Element => (

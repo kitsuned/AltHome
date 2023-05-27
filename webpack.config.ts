@@ -46,16 +46,25 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean }>>[
 					},
 				},
 				{
-					test: /.scss$/,
+					test: /.css$/,
 					use: [
 						MiniCssExtractPlugin.loader,
-						'css-loader',
-						'sass-loader',
+						{
+							loader: 'css-loader',
+							options: {
+								modules: {
+									localIdentName:
+										argv.mode === 'production'
+											? '[hash:base64:5]'
+											: '[name]_[local]__[hash:base64:5]',
+								},
+							},
+						},
 						{
 							loader: 'postcss-loader',
 							options: {
 								postcssOptions: {
-									plugins: ['autoprefixer', 'postcss-preset-env'],
+									plugins: ['autoprefixer', 'postcss-preset-env', 'cssnano'],
 								},
 							},
 						},
@@ -75,7 +84,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean }>>[
 		},
 		plugins: [
 			new CircularDependencyPlugin({
-				exclude: /node_modules\/.+/,
+				exclude: /node_modules[\\/].+/,
 			}),
 			new ProvidePlugin({
 				React: 'react',
@@ -84,7 +93,7 @@ export default <WebpackMultipleConfigurations<{ WEBPACK_SERVE?: boolean }>>[
 				__DEV__: JSON.stringify(argv.mode === 'development'),
 				'process.env.APP_ID': JSON.stringify(name),
 			}),
-			new MiniCssExtractPlugin(),
+			new MiniCssExtractPlugin({}),
 			new HtmlWebpackPlugin({
 				template: './src/app/index.html',
 			}),

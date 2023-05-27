@@ -10,7 +10,8 @@ import { MenuAction } from 'features/ribbon/lib';
 
 import { RibbonContextMenuAction } from './ribbon-context-menu-action';
 import type { RibbonContextMenuProps } from './ribbon-context-menu.interface';
-import s from './ribbon-context-menu.module.scss';
+
+import s from './ribbon-context-menu.module.css';
 
 export const RibbonContextMenu = observer(
 	forwardRef<HTMLDivElement, RibbonContextMenuProps>(

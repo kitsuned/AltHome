@@ -4,7 +4,8 @@ import type { MotionProps, Variants } from 'framer-motion';
 import { FloatingPortal } from '@floating-ui/react';
 
 import { RibbonAppDrawerList } from './ribbon-app-drawer-list';
-import s from './ribbon-app-drawer.module.scss';
+
+import s from './ribbon-app-drawer.module.css';
 
 const dialogVariants: Variants = {
 	active: {

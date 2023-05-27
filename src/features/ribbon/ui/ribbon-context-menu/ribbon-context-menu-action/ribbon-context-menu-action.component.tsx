@@ -8,7 +8,8 @@ import { useRibbonService } from 'features/ribbon/services';
 
 import type { RibbonContextMenuActionProps } from './ribbon-context-menu-action.interface';
 import { mapMenuActionToIcon } from './ribbon-context-menu-action.lib';
-import s from './ribbon-context-menu-action.module.scss';
+
+import s from './ribbon-context-menu-action.module.css';
 
 export const RibbonContextMenuAction = observer(
 	({ action }: RibbonContextMenuActionProps): JSX.Element => {

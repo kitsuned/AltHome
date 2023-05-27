@@ -1,6 +1,3 @@
-$card-width: 142px;
-$card-height: 230px;
-
 .card {
 	--card-color: #ffffff;
 
@@ -16,24 +13,24 @@ $card-height: 230px;
 	background: none;
 	outline: none;
 
-	width: $card-width;
-	height: $card-height;
+	width: 142px;
+	height: 230px;
 
 	padding: 0;
 	margin-left: 2px;
 	border: 0;
+}
 
-	&::after {
-		content: '';
-		z-index: -1;
+.card::after {
+	content: '';
+	z-index: -1;
 
-		position: absolute;
-		inset: 0;
+	position: absolute;
+	inset: 0;
 
-		transform: skewX(-9.5deg);
+	transform: skewX(-9.5deg);
 
-		background-color: var(--card-color);
-	}
+	background-color: var(--card-color);
 }
 
 .icon {

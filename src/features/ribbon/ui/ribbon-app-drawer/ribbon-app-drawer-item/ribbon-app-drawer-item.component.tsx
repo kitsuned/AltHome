@@ -9,7 +9,8 @@ import clsx from 'clsx';
 import { useRibbonService } from 'features/ribbon/services';
 
 import type { RibbonAppDrawerItemProps } from './ribbon-app-drawer-item.interface';
-import s from './ribbon-app-drawer-item.module.scss';
+
+import s from './ribbon-app-drawer-item.module.css';
 
 export const RibbonAppDrawerItem = observer(
 	({ launchPoint }: RibbonAppDrawerItemProps): JSX.Element => {

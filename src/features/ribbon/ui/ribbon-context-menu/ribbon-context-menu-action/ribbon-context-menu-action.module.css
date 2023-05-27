@@ -19,12 +19,12 @@
 	transition: background-color .1s ease;
 	vertical-align: baseline;
 	width: 100%;
-
-	&.focused {
-		background-color: #e0e1e2;
-	}
-
-	&.danger {
-		color: #db282899;
-	}
 }
+
+.button.focused {
+	 background-color: #e0e1e2;
+ }
+
+.button.danger {
+	 color: #db282899;
+ }

@@ -13,7 +13,8 @@ import { useRibbonService } from '../../services';
 import { RibbonContextMenu } from '../ribbon-context-menu';
 
 import type { RibbonCardProps } from './ribbon-card.interface';
-import s from './ribbon-card.module.scss';
+
+import s from './ribbon-card.module.css';
 
 const motionProps: MotionProps = {
 	variants: {

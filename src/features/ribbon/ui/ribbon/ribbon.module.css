@@ -11,8 +11,8 @@
 	align-items: flex-end;
 
 	overflow-x: scroll;
+}
 
-	&::-webkit-scrollbar {
-		display: none;
-	}
+.group::-webkit-scrollbar {
+	display: none;
 }

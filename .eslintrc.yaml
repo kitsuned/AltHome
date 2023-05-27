@@ -133,6 +133,9 @@ rules:
         - pattern: shared/**
           group: internal
           position: before
+        - pattern: './**.module.css'
+          group: sibling
+          position: after
         - pattern: assets/**
           group: sibling
           position: after
