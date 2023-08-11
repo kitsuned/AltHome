@@ -1,5 +1,6 @@
 {
-	"name": "com.kitsuned.althome",
+	"id": "com.kitsuned.althome",
+	"name": "althome",
 	"version": "1.0.1",
 	"description": "AltHome is a replacement for the stock home app on LG TVs running webOS 6+",
 	"packageManager": "yarn@3.3.1",
@@ -23,8 +24,7 @@
 		"reflect-metadata": "0.1.13"
 	},
 	"devDependencies": {
-		"@kitsuned/webos-packager-plugin": "1.1.2",
-		"@types/circular-dependency-plugin": "5.0.5",
+		"@kitsuned/webos-packager-plugin": "2.0.1",
 		"@types/lodash": "4.14.194",
 		"@types/node": "18.11.18",
 		"@types/react": "18.0.26",
@@ -32,7 +32,6 @@
 		"@typescript-eslint/eslint-plugin": "5.59.1",
 		"@typescript-eslint/parser": "5.59.1",
 		"autoprefixer": "10.4.13",
-		"circular-dependency-plugin": "5.2.2",
 		"copy-webpack-plugin": "11.0.0",
 		"css-loader": "6.7.3",
 		"esbuild": "0.16.16",

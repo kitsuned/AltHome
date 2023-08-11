@@ -1,7 +1,7 @@
 import type { Configuration as WebpackConfiguration } from 'webpack';
 import type { Configuration as DevServerConfiguration } from 'webpack-dev-server';
 
-type Configuration = WebpackConfiguration & DevServerConfiguration;
+type Configuration = WebpackConfiguration & DevServerConfiguration & { id: string };
 
 export type WebpackEnvironment<T extends Record<string, any>> = T;
 

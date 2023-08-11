@@ -140,7 +140,7 @@ rules:
   class-methods-use-this: off
 
 overrides:
-  - files: '*.config.ts'
+  - files: [ '*.config.ts', 'webpack.*.ts' ]
     rules:
       no-restricted-exports: off
   - files: '*.d.ts'
