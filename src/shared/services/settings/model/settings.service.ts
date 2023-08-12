@@ -1,8 +1,8 @@
 import { comparer, makeAutoObservable, reaction, toJS, when } from 'mobx';
 
 import { injectable } from 'inversify';
-import { throttle } from 'lodash';
 
+import { throttle } from 'shared/core/utils/throttle';
 import { luna, LunaTopic } from 'shared/services/luna';
 
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';

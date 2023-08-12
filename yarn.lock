@@ -910,13 +910,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:4.14.194":
-  version: 4.14.194
-  resolution: "@types/lodash@npm:4.14.194"
-  checksum: 113f34831c461469d91feca2dde737f88487732898b4d25e9eb23b087bb193985f864d1e1e0f3b777edc5022e460443588b6000a3b2348c966f72d17eedc35ea
-  languageName: node
-  linkType: hard
-
 "@types/mime@npm:*":
   version: 3.0.1
   resolution: "@types/mime@npm:3.0.1"
@@ -1519,7 +1512,6 @@ __metadata:
   dependencies:
     "@floating-ui/react": 0.22.3
     "@kitsuned/webos-packager-plugin": 2.0.1
-    "@types/lodash": 4.14.194
     "@types/node": 18.11.18
     "@types/react": 18.0.26
     "@types/react-dom": 18.0.10
@@ -1545,7 +1537,6 @@ __metadata:
     framer-motion: 9.0.0
     html-webpack-plugin: 5.5.0
     inversify: 6.0.1
-    lodash: 4.17.21
     mini-css-extract-plugin: 2.7.2
     mitt: 3.0.0
     mobx: 6.7.0
@@ -4618,7 +4609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.21, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
+"lodash@npm:^4.17.20, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7

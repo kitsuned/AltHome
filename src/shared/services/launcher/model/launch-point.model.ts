@@ -1,5 +1,4 @@
 import { inject, injectable } from 'inversify';
-import { pick } from 'lodash';
 
 import type { LaunchPointInput } from '../api/launch-point.interface';
 
@@ -50,19 +49,24 @@ export class LaunchPoint {
 	}
 
 	public apply(snapshot: LaunchPointInput): LaunchPoint {
+		const {
+			title,
+			launchPointId,
+			removable,
+			iconColor,
+			builtin = false,
+			params = {},
+		} = snapshot;
+
 		return Object.assign(this, {
 			appId: snapshot.id,
 			icon: LaunchPoint.normalizeIcon(snapshot),
-			builtin: false,
-			params: {},
-			...pick(snapshot, [
-				'title',
-				'launchPointId',
-				'removable',
-				'iconColor',
-				'builtin',
-				'params',
-			]),
+			title,
+			launchPointId,
+			removable,
+			iconColor,
+			builtin,
+			params,
 		} satisfies NonFunctionProperties<LaunchPoint>);
 	}
 
