@@ -21,12 +21,11 @@ const config: WebpackConfigFunction<{ WEBPACK_SERVE?: boolean }> = (_, argv) => 
 	target: 'web',
 	mode: argv.mode ?? 'development',
 	entry: './src/index.tsx',
-	devtool: argv.mode === 'production' ? 'source-map' : 'eval',
+	devtool: 'source-map',
 	devServer: {
 		hot: true,
 	},
 	output: {
-		clean: true,
 		filename: 'app.js',
 	},
 	resolve: {
@@ -87,12 +86,12 @@ const config: WebpackConfigFunction<{ WEBPACK_SERVE?: boolean }> = (_, argv) => 
 			patterns: [
 				{
 					from: '**/*',
-					context: 'manifests',
+					context: 'manifests/app',
 					priority: 10,
 				},
 				{
 					from: '**/*.json',
-					context: 'manifests',
+					context: 'manifests/app',
 					transform: transformer.transform,
 					priority: 0,
 				},
