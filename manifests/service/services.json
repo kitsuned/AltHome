@@ -1,0 +1,8 @@
+{
+	"id": "@SERVICE_ID@",
+	"services": [
+		{
+			"name": "@SERVICE_ID@"
+		}
+	]
+}
