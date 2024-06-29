@@ -5,8 +5,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
-import { JsonTransformer } from 'chore/webpack-utils';
-import type { WebpackConfigFunction } from 'chore/webpack-utils';
+import { JsonTransformer } from 'webpack-utils';
+import type { WebpackConfigFunction } from 'webpack-utils';
 
 import { id, version } from './package.json';
 
@@ -35,11 +35,30 @@ const config: WebpackConfigFunction<{ WEBPACK_SERVE?: boolean }> = (_, argv) => 
 	module: {
 		rules: [
 			{
-				test: /.[jt]sx?$/,
-				loader: 'esbuild-loader',
-				options: {
-					loader: 'tsx',
-					target: 'chrome71',
+				test: /\.[mc]?[jt]sx?$/,
+				exclude: [/node_modules\/core-js/],
+				use: {
+					loader: 'babel-loader',
+					options: {
+						sourceType: 'unambiguous',
+						presets: [
+							[
+								'@babel/env',
+								{
+									useBuiltIns: 'usage',
+									corejs: '3.37',
+									targets: { chrome: 79 }, // corresponds to webOS 6
+								},
+							],
+							['@babel/react'],
+							['@babel/typescript', { onlyRemoveTypeImports: true }],
+						],
+						plugins: [
+							['transform-typescript-metadata'],
+							['@babel/plugin-proposal-decorators', { version: 'legacy' }],
+							['@babel/plugin-transform-class-properties'],
+						],
+					},
 				},
 			},
 			{
