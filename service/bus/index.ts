@@ -1,5 +1,7 @@
 import palmbus from 'palmbus';
 
+import { SERVICE_ID } from '../environment';
+
 import { Message } from './message';
 
 type Executor<T, N extends Record<string, any>> = (body: T) => AsyncGenerator<N>;
@@ -21,7 +23,7 @@ export class Service {
 	private readonly methods: Map<string, Executor<any, any>> = new Map();
 
 	public constructor(serviceId?: string) {
-		this.serviceId = serviceId ?? process.env.SERVICE_ID!;
+		this.serviceId = serviceId ?? SERVICE_ID;
 
 		this.handle = new palmbus.Handle(this.serviceId);
 
@@ -32,7 +34,10 @@ export class Service {
 		}, 10000);
 	}
 
-	public register<T, N>(method: string, executor: Executor<T, N>) {
+	public register<T, N extends Record<string, any> = Record<string, any>>(
+		method: string,
+		executor: Executor<T, N>,
+	) {
 		this.handle.registerMethod(...extractMethodPath(method));
 
 		this.methods.set(method, executor);
@@ -44,7 +49,7 @@ export class Service {
 		Promise.resolve()
 			.then<any>(() => message.payload)
 			.then(async body => {
-				const impl = this.methods.get(message.method);
+				const impl = this.methods.get(message.method)!;
 
 				return this.drainExecutor(impl(body), message);
 			})

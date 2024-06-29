@@ -1,20 +1,16 @@
 import { Service } from './bus';
+import { routines } from './routines';
 
 const service = new Service();
 
-service.register<{ crash: boolean }>('/hello', async function* (message) {
-	yield { greetings: 'Hello!' };
-	yield { message: 'Let me waste your time, hold on...' };
+service.register('/hello', async function* (message) {
+	for (const ctor of routines) {
+		const routine = new ctor();
 
-	await new Promise(resolve => setTimeout(resolve, 1000));
+		yield { done: false, status: `apply ${routine.id}` };
 
-	yield { message: 'Are you still here?' };
-
-	await new Promise(resolve => setTimeout(resolve, 1000));
-
-	if (message.crash) {
-		throw new Error('Terrible error... Boo!');
+		await routine.apply();
 	}
 
-	return { message: 'My Final Message. Goodbye' };
+	return { done: true, message: 'My Final Message. Goodbye' };
 });
