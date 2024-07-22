@@ -1,7 +1,7 @@
 import type palmbus from 'palmbus';
 
 export class Message<T extends Record<string, any> = Record<string, any>> {
-	private constructor(private readonly pMessage: palmbus.Message) {}
+	protected constructor(private readonly pMessage: palmbus.Message) {}
 
 	public get method(): string {
 		return this.pMessage.category() + this.pMessage.method();

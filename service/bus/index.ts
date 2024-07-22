@@ -3,6 +3,7 @@ import palmbus from 'palmbus';
 import { SERVICE_ID } from '../environment';
 
 import { Message } from './message';
+import { AsyncSink } from './sink';
 
 type Executor<T, N extends Record<string, any>> = (body: T) => AsyncGenerator<N>;
 
@@ -41,6 +42,34 @@ export class Service {
 		this.handle.registerMethod(...extractMethodPath(method));
 
 		this.methods.set(method, executor);
+	}
+
+	public async *subscribe<T>(
+		uri: string,
+		params: Record<string, any> = {},
+	): AsyncGenerator<T, null> {
+		const sink = new AsyncSink<T>();
+		const subscription = this.handle.subscribe(uri, JSON.stringify(params));
+
+		subscription.addListener('response', pMessage => {
+			sink.push(Message.fromPalmMessage(pMessage).payload);
+		});
+
+		try {
+			yield* sink;
+		} finally {
+			subscription.cancel();
+		}
+	}
+
+	public async oneshot<T>(uri: string, params: Record<string, any> = {}): Promise<T> {
+		const generator = this.subscribe<T>(uri, params);
+
+		const { value } = await generator.next();
+
+		await generator.return(null);
+
+		return value!;
 	}
 
 	private handleRequest(pMessage: palmbus.Message): void {

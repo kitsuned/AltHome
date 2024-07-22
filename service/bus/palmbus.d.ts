@@ -5,6 +5,8 @@ declare namespace Palmbus {
 
 		public call(uri: string, serialized: string): Call;
 
+		public subscribe(uri: string, serialized: string): Call;
+
 		public registerMethod(category: string, method: string): void;
 
 		public addListener(event: 'request', listener: (message: Message) => any): this;
@@ -31,6 +33,8 @@ declare namespace Palmbus {
 
 	class Call {
 		public addListener(event: 'response', listener: (message: Message) => any): this;
+
+		public cancel(): void;
 	}
 }
 
