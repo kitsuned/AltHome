@@ -1,5 +1,8 @@
-import type { Routine } from '../routine';
+import type { Routine as AbstractRoutine } from '../routine';
 
+import { KeyfilterRoutine } from './keyfilter.routine';
 import { RootSymlRoutine } from './root-syml.routine';
 
-export const routines: (typeof Routine)[] = [RootSymlRoutine];
+type Routine = typeof AbstractRoutine;
+
+export const routines: Routine[] = [RootSymlRoutine, KeyfilterRoutine];

@@ -2,7 +2,7 @@ import { promises } from 'fs';
 import { join } from 'path';
 
 import { APP_ROOT_DIR } from '../environment';
-import type { Routine } from '../routine';
+import { Routine } from '../routine';
 
 class InvalidLinkError extends Error {
 	public constructor(message) {
@@ -12,7 +12,7 @@ class InvalidLinkError extends Error {
 	}
 }
 
-export class RootSymlRoutine implements Routine {
+export class RootSymlRoutine extends Routine {
 	public readonly id = 'root-syml';
 
 	private readonly linkPath = join(APP_ROOT_DIR, 'root');

@@ -1,5 +1,4 @@
-declare const process: {
-	env: {
-		SERVICE_ID: string;
-	};
-};
+declare module '*.source.*' {
+	const value: string;
+	export = value;
+}

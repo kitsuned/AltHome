@@ -21,6 +21,7 @@ const config: WebpackConfigFunction<{ WEBPACK_SERVE?: boolean }> = (_, argv) => 
 	mode: argv.mode ?? 'development',
 	target: 'node8.12',
 	entry: './service/index.ts',
+	devtool: argv.mode === 'development' ? 'cheap-module-source-map' : false,
 	output: {
 		filename: 'service.js',
 	},
@@ -30,9 +31,11 @@ const config: WebpackConfigFunction<{ WEBPACK_SERVE?: boolean }> = (_, argv) => 
 	resolve: {
 		extensions: ['.ts', '.js'],
 	},
+	optimization: {
+		minimize: false,
+	},
 	module: {
 		rules: [
-			// TODO: move to Babel
 			{
 				test: /.[jt]sx?$/,
 				loader: 'babel-loader',
