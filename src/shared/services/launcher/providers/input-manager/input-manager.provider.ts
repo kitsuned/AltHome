@@ -24,7 +24,7 @@ export class InputProvider implements LaunchPointsProvider {
 	}
 
 	public get fulfilled(): boolean {
-		return Boolean(this.topic.message);
+		return Boolean(this.topic.message!);
 	}
 
 	public get launchPoints(): LaunchPointInput[] {
@@ -34,15 +34,23 @@ export class InputProvider implements LaunchPointsProvider {
 			return [];
 		}
 
-		return message.devices.map(this.mapDeviceToLaunchPoint);
+		return (message.devices as Device[])
+			.filter(this.isPhysicalDevice)
+			.map(this.mapDeviceToLaunchPoint);
+	}
+
+	private isPhysicalDevice(device: Device): boolean {
+		return !('mvpdIcon' in device || 'pigImage' in device);
 	}
 
 	private mapDeviceToLaunchPoint(device: Device): LaunchPointInput {
+		const icon = device.iconPrefix ? device.iconPrefix + device.icon : device.icon;
+
 		return {
 			id: device.appId,
 			launchPointId: device.appId,
 			title: device.label,
-			icon: `./root${device.iconPrefix}${device.icon}`,
+			icon: `./root${icon}`,
 			iconColor: '#ffffff',
 			removable: false,
 		};

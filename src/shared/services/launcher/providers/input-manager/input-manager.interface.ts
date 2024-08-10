@@ -9,6 +9,10 @@ export type Device = {
 
 	iconPrefix: string;
 	icon: string;
+
+	// properties exclusive only to MVPD apps
+	mvpdIcon?: string;
+	pigImage?: string;
 };
 
 type InputStatusMessage = {
