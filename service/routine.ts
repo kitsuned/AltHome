@@ -1,5 +1,9 @@
-export interface Routine {
-	readonly id: string;
+import type { Service } from './bus';
 
-	apply(): Promise<void>;
+export abstract class Routine {
+	public readonly id: string;
+
+	protected constructor(protected readonly service: Service) {}
+
+	public abstract apply(): PromiseLike<void> | void;
 }

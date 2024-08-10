@@ -10,6 +10,7 @@ settings:
     version: detect
   import/resolver:
     typescript: true
+  import/core-modules: [ palmbus ]
 
 root: true
 
@@ -39,6 +40,17 @@ rules:
   curly:
     - error
     - all
+
+  func-names:
+    - error
+    - as-needed
+    - generators: never
+
+  max-classes-per-file:
+    - warn
+    - max: 2
+
+  no-await-in-loop: off
 
   no-void:
     - error
