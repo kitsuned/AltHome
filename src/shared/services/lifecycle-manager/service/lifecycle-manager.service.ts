@@ -29,8 +29,9 @@ export class LifecycleManagerService {
 			() => this.topic.message,
 			message => {
 				if (
-					message?.appId !== process.env.APP_ID &&
-					(message?.event === 'splash' || message?.event === 'launch')
+					message?.returnValue &&
+					message.appId !== process.env.APP_ID &&
+					(message.event === 'splash' || message?.event === 'launch')
 				) {
 					this.broadcastHide();
 				}

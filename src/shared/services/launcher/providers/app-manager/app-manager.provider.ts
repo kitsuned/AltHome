@@ -24,7 +24,7 @@ export class AppManagerProvider implements LaunchPointsProvider {
 	}
 
 	public get fulfilled(): boolean {
-		return Boolean(this.topic.message);
+		return Boolean(this.topic.message!);
 	}
 
 	private handleMessage(message: AppManagerMessage): void {
