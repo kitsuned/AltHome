@@ -47,9 +47,12 @@ const config: WebpackConfigFunction<{ WEBPACK_SERVE?: boolean }> = (_, argv) => 
 				},
 			},
 			{
-				test: /.source.\w+$/,
-				type: 'asset/source',
+				test: /.keyfilter.js$/,
+				type: 'asset/resource',
 				loader: 'babel-loader',
+				generator: {
+					filename: 'keyfilters/[name][ext]',
+				},
 				options: {
 					presets: [
 						[
