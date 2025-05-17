@@ -1,5 +1,3 @@
-import process from 'process';
-
 import { Service } from './bus';
 import { routines } from './routines';
 

@@ -3,9 +3,13 @@ declare module '*.source.*' {
 	export = value;
 }
 
-declare const process: {
-	env: {
-		APP_ID: string;
-		SERVICE_ID: string;
-	};
-};
+declare global {
+	namespace NodeJS {
+		interface ProcessEnv {
+			APP_ID: string;
+			SERVICE_ID: string;
+		}
+	}
+}
+
+export {};
