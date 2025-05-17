@@ -5,7 +5,7 @@ import { APP_ROOT_DIR } from '../environment';
 import { Routine } from '../routine';
 
 class InvalidLinkError extends Error {
-	public constructor(message) {
+	public constructor(message: string) {
 		super(message);
 
 		Object.setPrototypeOf(this, InvalidLinkError.prototype);

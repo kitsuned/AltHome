@@ -1,8 +1,11 @@
-import type { Routine as AbstractRoutine } from '../routine';
+import type { Service } from '../bus';
+import type { Routine } from '../routine';
 
 import { KeyfilterRoutine } from './keyfilter.routine';
 import { RootSymlRoutine } from './root-syml.routine';
 
-type Routine = typeof AbstractRoutine;
+type RoutineCtor = {
+	new (service: Service): Routine;
+};
 
-export const routines: Routine[] = [RootSymlRoutine, KeyfilterRoutine];
+export const routines: RoutineCtor[] = [RootSymlRoutine, KeyfilterRoutine];
