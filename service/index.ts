@@ -8,7 +8,7 @@ const service = new Service();
 service.register('/elevate', async function* () {
 	yield { done: false, status: 'Checking root status...' };
 
-	const { root = false } = await service.oneshot(
+	const { root = false } = await service.oneshot<{ root: boolean }>(
 		'luna://org.webosbrew.hbchannel.service/getConfiguration',
 	);
 
@@ -26,8 +26,9 @@ service.register('/elevate', async function* () {
 });
 
 service.register('/apply', async function* () {
-	for (const RoutineCtor of routines) {
-		const routine = new RoutineCtor(service);
+	for (const ctor of routines) {
+		// eslint-disable-next-line new-cap
+		const routine = new ctor(service);
 
 		yield { done: false, status: `Apply ${routine.id}` };
 
