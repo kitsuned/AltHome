@@ -1,4 +1,5 @@
 import { Service } from './bus';
+import { SERVICE_ID } from './environment';
 import { routines } from './routines';
 
 const service = new Service();
@@ -12,13 +13,13 @@ service.register('/elevate', async function* () {
 
 	if (!root) {
 		throw new Error('Not privileged.');
+	} else {
+		yield { done: false, status: 'Elevating...' };
+
+		await service.oneshot('luna://org.webosbrew.hbchannel.service/exec', {
+			command: `./elevate-service ${SERVICE_ID}`,
+		});
 	}
-
-	yield { done: false, status: 'Elevating...' };
-
-	await service.oneshot('luna://org.webosbrew.hbchannel.service/exec', {
-		command: './elevate-service com.kitsuned.althome.service',
-	});
 
 	return { done: true };
 });
@@ -33,11 +34,13 @@ service.register('/apply', async function* () {
 		await routine.apply();
 	}
 
-	return { done: true, message: 'My Final Message. Goodbye' };
+	return { done: true };
 });
 
 service.register('/quit', async function* () {
-	yield {};
+	yield { status: 'Bye bye!' };
 
-	queueMicrotask(() => process.exit(0));
+	queueMicrotask(() => queueMicrotask(() => process.exit(0)));
+
+	return {};
 });

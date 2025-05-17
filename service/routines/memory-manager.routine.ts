@@ -1,4 +1,4 @@
-import { APP_ID } from '../environment';
+import { APP_ID, CANONICAL_HOME_APP_ID } from '../environment';
 import { Routine } from '../routine';
 import { asyncSpawn, readJson, writeJson } from '../utils';
 
@@ -6,8 +6,6 @@ type MemoryManagerConfig = {
 	KeepOnLaunchEx: string[];
 	[key: string]: any;
 };
-
-const CANONICAL_HOME_APP_ID = 'com.webos.app.home';
 
 export class MemoryManagerRoutine extends Routine {
 	public readonly id = 'memchute';
