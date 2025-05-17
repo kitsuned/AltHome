@@ -2,6 +2,7 @@ import type { Service } from '../bus';
 import type { Routine } from '../routine';
 
 import { KeyfilterRoutine } from './keyfilter.routine';
+import { KillHomeRoutine } from './kill-home.routine';
 import { MemoryManagerRoutine } from './memory-manager.routine';
 import { PreloadManagerRoutine } from './preload.routine';
 import { RootSymlRoutine } from './root-syml.routine';
@@ -15,4 +16,5 @@ export const routines: RoutineCtor[] = [
 	KeyfilterRoutine,
 	MemoryManagerRoutine,
 	PreloadManagerRoutine,
+	KillHomeRoutine,
 ];

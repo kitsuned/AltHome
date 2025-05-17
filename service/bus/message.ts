@@ -1,6 +1,6 @@
 import type palmbus from 'palmbus';
 
-export class Message<T extends Record<string, any> = Record<string, any>> {
+export class Message<T extends Record<string, any>> {
 	protected constructor(private readonly pMessage: palmbus.Message) {}
 
 	public get method(): string {
@@ -19,7 +19,9 @@ export class Message<T extends Record<string, any> = Record<string, any>> {
 		this.pMessage.respond(JSON.stringify(message));
 	}
 
-	public static fromPalmMessage(pMessage: palmbus.Message) {
-		return new Message(pMessage);
+	public static fromPalmMessage<T extends Record<string, any> = Record<string, any>>(
+		pMessage: palmbus.Message,
+	) {
+		return new Message<T>(pMessage);
 	}
 }

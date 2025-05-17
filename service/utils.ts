@@ -20,3 +20,9 @@ export const asyncSpawn = (bin: string, args: string[] = []): Promise<void> =>
 
 		process.on('error', reject);
 	});
+
+export const restartService = (service: string) =>
+	asyncSpawn('systemctl', ['--no-block', 'restart', service]);
+
+export const killProcess = (processName: string) =>
+	asyncSpawn('killall', [processName]).catch(() => null);
