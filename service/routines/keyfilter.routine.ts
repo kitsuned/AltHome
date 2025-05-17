@@ -1,53 +1,40 @@
-import { promises } from 'fs';
+import { resolve } from 'path';
 
 import { Routine } from '../routine';
+import { readJson } from '../utils';
 
+// @ts-ignore
 // eslint-disable-next-line import/extensions
-import shadow from './shadow.source.js';
+import keyfilterPath from './keyfilters/home.keyfilter.js';
 
 type KeyfilterConfigEntry = {
 	file: string;
 	handler: string;
 };
 
+type SMPartialConfig = {
+	keyFilters: KeyfilterConfigEntry[];
+};
+
 export class KeyfilterRoutine extends Routine {
 	public readonly id = 'keyfilter';
 
-	private readonly targetHandlerId = 'handleSystemKeys';
-	private readonly patchedHandlerPath = '/home/root/keyfilter-sysui-shadowed.js';
+	private readonly targetHandler = 'handleHomeKey';
+	private readonly targetFile = resolve(keyfilterPath);
 
 	public async apply() {
-		const { keyFilters } = await this.readDefaultConfigSMLayer<{
-			keyFilters: KeyfilterConfigEntry[];
-		}>();
+		// TODO it may cause problems on tunerless / monitor platforms
+		const { keyFilters: keyfilters } = await readJson<SMPartialConfig>(
+			'/etc/configd/layers/base/com.webos.surfacemanager.json',
+		);
 
-		const target = keyFilters.find(x => x.handler === this.targetHandlerId);
-
-		if (!target) {
-			throw new Error(
-				`Target key filter entry not found (looking for ${this.targetHandlerId} handler)`,
-			);
-		}
-
-		await this.deriveKeyfilter(target.file);
-
-		target.file = this.patchedHandlerPath;
-
-		await this.reconfigureKeyfilters(keyFilters);
-	}
-
-	private async readDefaultConfigSMLayer<T>() {
-		return JSON.parse(
-			await this.readFile('/etc/configd/layers/base/com.webos.surfacemanager.json'),
-		) as T;
-	}
-
-	private async deriveKeyfilter(path: string) {
-		const content = await this.readFile(path);
-
-		const patched = `${content}\n${shadow}`;
-
-		await this.writeFile(this.patchedHandlerPath, patched);
+		await this.reconfigureKeyfilters([
+			{
+				handler: this.targetHandler,
+				file: this.targetFile,
+			},
+			...keyfilters,
+		]);
 	}
 
 	private async reconfigureKeyfilters(keyfilters: KeyfilterConfigEntry[]) {
@@ -56,13 +43,5 @@ export class KeyfilterRoutine extends Routine {
 				'com.webos.surfacemanager.keyFilters': keyfilters,
 			},
 		});
-	}
-
-	private readFile(path: string): Promise<string> {
-		return promises.readFile(path, { encoding: 'utf8' });
-	}
-
-	private writeFile(path: string, content: string) {
-		return promises.writeFile(path, content, { encoding: 'utf8' });
 	}
 }
