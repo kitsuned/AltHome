@@ -1,6 +1,6 @@
 import { APP_ID, CANONICAL_HOME_APP_ID } from '../environment';
 import { Routine } from '../routine';
-import { asyncSpawn, readJson, writeJson } from '../utils';
+import { readJson, restartService, writeJson } from '../utils';
 
 type MemoryManagerConfig = {
 	KeepOnLaunchEx: string[];
@@ -11,6 +11,12 @@ export class MemoryManagerRoutine extends Routine {
 	public readonly id = 'memchute';
 
 	public async apply() {
+		await this.patchMemoryManagerConfig();
+
+		await restartService('memchute.service');
+	}
+
+	public async patchMemoryManagerConfig() {
 		const config = await readJson<MemoryManagerConfig>('/etc/palm/memorymanager-conf.json');
 
 		config.KeepOnLaunchEx = config.KeepOnLaunchEx.map(id =>
@@ -18,13 +24,5 @@ export class MemoryManagerRoutine extends Routine {
 		);
 
 		await writeJson('/home/root/memorymanager-conf.json', config);
-
-		await asyncSpawn('systemctl', ['--no-block', 'restart', 'memchute.service']);
-
-		try {
-			await asyncSpawn('killall', [CANONICAL_HOME_APP_ID]);
-		} catch {
-			console.warn(`${CANONICAL_HOME_APP_ID} was dead`);
-		}
 	}
 }

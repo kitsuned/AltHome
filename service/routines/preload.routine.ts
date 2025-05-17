@@ -1,6 +1,6 @@
 import { APP_ID, CANONICAL_HOME_APP_ID } from '../environment';
 import { Routine } from '../routine';
-import { asyncSpawn, readJson } from '../utils';
+import { readJson, restartService } from '../utils';
 
 type AppPolicy = {
 	id: string;
@@ -19,7 +19,7 @@ export class PreloadManagerRoutine extends Routine {
 	public async apply() {
 		await this.patchAppPoliciesConfig();
 
-		await asyncSpawn('systemctl', ['--no-block', 'restart', 'preload-manager.service']);
+		await restartService('preload-manager.service');
 	}
 
 	public async patchAppPoliciesConfig() {

@@ -44,7 +44,7 @@ export class Service {
 		this.methods.set(method, executor);
 	}
 
-	public async *subscribe<T>(
+	public async *subscribe<T extends Record<string, any>>(
 		uri: string,
 		params: Record<string, any> = {},
 	): AsyncGenerator<T, null> {
@@ -52,17 +52,23 @@ export class Service {
 		const subscription = this.handle.subscribe(uri, JSON.stringify(params));
 
 		subscription.addListener('response', pMessage => {
-			sink.push(Message.fromPalmMessage(pMessage).payload);
+			sink.push(Message.fromPalmMessage<T>(pMessage).payload);
 		});
 
 		try {
+			// @ts-ignore TODO
 			yield* sink;
 		} finally {
 			subscription.cancel();
 		}
+
+		throw new Error('Unreachable');
 	}
 
-	public async oneshot<T>(uri: string, params: Record<string, any> = {}): Promise<T> {
+	public async oneshot<T extends Record<string, any>>(
+		uri: string,
+		params: Record<string, any> = {},
+	): Promise<T> {
 		const generator = this.subscribe<T>(uri, params);
 
 		const { value } = await generator.next();
@@ -93,7 +99,7 @@ export class Service {
 			});
 	}
 
-	private async drainExecutor(generator: ReturnType<Executor<any, any>>, message: Message) {
+	private async drainExecutor(generator: ReturnType<Executor<any, any>>, message: Message<any>) {
 		const isSubscription = message.payload.subscribe === true;
 
 		let it: IteratorResult<any>;
