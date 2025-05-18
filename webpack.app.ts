@@ -96,6 +96,7 @@ const config: WebpackConfigFunction<{ WEBPACK_SERVE?: boolean }> = (_, argv) => 
 		new DefinePlugin({
 			__DEV__: JSON.stringify(argv.mode === 'development'),
 			'process.env.APP_ID': JSON.stringify(id),
+			'process.env.SERVICE_ID': JSON.stringify(`${id}.service`),
 		}),
 		new MiniCssExtractPlugin(),
 		new HtmlWebpackPlugin({
@@ -113,12 +114,6 @@ const config: WebpackConfigFunction<{ WEBPACK_SERVE?: boolean }> = (_, argv) => 
 					context: 'manifests/app',
 					transform: transformer.transform,
 					priority: 0,
-				},
-				{
-					from: 'agentd*',
-					context: 'agent',
-					to: 'service',
-					toType: 'file',
 				},
 			],
 		}),

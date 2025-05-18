@@ -1,27 +1,37 @@
 import type { LunaMessage } from '../api/luna.api';
 import { luna } from '../model/luna.service';
 
+const toast = (message: string) => luna('luna://com.webos.notification/createToast', { message });
+
+// TODO add mutex
 export const requestElevation = async () => {
 	const { root } = await luna<{ root: boolean }>(
 		'luna://org.webosbrew.hbchannel.service/getConfiguration',
 	);
 
 	if (!root) {
-		await luna('luna://com.webos.notification/createToast', {
-			message: '[AltHome] Check root status!',
-		});
+		await toast('[AltHome] Check root status!');
 
 		return;
 	}
 
-	await luna('luna://com.webos.notification/createToast', {
-		message: '[AltHome] Getting things ready…',
-	});
+	await toast('[AltHome] Preparing service…');
 
-	await luna('luna://org.webosbrew.hbchannel.service/exec', {
-		command:
-			'/media/developer/apps/usr/palm/applications/com.kitsuned.althome/service --self-elevation',
-	});
+	await luna(`luna://${process.env.SERVICE_ID}/elevate`);
+
+	try {
+		await luna(`luna://${process.env.SERVICE_ID}/quit`);
+	} catch {
+		// should fail with "Message status unknown."
+	}
+
+	await new Promise(resolve => setTimeout(resolve, 500));
+
+	await toast('[AltHome] Getting things ready…');
+
+	await luna(`luna://${process.env.SERVICE_ID}/apply`);
+
+	await toast('[AltHome] Setup completed');
 
 	window.close();
 };
