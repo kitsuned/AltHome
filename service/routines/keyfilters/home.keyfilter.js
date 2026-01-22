@@ -27,10 +27,10 @@ function handleHomeKey(key) {
 /**
  * Handle package info response to check is AltHome installed
  */
-function cb_handleAltHomePackageInfo(payload) {
+function cb_handleAltHomeAppInfo(payload) {
 	const response = JSON.parse(payload);
 
-	if (response.returnValue && response.packageInfo) {
+	if (response.returnValue && response.appInfo) {
 		isAltHomeInstalled = true;
 	}
 }
@@ -42,8 +42,8 @@ function cb_handleAltHomePackageInfo(payload) {
 function init() {
 	lunaCall.send(
 		'com.webos.service.applicationmanager',
-		'/getPackageInfo',
+		'/getAppInfo',
 		JSON.stringify({ id: __APP_ID__ }),
-		cb_handleAltHomePackageInfo,
+		cb_handleAltHomeAppInfo,
 	);
 }
