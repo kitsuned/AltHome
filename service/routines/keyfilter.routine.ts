@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 
 import { Routine } from '../routine';
-import { readJson } from '../utils';
+import { readConfigd } from '../utils';
 
 // @ts-ignore
 // eslint-disable-next-line import/extensions
@@ -23,9 +23,8 @@ export class KeyfilterRoutine extends Routine {
 	private readonly targetFile = resolve(keyfilterPath);
 
 	public async apply() {
-		// TODO it may cause problems on tunerless / monitor platforms
-		const { keyFilters: keyfilters } = await readJson<SMPartialConfig>(
-			'/etc/configd/layers/base/com.webos.surfacemanager.json',
+		const { keyFilters: keyfilters } = await readConfigd<SMPartialConfig>(
+			'com.webos.surfacemanager',
 		);
 
 		await this.reconfigureKeyfilters([

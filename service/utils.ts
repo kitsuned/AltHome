@@ -12,6 +12,12 @@ export const readJson = async <T>(path: string): Promise<T> => JSON.parse(await 
 export const writeJson = <T>(path: string, content: T): Promise<void> =>
 	writeFile(path, JSON.stringify(content));
 
+// configd merges all layers into /var/preferences/configd_db.json
+// and keeps user overrides in /var/preferences/configd_factory_db.json
+// P.S. JSON is too big to memoize it...
+export const readConfigd = async <T, K extends string = string>(key: K): Promise<T> =>
+	(await readJson<Record<K, T>>('/var/preferences/configd_db.json'))[key];
+
 export const asyncSpawn = (bin: string, args: string[] = []): Promise<void> =>
 	new Promise((resolve, reject) => {
 		const process = spawn(bin, args, { stdio: 'inherit' });

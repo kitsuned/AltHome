@@ -1,6 +1,6 @@
 import { APP_ID, CANONICAL_HOME_APP_ID } from '../environment';
 import { Routine } from '../routine';
-import { readJson, restartService } from '../utils';
+import { readConfigd, restartService } from '../utils';
 
 type AppPolicy = {
 	id: string;
@@ -23,8 +23,8 @@ export class PreloadManagerRoutine extends Routine {
 	}
 
 	public async patchAppPoliciesConfig() {
-		const { supportAppList: apps } = await readJson<PreloadManagerConfigLayer>(
-			'/etc/configd/layers/base/com.webos.service.preloadmanager.json',
+		const { supportAppList: apps } = await readConfigd<PreloadManagerConfigLayer>(
+			'com.webos.service.preloadmanager',
 		);
 
 		// TODO preloadMode: partial, semi-full, full, criu (???)
