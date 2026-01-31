@@ -11,7 +11,7 @@ extends:
   - airbnb-base
   - airbnb-typescript/base
   - prettier
-  - 'plugin:sonarjs/recommended'
+  - 'plugin:sonarjs/recommended-legacy'
   - 'plugin:react/jsx-runtime'
   - 'plugin:react-hooks/recommended'
   - 'plugin:import/recommended'
