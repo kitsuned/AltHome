@@ -41,3 +41,5 @@ export const restartService = (service: string) =>
 
 export const killProcess = (processName: string) =>
 	asyncSpawn('killall', [processName]).catch(() => null);
+
+export const rescanLunaManifests = () => asyncSpawn('ls-control', ['scan-services']);
