@@ -1918,6 +1918,63 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@inversifyjs/common@npm:1.5.2":
+  version: 1.5.2
+  resolution: "@inversifyjs/common@npm:1.5.2"
+  checksum: 10/92dd014ed2933d611b1d3198c8438b38b836a24e45d556a5b94898b1bb25bc4840e7e2d9f083db629a63e0ae0fd8070c026d6c11cda575934aef334606d08832
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/container@npm:1.15.0":
+  version: 1.15.0
+  resolution: "@inversifyjs/container@npm:1.15.0"
+  dependencies:
+    "@inversifyjs/common": "npm:1.5.2"
+    "@inversifyjs/core": "npm:9.2.0"
+    "@inversifyjs/plugin": "npm:0.2.0"
+    "@inversifyjs/reflect-metadata-utils": "npm:1.4.1"
+  peerDependencies:
+    reflect-metadata: ~0.2.2
+  checksum: 10/b4c557af36641b61073808da6f59b6d81b96abfa8e01fd85d13f01b36fb54031dc8dda325b816028977c5baa6a4180a5bc036f810cea75c5ae06722b3361ff26
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/core@npm:9.2.0":
+  version: 9.2.0
+  resolution: "@inversifyjs/core@npm:9.2.0"
+  dependencies:
+    "@inversifyjs/common": "npm:1.5.2"
+    "@inversifyjs/prototype-utils": "npm:0.1.3"
+    "@inversifyjs/reflect-metadata-utils": "npm:1.4.1"
+  checksum: 10/8e669b71064fe6ad96b7193762d48183d6245b046778f74cc58a94faa6db9902d7000d3e88bddec40f955d77f3d1f1c21807aef75f2727eecfb47a41a5839799
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/plugin@npm:0.2.0":
+  version: 0.2.0
+  resolution: "@inversifyjs/plugin@npm:0.2.0"
+  checksum: 10/ee7897ae3ee17d7dff02781b00eadd942e79f9f8bcd4e42190b9d899945ca3765b5c97bdfca5553ad14c0fc7286de3ada2d11e43dcc26c999f7f856727db65e8
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/prototype-utils@npm:0.1.3":
+  version: 0.1.3
+  resolution: "@inversifyjs/prototype-utils@npm:0.1.3"
+  dependencies:
+    "@inversifyjs/common": "npm:1.5.2"
+  checksum: 10/f88638bba3664a126acd0bd4fc50caeaf05743651a351ca02933d770fff83afd29ae78583243043c9cf9eaf61bd0bdb31b95fe1bb374338ab016071df93ddfaf
+  languageName: node
+  linkType: hard
+
+"@inversifyjs/reflect-metadata-utils@npm:1.4.1":
+  version: 1.4.1
+  resolution: "@inversifyjs/reflect-metadata-utils@npm:1.4.1"
+  peerDependencies:
+    reflect-metadata: ~0.2.2
+  checksum: 10/14b61dfdce2b456d641ead477d3f0172ee896d93f5b9230b5f96deaca10ca9ed2ca4c7f287f5979d771227e6b3b555a5d6a11917f0b84f8180a9155adbb5d8da
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -2992,7 +3049,7 @@ __metadata:
     eslint-plugin-sonarjs: "npm:0.19.0"
     framer-motion: "npm:9.0.0"
     html-webpack-plugin: "npm:5.5.0"
-    inversify: "npm:6.0.1"
+    inversify: "npm:7.11.0"
     mini-css-extract-plugin: "npm:2.7.2"
     mitt: "npm:3.0.0"
     mobx: "npm:6.7.0"
@@ -3003,7 +3060,7 @@ __metadata:
     prettier: "npm:2.8.8"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
-    reflect-metadata: "npm:0.1.13"
+    reflect-metadata: "npm:0.2.2"
     sass: "npm:1.57.1"
     sass-loader: "npm:13.2.0"
     style-loader: "npm:3.3.1"
@@ -5715,10 +5772,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inversify@npm:6.0.1":
-  version: 6.0.1
-  resolution: "inversify@npm:6.0.1"
-  checksum: 10/9563eaccdff13c6d7c309ececd29e30f63d401f42e448f1a9350d3a141273b98835b658afb824f1ef2d59d397e64c00661a0a6d81f226b7a02c48f37e90f96e6
+"inversify@npm:7.11.0":
+  version: 7.11.0
+  resolution: "inversify@npm:7.11.0"
+  dependencies:
+    "@inversifyjs/common": "npm:1.5.2"
+    "@inversifyjs/container": "npm:1.15.0"
+    "@inversifyjs/core": "npm:9.2.0"
+  checksum: 10/7b853d2995a988a03088dc5be1efffa421aeb807d7a9fc8fd317e52122452f77b61b77df2d83e66cc51caaac873a6870c9216dbeb96d93d91798c60599c2d738
   languageName: node
   linkType: hard
 
@@ -7862,10 +7923,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reflect-metadata@npm:0.1.13":
-  version: 0.1.13
-  resolution: "reflect-metadata@npm:0.1.13"
-  checksum: 10/732570da35d2d96f8fdd5aac60fb263aa92f6512eaded5962b052bd9e90f22a9dec5aaf0d7ff4bfe97646c9530e8444e8435c2d80b24d0bdf938b5d47f6f5b83
+"reflect-metadata@npm:0.2.2":
+  version: 0.2.2
+  resolution: "reflect-metadata@npm:0.2.2"
+  checksum: 10/1c93f9ac790fea1c852fde80c91b2760420069f4862f28e6fae0c00c6937a56508716b0ed2419ab02869dd488d123c4ab92d062ae84e8739ea7417fae10c4745
   languageName: node
   linkType: hard
 
