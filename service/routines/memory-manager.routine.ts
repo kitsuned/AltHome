@@ -4,6 +4,7 @@ import { readJson, restartService, writeJson } from '../utils';
 
 type MemoryManagerConfig = {
 	KeepOnLaunchEx: string[];
+	HomeGroup?: string[];
 	[key: string]: any;
 };
 
@@ -22,6 +23,10 @@ export class MemoryManagerRoutine extends Routine {
 		config.KeepOnLaunchEx = config.KeepOnLaunchEx.map(id =>
 			id === CANONICAL_HOME_APP_ID ? APP_ID : id,
 		);
+
+		if (config.HomeGroup) {
+			config.HomeGroup = [APP_ID];
+		}
 
 		await writeJson('/home/root/memorymanager-conf.json', config);
 	}
