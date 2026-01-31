@@ -12,6 +12,15 @@ export const readJson = async <T>(path: string): Promise<T> => JSON.parse(await 
 export const writeJson = <T>(path: string, content: T): Promise<void> =>
 	writeFile(path, JSON.stringify(content));
 
+export const exists = async (path: string): Promise<boolean> => {
+	try {
+		await promises.stat(path);
+		return true;
+	} catch {
+		return false;
+	}
+};
+
 // configd merges all layers into /var/preferences/configd_db.json
 // and keeps user overrides in /var/preferences/configd_factory_db.json
 // P.S. JSON is too big to memoize it...
