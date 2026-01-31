@@ -1,17 +1,9 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"lib": [
-			"ES2020",
-			"DOM"
-		],
-		"types": [
-			"reflect-metadata"
-		],
-		"module": "ES2020",
+		"lib": ["ESNext"],
+		"module": "ESNext",
 		"moduleResolution": "Node",
-		"jsx": "react-jsx",
-		"baseUrl": "./src",
 		"allowSyntheticDefaultImports": true,
 		"allowUmdGlobalAccess": true,
 		"declaration": false,
@@ -22,9 +14,6 @@
 		"skipLibCheck": true,
 		"strict": true,
 		"useDefineForClassFields": true,
-		"experimentalDecorators": true,
-		"paths": {
-			"@di": ["shared/core/di"]
-		}
+		"experimentalDecorators": true
 	}
 }

@@ -1,0 +1,7 @@
+{
+	"name": "@althome/webpack-utils",
+	"private": true,
+	"type": "module",
+	"exports": "./index.ts",
+	"sideEffects": false
+}

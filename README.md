@@ -1,4 +1,4 @@
-<img alt="AltHome logo" src="./manifests/icon.svg" width="120" />
+<img alt="AltHome logo" src="./packages/app/manifests/icon.svg" width="120" />
 
 **AltHome** is a replacement for the stock home app on LG TVs running webOS 6+.
 

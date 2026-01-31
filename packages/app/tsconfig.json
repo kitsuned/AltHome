@@ -1,0 +1,12 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"jsx": "react-jsx",
+		"lib": ["ESNext", "DOM"],
+		"types": ["reflect-metadata", "node"],
+		"paths": {
+			"@di": ["shared/core/di"]
+		}
+	}
+}

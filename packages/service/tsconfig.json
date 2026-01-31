@@ -1,0 +1,10 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"strict": true,
+		"baseUrl": "./",
+		"composite": true,
+		"types": ["node"]
+	},
+	"include": ["./src/bus/palmbus.d.ts", "./src/global.d.ts"]
+}

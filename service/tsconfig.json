@@ -1,9 +1,0 @@
-{
-	"extends": "../tsconfig.json",
-	"compilerOptions": {
-		"strict": true,
-		"baseUrl": "./",
-		"composite": true,
-		"types": ["node"]
-	}
-}
