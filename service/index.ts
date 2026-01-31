@@ -12,7 +12,7 @@ service.register('/elevate', async function* () {
 	);
 
 	if (!root) {
-		throw new Error('Not privileged.');
+		throw new Error('Homebrew Channel is not privileged.');
 	} else {
 		yield { done: false, status: 'Elevating...' };
 
@@ -25,6 +25,10 @@ service.register('/elevate', async function* () {
 });
 
 service.register('/apply', async function* () {
+	if (process.getuid() !== 0) {
+		throw new Error('Helper service it not running as root. Use /elevate.');
+	}
+
 	for (const ctor of routines) {
 		// eslint-disable-next-line new-cap
 		const routine = new ctor(service);
@@ -40,7 +44,7 @@ service.register('/apply', async function* () {
 service.register('/quit', async function* () {
 	yield { status: 'Bye bye!' };
 
-	queueMicrotask(() => queueMicrotask(() => process.exit(0)));
+	queueMicrotask(() => process.exit(0));
 
 	return {};
 });
