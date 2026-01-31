@@ -1,7 +1,8 @@
-import hide from '../../../../../assets/hide.png';
-import remove from '../../../../../assets/remove.png';
-import swap from '../../../../../assets/swap.png';
 import { MenuAction } from '../../../lib';
+
+import hide from 'assets/hide.png';
+import remove from 'assets/remove.png';
+import swap from 'assets/swap.png';
 
 const map: Record<MenuAction, string> = {
 	[MenuAction.Hide]: hide,

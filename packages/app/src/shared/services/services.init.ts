@@ -5,4 +5,4 @@ import { lifecycleManagerModule } from './lifecycle-manager';
 import { settingsModule } from './settings';
 import { systemInfoModule } from './system-info';
 
-container.load(systemInfoModule, settingsModule, lifecycleManagerModule, launcherModule);
+container.loadSync(systemInfoModule, settingsModule, lifecycleManagerModule, launcherModule);

@@ -8,4 +8,4 @@ import {
 	scrollModule,
 } from './services';
 
-container.load(appDrawerModule, contextMenuModule, keyboardModule, scrollModule, ribbonModule);
+container.loadSync(appDrawerModule, contextMenuModule, keyboardModule, scrollModule, ribbonModule);

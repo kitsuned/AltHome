@@ -129,6 +129,9 @@ rules:
           group: external
           position: before
         - pattern: '@**'
+          group: external
+          position: before
+        - pattern: '@althome/**'
           group: internal
           position: before
         - pattern: shared/**

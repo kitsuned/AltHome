@@ -8,11 +8,3 @@ parserOptions:
 
 env:
   node: true
-
-settings:
-  import/core-modules: [ palmbus ]
-
-overrides:
-  - files: [ './src/index.ts' ]
-    rules:
-      require-yield: off

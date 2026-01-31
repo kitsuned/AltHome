@@ -1,6 +1,6 @@
-import { ProvidePlugin, DefinePlugin } from 'webpack';
-
 import { resolve } from 'node:path';
+
+import { ProvidePlugin, DefinePlugin } from 'webpack';
 
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';

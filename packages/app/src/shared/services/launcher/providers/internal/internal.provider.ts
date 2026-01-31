@@ -1,9 +1,12 @@
 import { injectable } from 'inversify';
 
-import plus from 'assets/plus.png';
-import { Intent, type ActivateType } from 'shared/api/common';
+import { Intent } from 'shared/api/common';
+import type { ActivateType } from 'shared/api/common';
+
 import type { LaunchPointInput } from '../../api/launch-point.interface';
 import type { LaunchPointsProvider } from '../launch-points.provider';
+
+import plus from 'assets/plus.png';
 
 @injectable()
 export class InternalProvider implements LaunchPointsProvider {

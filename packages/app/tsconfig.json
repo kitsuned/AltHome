@@ -8,5 +8,6 @@
 		"paths": {
 			"@di": ["shared/core/di"]
 		}
-	}
+	},
+	"include": ["src", "webpack.config.ts"]
 }

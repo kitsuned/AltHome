@@ -1,4 +1,7 @@
 {
 	"name": "@althome/app",
-	"private": true
+	"private": true,
+	"scripts": {
+		"lint": "eslint ."
+	}
 }
