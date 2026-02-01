@@ -2,7 +2,8 @@ import { comparer, makeAutoObservable, reaction, toJS, when } from 'mobx';
 
 import { injectable } from 'inversify';
 
-import { throttle } from '../../../core/utils/throttle';
+import { throttle } from '@althome/utils';
+
 import { luna, LunaTopic } from '../../luna';
 
 const KEY = process.env.APP_ID as 'com.kitsuned.althome';

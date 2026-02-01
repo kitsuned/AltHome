@@ -1,9 +1,10 @@
 import palmbus from 'palmbus';
 
+import { AsyncSink } from '@althome/utils';
+
 import { SERVICE_ID } from '../environment';
 
 import { Message } from './message';
-import { AsyncSink } from './sink';
 
 type Executor<T, N extends Record<string, any>> = (body: T) => AsyncGenerator<N>;
 
