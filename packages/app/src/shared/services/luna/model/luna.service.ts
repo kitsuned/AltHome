@@ -3,7 +3,6 @@
 import { makeAutoObservable, reaction, toJS } from 'mobx';
 
 import type { LunaMessage, LunaRequestParams } from '../api/luna.api';
-import { verifyMessageContents } from '../lib/auto-elevator.lib';
 
 export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParams = {}> {
 	public message: LunaMessage<T> | null = null;
@@ -35,10 +34,6 @@ export class LunaTopic<T extends Record<string, any>, P extends LunaRequestParam
 
 	private handleCallback(serialized: string) {
 		this.message = JSON.parse(serialized);
-
-		if (this.message) {
-			verifyMessageContents(this.message);
-		}
 	}
 }
 
@@ -57,8 +52,6 @@ class LunaOneShot<T extends Record<string, any>, P extends LunaRequestParams = {
 				}
 
 				if (parsed.errorCode || !parsed.returnValue) {
-					verifyMessageContents(parsed);
-
 					reject(parsed);
 				}
 
