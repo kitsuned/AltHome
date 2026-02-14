@@ -1,3 +1,10 @@
+interface InputRegion {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
 declare global {
 	class PalmServiceBridge {
 		constructor(serviceId?: string);
@@ -10,7 +17,7 @@ declare global {
 	namespace webOSSystem {
 		const identifier: string;
 
-		const launchParams: ActivateType;
+		const launchParams: string;
 		const launchReason: string;
 
 		/**
@@ -53,3 +60,5 @@ declare global {
 		): void;
 	}
 }
+
+export {};

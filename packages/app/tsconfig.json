@@ -4,10 +4,9 @@
 		"baseUrl": "./src",
 		"jsx": "react-jsx",
 		"lib": ["ESNext", "DOM"],
-		"types": ["reflect-metadata", "node"],
+		"types": ["reflect-metadata"],
 		"paths": {
 			"@di": ["shared/core/di"]
 		}
-	},
-	"include": ["src", "webpack.config.ts"]
+	}
 }
