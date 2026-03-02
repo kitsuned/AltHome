@@ -131,6 +131,9 @@ rules:
         - pattern: '@**'
           group: external
           position: before
+        - pattern: '@kitsuned/**'
+          group: external
+          position: after
         - pattern: '@althome/**'
           group: internal
           position: before

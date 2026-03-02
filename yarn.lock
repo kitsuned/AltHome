@@ -23,12 +23,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@althome/webpack-utils@workspace:packages/webpack-utils":
-  version: 0.0.0-use.local
-  resolution: "@althome/webpack-utils@workspace:packages/webpack-utils"
-  languageName: unknown
-  linkType: soft
-
 "@babel/code-frame@npm:^7.0.0":
   version: 7.18.6
   resolution: "@babel/code-frame@npm:7.18.6"
@@ -2142,6 +2136,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@kitsuned/webpack-utils@npm:1.0.2":
+  version: 1.0.2
+  resolution: "@kitsuned/webpack-utils@npm:1.0.2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40kitsuned%2Fwebpack-utils%2F1.0.2%2Fc08d87635cd1c5360463ffae148e253c4cf76a38"
+  peerDependencies:
+    webpack: "*"
+    webpack-dev-server: "*"
+  checksum: 10/ddb9cda122d68e45b4ee79b01c363d1b262ea596d95e6e7b10b15ede0a66c0269212b4362f237df96d32bf490e14c1a842cabe8b0a6417d9587cf0af0f102bf6
+  languageName: node
+  linkType: hard
+
 "@leichtgewicht/ip-codec@npm:^2.0.1":
   version: 2.0.4
   resolution: "@leichtgewicht/ip-codec@npm:2.0.4"
@@ -3317,6 +3321,7 @@ __metadata:
     "@babel/preset-typescript": "npm:7.28.5"
     "@babel/register": "npm:7.28.6"
     "@floating-ui/react": "npm:0.27.17"
+    "@kitsuned/webpack-utils": "npm:1.0.2"
     "@types/babel__core": "npm:7.20.5"
     "@types/babel__preset-env": "npm:7.10.0"
     "@types/babel__register": "npm:7.17.3"

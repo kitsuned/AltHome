@@ -7,8 +7,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
-import type { WebpackConfigFunction } from '@althome/webpack-utils';
-import { JsonTransformer } from '@althome/webpack-utils';
+import { JsonTransformer } from '@kitsuned/webpack-utils';
+import type { WebpackConfigFunction } from '@kitsuned/webpack-utils';
 
 // eslint-disable-next-line import/no-relative-packages
 import { id, version } from '../../package.json';

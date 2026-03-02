@@ -2,8 +2,8 @@ import { DefinePlugin } from 'webpack';
 
 import CopyPlugin from 'copy-webpack-plugin';
 
-import { JsonTransformer } from '@althome/webpack-utils';
-import type { WebpackConfigFunction } from '@althome/webpack-utils';
+import { JsonTransformer } from '@kitsuned/webpack-utils';
+import type { WebpackConfigFunction } from '@kitsuned/webpack-utils';
 
 // eslint-disable-next-line
 import { id, version } from '../../package.json';
